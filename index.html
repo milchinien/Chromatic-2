@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chromatic 2 – Prototyp</title>
+  </head>
+  <body>
+    <div id="app">
+      <div id="stage"></div>
+
+      <header id="hud">
+        <div class="hud-side" data-team="0">
+          <div class="hud-label"><span class="team-chip team-0"></span>Deine Basis</div>
+          <div class="hpbar"><div class="hpbar-fill"></div><span class="hpbar-text"></span></div>
+          <div class="hud-units">Einheiten: <b class="units">0</b></div>
+        </div>
+        <div class="hud-center">
+          <div class="title">Chromatic 2</div>
+          <div class="hud-time"><span id="time">0:00</span> · <span id="status">Aufstellung</span></div>
+        </div>
+        <div class="hud-side right" data-team="1">
+          <div class="hud-label">Gegnerische Basis<span class="team-chip team-1"></span></div>
+          <div class="hpbar"><div class="hpbar-fill"></div><span class="hpbar-text"></span></div>
+          <div class="hud-units">Einheiten: <b class="units">0</b></div>
+        </div>
+      </header>
+
+      <footer id="dock">
+        <section class="slot" data-side="0"></section>
+        <section id="controls" class="px-box">
+          <button id="btn-fight" class="btn btn-fight">Kampf!</button>
+          <div class="row">
+            <button id="btn-pause" class="btn btn-small">Pause</button>
+            <div class="speed">
+              <button class="btn btn-small btn-speed active" data-speed="1">1×</button>
+              <button class="btn btn-small btn-speed" data-speed="2">2×</button>
+              <button class="btn btn-small btn-speed" data-speed="4">4×</button>
+            </div>
+          </div>
+          <button id="btn-reset" class="btn btn-small btn-wide">Neu aufstellen</button>
+        </section>
+        <section class="slot" data-side="1"></section>
+      </footer>
+
+      <div id="picker" class="modal hidden">
+        <div class="modal-box px-box">
+          <div class="modal-head">
+            <h2 id="picker-title">Karte wählen</h2>
+            <button id="picker-close" class="btn btn-small">Schließen</button>
+          </div>
+          <div class="picker-body">
+            <div id="picker-grid"></div>
+            <aside id="picker-detail" class="px-inset"></aside>
+          </div>
+        </div>
+      </div>
+
+      <div id="result" class="modal hidden">
+        <div class="modal-box px-box result-box">
+          <h2 id="result-title">Sieg!</h2>
+          <div id="result-stats"></div>
+          <div class="row center">
+            <button id="result-again" class="btn">Nochmal</button>
+            <button id="result-close" class="btn btn-secondary">Schlachtfeld ansehen</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="fps"></div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
