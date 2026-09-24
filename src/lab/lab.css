@@ -1,0 +1,516 @@
+/* =====================================================================
+   UI-Lab: neutrale Hülle + gemeinsames Grundlayout aller Design-Varianten.
+   Jede Variante ist ein 640×360-„Bildschirm“, der ganzzahlig hochskaliert
+   wird. 1 CSS-px im Bildschirm = 1 Spielpixel.
+   ===================================================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: #101014;
+  color: #d9d6e0;
+  font-family: 'VT323', monospace;
+  font-size: 20px;
+  overflow: hidden;
+}
+
+#lab {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+#lab-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 10px;
+  background: #1b1b22;
+  border-bottom: 2px solid #000;
+}
+
+#lab-title {
+  font-family: 'Silkscreen', monospace;
+  font-size: 16px;
+  color: #ffcc33;
+  white-space: nowrap;
+}
+
+#lab-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  flex: 1;
+}
+
+.lab-btn {
+  font: inherit;
+  font-size: 16px;
+  color: #c9c5d4;
+  background: #2a2a34;
+  border: 2px solid #000;
+  padding: 0 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lab-btn:hover {
+  background: #3a3a48;
+  color: #fff;
+}
+
+.lab-btn.active {
+  background: #ffcc33;
+  color: #1b1b22;
+}
+
+.num {
+  display: inline-grid;
+  place-items: center;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 2px;
+  background: #000;
+  color: #ffcc33;
+  font-size: 15px;
+}
+
+#lab-info {
+  display: flex;
+  align-items: center !important;
+  white-space: nowrap;
+  overflow: hidden;
+  gap: 14px;
+  align-items: baseline;
+  padding: 4px 12px;
+  background: #16161c;
+  color: #a9a5b6;
+}
+
+#lab-name {
+  color: #fff;
+  font-weight: normal;
+  font-size: 22px;
+}
+
+#lab-swatches {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 360px;
+  align-self: center;
+  box-shadow: 0 0 0 1px #000;
+}
+
+#lab-swatches i {
+  width: 6px;
+  height: 12px;
+}
+
+#lab-swatches:has(i:nth-child(40)) i {
+  width: 3px;
+  height: 6px;
+}
+
+#lab-keys {
+  margin-left: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  font-size: 16px;
+  color: #6f6b7c;
+}
+
+#lab-view {
+  flex: 1;
+  min-height: 0;
+  padding: 8px;
+  overflow: hidden;
+}
+
+#lab-view.single {
+  display: grid;
+  place-items: center;
+}
+
+#lab-view.grid {
+  display: grid;
+  overflow-y: auto;
+  grid-template-columns: repeat(var(--cols), auto);
+  justify-content: center;
+  align-content: start;
+  gap: 12px;
+}
+
+.thumb {
+  cursor: pointer;
+}
+
+.thumb-label {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  height: 22px;
+  color: #c9c5d4;
+}
+
+.thumb:hover .thumb-label {
+  color: #ffcc33;
+}
+
+.thumb:hover .frame {
+  outline: 2px solid #ffcc33;
+}
+
+.thumb .screen {
+  pointer-events: none;
+}
+
+.frame {
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 0 2px #000;
+}
+
+.scaler {
+  transform-origin: 0 0;
+  width: 640px;
+  height: 360px;
+}
+
+.scaler img {
+  image-rendering: pixelated;
+}
+
+/* --- Gemeinsames Grundlayout ------------------------------------------------ */
+
+.screen {
+  position: relative;
+  width: 640px;
+  height: 360px;
+  overflow: hidden;
+  display: grid;
+  padding: 12px 14px;
+  gap: 10px 14px;
+  grid-template-columns: 1fr 176px 128px;
+  grid-template-rows: 22px auto 1fr 12px;
+  grid-template-areas:
+    'top top top'
+    'logo logo card'
+    'menu doors card'
+    'foot foot foot';
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+  user-select: none;
+  line-height: 1;
+}
+
+.screen > * {
+  position: relative;
+  z-index: 1;
+}
+
+.screen > .bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.screen button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.screen button:disabled {
+  cursor: default;
+}
+
+.screen p {
+  margin: 0;
+}
+
+.ico {
+  display: inline-block;
+  flex: none;
+  width: calc(var(--w) * var(--is, 1px));
+  height: calc(var(--h) * var(--is, 1px));
+}
+
+.ico.empty {
+  opacity: 0.3;
+}
+
+/* Topbar */
+.topbar {
+  grid-area: top;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.topbar .spacer {
+  flex: 1;
+}
+
+.stat-chip {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 20px;
+  padding: 0 6px;
+}
+
+.segmented {
+  display: flex;
+  gap: 2px;
+}
+
+.seg {
+  padding: 3px 6px !important;
+}
+
+/* Logo */
+.logo {
+  grid-area: logo;
+  align-self: center;
+}
+
+.logo-line {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.logo-main {
+  display: flex;
+}
+
+.logo-ascii {
+  display: none;
+  margin: 0;
+}
+
+/* Menü */
+.menu {
+  grid-area: menu;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.menu .btn {
+  width: 168px;
+}
+
+/* Türen */
+.doors-panel {
+  grid-area: doors;
+  align-self: start;
+}
+
+.doors {
+  display: flex;
+  gap: 6px;
+}
+
+.door {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 2px;
+}
+
+.door-stars {
+  display: flex;
+  gap: 1px;
+  --is: 1px;
+}
+
+/* Karte */
+.card {
+  grid-area: card;
+  align-self: center;
+  justify-self: center;
+  width: 128px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.08s steps(2);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+}
+
+.card-top {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.card-name {
+  flex: 1;
+  white-space: nowrap;
+}
+
+.card-art {
+  position: relative;
+  height: 68px;
+  overflow: hidden;
+}
+
+.card-art .unit {
+  position: absolute;
+  left: var(--x);
+  bottom: calc(var(--y) * -1 + 12px);
+}
+
+.card-art .unit.back {
+  bottom: calc(var(--y) * -1 + 26px);
+}
+
+.card-text {
+  min-height: 30px;
+}
+
+.card-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: auto;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+/* Fuß */
+.foot {
+  grid-area: foot;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.blink {
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Dialog + Toast */
+.dialog-wrap {
+  position: absolute !important;
+  inset: 0;
+  z-index: 10 !important;
+  display: none;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.dialog-wrap.open {
+  display: grid;
+}
+
+.dialog {
+  width: 240px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dialog .panel-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dialog-btns {
+  display: flex;
+  gap: 8px;
+}
+
+.dialog-btns .btn {
+  flex: 1;
+  justify-content: center;
+}
+
+.toast {
+  position: absolute !important;
+  left: 50%;
+  top: 44px;
+  z-index: 9 !important;
+  transform: translate(-50%, -8px);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.15s steps(3),
+    transform 0.15s steps(3);
+  padding: 6px 12px;
+  white-space: nowrap;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+#lab-screens {
+  display: flex;
+  gap: 3px;
+  align-self: center;
+}
+
+#lab-screens:empty {
+  display: none;
+}
+
+.lab-screen.active {
+  background: #5ad4ff;
+  color: #1b1b22;
+}
+
+#lab-fav.active {
+  background: #ff9de6;
+  color: #1b1b22;
+}
+
+/* Idle-Extras: nur im Idle-Design sichtbar */
+.num-big,
+.rate,
+.stat-chip.gems,
+.badge,
+.tabbar,
+.ribbon,
+.dps {
+  display: none;
+}

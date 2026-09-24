@@ -11,7 +11,7 @@ Kartenstufe ein und lässt beide gegeneinander kämpfen.
 
 ```bash
 pnpm install
-pnpm dev        # http://localhost:3100
+pnpm dev        # http://localhost:3100 (oder nächster freier Port)
 pnpm build      # Produktions-Build nach dist/
 ```
 

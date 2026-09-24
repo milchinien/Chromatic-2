@@ -1,0 +1,1019 @@
+/* =====================================================================
+   UI-Designs aus dem UI-Lab für den echten Kampfbildschirm
+   (index.html?theme=<id>). Übernommen: Palette, Knopf-Design, Schrift.
+   --c0…--c4 = Palettenfarben (dunkel → hell), --a-* = Akzente,
+   --team0/1(d) = Teamfarben. Schrift überall: Weiholmir (pixelgenau
+   bei Vielfachen von 8 px). --p = UI-Pixelgröße aus style.css.
+   ===================================================================== */
+
+/* --- Gemeinsame Grundlage ------------------------------------------------ */
+
+body.gtheme {
+  --ink: var(--c0);
+  --panel: var(--c1);
+  --panel-hi: var(--c2);
+  --panel-lo: var(--c0);
+  --inset: var(--c0);
+  --text: var(--c4);
+  --muted: var(--c3);
+  --gold: var(--c4);
+  --blue: var(--team0);
+  --red: var(--c2);
+  --panel-pattern: none;
+  --font-px: 'Weiholmir', monospace;
+  --font-body: 'Weiholmir', monospace;
+  font-size: 16px;
+  background: var(--c0);
+}
+
+.gtheme .slot .card {
+  width: 180px;
+  padding-bottom: 6px;
+}
+
+.gtheme .slot .opts {
+  gap: 4px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.gtheme #controls {
+  gap: 4px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.gtheme .card-art {
+  height: 56px;
+}
+
+.gtheme .hud-label,
+.gtheme .opt-label,
+.gtheme .card-name,
+.gtheme .hpbar-text,
+.gtheme .grid-head,
+.gtheme .grid-row-head,
+.gtheme .card-change,
+.gtheme .badge,
+.gtheme #result-stats .h,
+.gtheme .hud-units,
+.gtheme .hud-time,
+.gtheme .card-sub,
+.gtheme .card-stats,
+.gtheme .tile-name,
+.gtheme .detail-stats,
+.gtheme .note,
+.gtheme #picker-detail p,
+.gtheme #picker-detail h3,
+.gtheme #result-stats,
+.gtheme .stepper b,
+.gtheme #fps {
+  font-size: 16px;
+  font-weight: normal;
+}
+
+.gtheme #fps {
+  color: var(--c3);
+}
+
+.gtheme .title {
+  font-size: 32px;
+  font-weight: normal;
+  letter-spacing: 2px;
+}
+
+.gtheme .title .l {
+  display: inline-block;
+}
+
+.gtheme h2 {
+  font-size: 24px;
+  font-weight: normal;
+}
+
+.gtheme #result-title {
+  font-size: 48px;
+}
+
+.gtheme .btn {
+  font-size: 16px;
+  font-weight: normal;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.gtheme .btn-fight {
+  font-size: 32px;
+  font-weight: normal;
+}
+
+.gtheme .stepper .btn {
+  font-size: 16px;
+}
+
+.gtheme #hud {
+  background: linear-gradient(color-mix(in srgb, var(--c0) 80%, transparent), transparent);
+}
+
+.gtheme .team-0 {
+  background: var(--team0);
+}
+
+.gtheme .team-1 {
+  background: var(--team1);
+}
+
+.gtheme .hpbar {
+  background: var(--c0);
+}
+
+.gtheme .hpbar-fill {
+  background: linear-gradient(var(--team0) 0 60%, var(--team0d) 60%);
+}
+
+.gtheme .right .hpbar-fill {
+  background: linear-gradient(var(--team1) 0 60%, var(--team1d) 60%);
+}
+
+.gtheme .card,
+.gtheme .tile {
+  --c: var(--c2) !important;
+  --cd: var(--c1) !important;
+  --cl: var(--c3) !important;
+}
+
+.gtheme .card {
+  background: linear-gradient(var(--cl) 0 2px, var(--c) 2px 26px, var(--c0) 26px);
+}
+
+.gtheme .tile {
+  background: var(--c0);
+}
+
+.gtheme .tile:hover,
+.gtheme .tile.selected {
+  background: var(--c1);
+}
+
+.gtheme .grid-head,
+.gtheme #picker-detail h3 {
+  color: var(--c4) !important;
+}
+
+.gtheme .modal {
+  background: color-mix(in srgb, var(--c0) 70%, transparent);
+}
+
+.gtheme input[type='range']::-webkit-slider-thumb {
+  background: var(--c3);
+  box-shadow:
+    inset 0 -3px 0 0 var(--c1),
+    0 0 0 2px var(--c0);
+}
+
+.gtheme input[type='range']::-moz-range-thumb {
+  background: var(--c3);
+  box-shadow:
+    inset 0 -3px 0 0 var(--c1),
+    0 0 0 2px var(--c0);
+}
+
+.gtheme .theme-row {
+  justify-content: center;
+  margin-top: 6px;
+  pointer-events: auto;
+}
+
+.gtheme .theme-row .btn {
+  padding: 2px 10px;
+}
+
+/* --- Klick-Partikel ---------------------------------------------------------- */
+
+.gfx {
+  position: fixed;
+  z-index: 1000;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  transform: scale(3);
+}
+
+.gfx b {
+  position: absolute;
+  left: -1px;
+  top: -1px;
+  width: 2px;
+  height: 2px;
+  background: var(--p1, #fff);
+  animation: gfx-fly var(--gfx-dur, 0.45s) steps(6) forwards;
+}
+
+.gfx b:nth-child(2n) {
+  background: var(--p2, #fff);
+}
+
+.gfx b:nth-child(1) { --dx: 14px; --dy: 0px; }
+.gfx b:nth-child(2) { --dx: 11px; --dy: 8px; }
+.gfx b:nth-child(3) { --dx: 4px; --dy: 13px; }
+.gfx b:nth-child(4) { --dx: -4px; --dy: 13px; }
+.gfx b:nth-child(5) { --dx: -11px; --dy: 8px; }
+.gfx b:nth-child(6) { --dx: -14px; --dy: 0px; }
+.gfx b:nth-child(7) { --dx: -11px; --dy: -8px; }
+.gfx b:nth-child(8) { --dx: -4px; --dy: -13px; }
+.gfx b:nth-child(9) { --dx: 4px; --dy: -13px; }
+.gfx b:nth-child(10) { --dx: 11px; --dy: -8px; }
+
+@keyframes gfx-fly {
+  to {
+    transform: translate(calc(var(--dx) * var(--spread, 1)), calc(var(--dy) * var(--spread, 1) + var(--g, 0px)));
+    opacity: 0;
+  }
+}
+
+.gfx em {
+  display: none;
+}
+
+/* =====================================================================
+   RIDGE – Wegweiser-Bretter, Panels mit Bergkante
+   ===================================================================== */
+
+.gtheme-ridge {
+  --ridge: polygon(0 12px, 9% 4px, 17% 10px, 28% 0, 40% 8px, 52% 3px, 63% 12px, 74% 1px, 86% 9px, 100% 3px, 100% 100%, 0 100%);
+}
+
+.gtheme-ridge .px-box,
+.gtheme-ridge .card {
+  background: linear-gradient(var(--c1) 0 16px, var(--c0) 16px);
+  box-shadow: none;
+  clip-path: var(--ridge);
+}
+
+.gtheme-ridge #controls,
+.gtheme-ridge .slot .opts,
+.gtheme-ridge .modal-box {
+  padding-top: 20px;
+}
+
+.gtheme-ridge .card {
+  padding-top: 18px;
+}
+
+.gtheme-ridge .card-name {
+  color: var(--c4);
+}
+
+.gtheme-ridge .title {
+  color: var(--c4);
+  text-shadow: 0 3px 0 var(--c2), 0 6px 0 var(--c1), 0 9px 0 var(--c0);
+}
+
+.gtheme-ridge .btn {
+  --f: var(--c1);
+  --nail: var(--c0);
+  color: var(--c4);
+  text-shadow: none;
+  padding-left: calc(var(--p) * 9);
+  background:
+    linear-gradient(var(--nail), var(--nail)) right calc(var(--p) * 3) top calc(var(--p) * 2) / var(--p) var(--p) no-repeat,
+    linear-gradient(var(--nail), var(--nail)) right calc(var(--p) * 3) bottom calc(var(--p) * 2) / var(--p) var(--p) no-repeat,
+    repeating-linear-gradient(180deg, transparent 0 calc(var(--p) * 2), color-mix(in srgb, var(--c0) 22%, transparent) calc(var(--p) * 2) calc(var(--p) * 2.5)),
+    var(--f);
+  box-shadow:
+    inset 0 var(--p) 0 0 color-mix(in srgb, var(--c4) 35%, transparent),
+    inset 0 calc(var(--p) * -1) 0 0 color-mix(in srgb, var(--c0) 45%, transparent);
+  clip-path: polygon(calc(var(--p) * 5) 0, 100% 0, 100% 100%, calc(var(--p) * 5) 100%, 0 50%);
+}
+
+.gtheme-ridge .btn:hover {
+  --f: var(--c2);
+  filter: none;
+}
+
+.gtheme-ridge .btn-fight,
+.gtheme-ridge .btn.active {
+  --f: var(--c3);
+  color: var(--c0);
+}
+
+.gtheme-ridge .btn-fight:hover {
+  --f: var(--c4);
+}
+
+.gtheme-ridge .btn:active,
+.gtheme-ridge .btn.active {
+  transform: none;
+  box-shadow:
+    inset 0 var(--p) 0 0 color-mix(in srgb, var(--c4) 35%, transparent),
+    inset 0 calc(var(--p) * -1) 0 0 color-mix(in srgb, var(--c0) 45%, transparent);
+}
+
+.gtheme-ridge .btn:disabled {
+  --f: var(--c0);
+  --nail: var(--c1);
+  color: var(--c2);
+  filter: none;
+}
+
+.gtheme-ridge .hpbar {
+  clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0 50%);
+  box-shadow: none;
+}
+
+.gtheme-ridge .tile {
+  box-shadow: inset 0 var(--p) 0 0 var(--c1), 0 0 0 2px var(--c0);
+}
+
+.gtheme-ridge .tile:hover,
+.gtheme-ridge .tile.selected {
+  box-shadow: inset 0 calc(var(--p) * 2) 0 0 var(--c3), 0 0 0 2px var(--c3);
+}
+
+.gtheme-ridge .clicked {
+  animation: gridge-wobble 0.36s steps(1);
+}
+
+@keyframes gridge-wobble {
+  0% {
+    transform: translateX(-8px);
+  }
+  25% {
+    transform: translateX(5px);
+  }
+  50% {
+    transform: translateX(-3px);
+  }
+  75% {
+    transform: translateX(1px);
+  }
+}
+
+.gtheme-ridge .gfx {
+  --p1: var(--c3);
+  --p2: var(--c4);
+  --g: 10px;
+  --spread: 1.2;
+}
+
+/* =====================================================================
+   LANTERN – geschnitztes Holz, Messingschilder
+   ===================================================================== */
+
+.gtheme-lantern .px-box,
+.gtheme-lantern .card {
+  background:
+    linear-gradient(var(--c4), var(--c4)) calc(var(--p) * 2) calc(var(--p) * 2) / var(--p) var(--p) no-repeat,
+    linear-gradient(var(--c4), var(--c4)) right calc(var(--p) * 2) top calc(var(--p) * 2) / var(--p) var(--p) no-repeat,
+    linear-gradient(var(--c4), var(--c4)) left calc(var(--p) * 2) bottom calc(var(--p) * 2) / var(--p) var(--p) no-repeat,
+    linear-gradient(var(--c4), var(--c4)) right calc(var(--p) * 2) bottom calc(var(--p) * 2) / var(--p) var(--p) no-repeat,
+    var(--c1);
+  box-shadow:
+    0 0 0 var(--p) var(--c0),
+    inset var(--p) var(--p) 0 0 var(--c2),
+    inset calc(var(--p) * -1) calc(var(--p) * -1) 0 0 var(--c0),
+    inset 0 0 0 calc(var(--p) * 3) var(--c1),
+    inset 0 0 0 calc(var(--p) * 3 + 2px) var(--c2),
+    calc(var(--p) * 2) calc(var(--p) * 2) 0 0 color-mix(in srgb, var(--c0) 70%, transparent);
+}
+
+.gtheme-lantern .card {
+  background: linear-gradient(var(--c3) 0 26px, var(--c1) 26px);
+}
+
+.gtheme-lantern .card-name {
+  color: var(--c0);
+  text-shadow: none;
+}
+
+.gtheme-lantern .title .l {
+  color: var(--c4);
+  text-shadow:
+    2px 0 0 var(--c0), -2px 0 0 var(--c0), 0 2px 0 var(--c0), 0 -2px 0 var(--c0),
+    0 4px 0 var(--c2), 0 6px 0 var(--c0);
+  animation: glantern-glow 1.6s steps(1) infinite;
+}
+
+@keyframes glantern-glow {
+  50% {
+    color: var(--c3);
+  }
+}
+
+.gtheme-lantern .btn {
+  --b: var(--c3);
+  color: var(--c0);
+  text-shadow: none;
+  padding-left: calc(var(--p) * 8);
+  padding-right: calc(var(--p) * 8);
+  background:
+    linear-gradient(var(--c0), var(--c0)) calc(var(--p) * 2.5) 50% / var(--p) var(--p) no-repeat,
+    linear-gradient(var(--c0), var(--c0)) right calc(var(--p) * 2.5) top 50% / var(--p) var(--p) no-repeat,
+    var(--b);
+  box-shadow:
+    0 0 0 var(--p) var(--c0),
+    inset 0 var(--p) 0 0 var(--c4),
+    inset 0 calc(var(--p) * -1.5) 0 0 var(--c2),
+    calc(var(--p) * 1.5) calc(var(--p) * 2) 0 0 color-mix(in srgb, var(--c0) 70%, transparent);
+}
+
+.gtheme-lantern .btn:hover {
+  --b: var(--c4);
+  filter: none;
+  box-shadow:
+    0 0 0 var(--p) var(--c0),
+    0 0 0 calc(var(--p) * 2) color-mix(in srgb, var(--c4) 50%, transparent),
+    inset 0 var(--p) 0 0 #fff5,
+    inset 0 calc(var(--p) * -1.5) 0 0 var(--c2),
+    calc(var(--p) * 1.5) calc(var(--p) * 2) 0 0 color-mix(in srgb, var(--c0) 70%, transparent);
+}
+
+.gtheme-lantern .btn-fight,
+.gtheme-lantern .btn.active {
+  --b: var(--c4);
+}
+
+.gtheme-lantern .btn:active,
+.gtheme-lantern .btn.active {
+  transform: translateY(var(--p));
+}
+
+.gtheme-lantern .btn:disabled {
+  --b: var(--c2);
+  color: var(--c1);
+  filter: none;
+}
+
+.gtheme-lantern .tile {
+  box-shadow: 0 0 0 2px var(--c0), inset 0 0 0 2px var(--c2);
+}
+
+.gtheme-lantern .tile:hover,
+.gtheme-lantern .tile.selected {
+  box-shadow: 0 0 0 2px var(--c4), inset 0 0 0 2px var(--c3);
+}
+
+.gtheme-lantern .clicked {
+  animation: glantern-press 0.32s steps(1);
+}
+
+@keyframes glantern-press {
+  0% {
+    transform: translateY(4px);
+    filter: brightness(1.35);
+  }
+  40% {
+    transform: translateY(2px);
+    filter: brightness(1.15);
+  }
+}
+
+.gtheme-lantern .gfx {
+  --p1: var(--c4);
+  --p2: var(--c3);
+  --g: -16px;
+  --spread: 0.9;
+  --gfx-dur: 0.6s;
+}
+
+/* =====================================================================
+   ORBIT – dünne HUD-Linien, Eckklammern, Glitch
+   ===================================================================== */
+
+.gtheme-orbit {
+  --k: calc(var(--p) * 4);
+  --brk:
+    linear-gradient(var(--c3), var(--c3)) left top / var(--k) 2px no-repeat,
+    linear-gradient(var(--c3), var(--c3)) left top / 2px var(--k) no-repeat,
+    linear-gradient(var(--c3), var(--c3)) right top / var(--k) 2px no-repeat,
+    linear-gradient(var(--c3), var(--c3)) right top / 2px var(--k) no-repeat,
+    linear-gradient(var(--c3), var(--c3)) left bottom / var(--k) 2px no-repeat,
+    linear-gradient(var(--c3), var(--c3)) left bottom / 2px var(--k) no-repeat,
+    linear-gradient(var(--c3), var(--c3)) right bottom / var(--k) 2px no-repeat,
+    linear-gradient(var(--c3), var(--c3)) right bottom / 2px var(--k) no-repeat;
+}
+
+.gtheme-orbit .px-box,
+.gtheme-orbit .card {
+  background: var(--brk), color-mix(in srgb, var(--c0) 84%, transparent);
+  box-shadow: inset 0 0 0 1px var(--c1);
+}
+
+.gtheme-orbit .card-name {
+  color: var(--c4);
+  letter-spacing: 1px;
+}
+
+.gtheme-orbit .title {
+  letter-spacing: 8px;
+  color: var(--c4);
+  text-shadow: none;
+  padding-bottom: 4px;
+  box-shadow: 0 2px 0 0 var(--c2);
+}
+
+.gtheme-orbit .btn {
+  color: var(--c3);
+  text-shadow: none;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  background: var(--brk), color-mix(in srgb, var(--c0) 82%, transparent);
+  box-shadow:
+    inset var(--p) 0 0 0 var(--c2),
+    inset 0 0 0 1px color-mix(in srgb, var(--c2) 60%, transparent);
+}
+
+.gtheme-orbit .btn:hover {
+  color: var(--c4);
+  filter: none;
+  background: var(--brk), var(--c1);
+  box-shadow:
+    inset calc(var(--p) * 1.5) 0 0 0 var(--c4),
+    inset 0 0 0 1px var(--c3);
+}
+
+.gtheme-orbit .btn-fight {
+  color: var(--c4);
+  box-shadow:
+    inset calc(var(--p) * 1.5) 0 0 0 var(--c4),
+    inset 0 0 0 1px var(--c3);
+}
+
+.gtheme-orbit .btn.active {
+  color: var(--c0);
+  background: var(--c3);
+  box-shadow: none;
+}
+
+.gtheme-orbit .btn:active {
+  transform: none;
+}
+
+.gtheme-orbit .btn:disabled {
+  color: var(--c2);
+  filter: none;
+  background: color-mix(in srgb, var(--c0) 60%, transparent);
+  box-shadow: inset 0 0 0 1px var(--c1);
+}
+
+.gtheme-orbit .hpbar {
+  box-shadow: none;
+  background: repeating-linear-gradient(90deg, var(--c1) 0 6px, transparent 6px 8px);
+}
+
+.gtheme-orbit .hpbar-fill {
+  background: repeating-linear-gradient(90deg, var(--team0) 0 6px, transparent 6px 8px);
+}
+
+.gtheme-orbit .right .hpbar-fill {
+  background: repeating-linear-gradient(90deg, var(--team1) 0 6px, transparent 6px 8px);
+}
+
+.gtheme-orbit .tile {
+  background: var(--brk), var(--c0);
+  box-shadow: inset 0 0 0 1px var(--c1);
+}
+
+.gtheme-orbit .tile:hover,
+.gtheme-orbit .tile.selected {
+  background: var(--brk), var(--c1);
+  box-shadow: inset 0 0 0 1px var(--c3);
+}
+
+.gtheme-orbit .clicked {
+  animation: gorbit-glitch 0.3s steps(1);
+}
+
+@keyframes gorbit-glitch {
+  0% {
+    transform: translate(-4px, 0);
+    background: var(--c3);
+    color: var(--c0);
+  }
+  33% {
+    transform: translate(3px, -2px);
+  }
+  66% {
+    transform: translate(-2px, 1px);
+    background: var(--c1);
+  }
+}
+
+.gtheme-orbit .gfx {
+  --p1: var(--c4);
+  --p2: var(--c3);
+  --spread: 1.5;
+}
+
+.gtheme-orbit .gfx b {
+  width: 1px;
+  height: 1px;
+}
+
+.gtheme-orbit .gfx::before {
+  content: '';
+  position: absolute;
+  left: -4px;
+  top: -4px;
+  width: 8px;
+  height: 8px;
+  box-shadow: 0 0 0 1px var(--c3);
+  animation: gorbit-ring 0.4s steps(5) forwards;
+}
+
+@keyframes gorbit-ring {
+  to {
+    left: -18px;
+    top: -18px;
+    width: 36px;
+    height: 36px;
+    opacity: 0;
+  }
+}
+
+/* =====================================================================
+   CANDLE – Runentafeln, Glitzer, Flammen-Akzent
+   ===================================================================== */
+
+.gtheme-candle .px-box,
+.gtheme-candle .card {
+  background:
+    linear-gradient(var(--c4), var(--c4)) 0 0 / 2px 2px no-repeat,
+    linear-gradient(var(--c4), var(--c4)) 100% 0 / 2px 2px no-repeat,
+    linear-gradient(var(--c4), var(--c4)) 0 100% / 2px 2px no-repeat,
+    linear-gradient(var(--c4), var(--c4)) 100% 100% / 2px 2px no-repeat,
+    color-mix(in srgb, var(--c0) 86%, transparent);
+  box-shadow:
+    0 0 0 2px var(--c2),
+    inset 0 0 0 2px var(--c1);
+}
+
+.gtheme-candle .card-name {
+  color: var(--c4);
+}
+
+.gtheme-candle .title .l {
+  color: var(--c4);
+  text-shadow: 0 2px 0 var(--c3), 0 4px 0 var(--c2), 0 6px 0 var(--c1);
+  animation: gcandle-flicker 0.9s steps(1) infinite;
+}
+
+.gtheme-candle .title .l:last-child {
+  color: var(--a-flame);
+}
+
+@keyframes gcandle-flicker {
+  33% {
+    text-shadow: 0 2px 0 var(--c3), 0 4px 0 var(--c2), 0 6px 0 var(--c1), 0 -2px 0 color-mix(in srgb, var(--a-flame) 50%, transparent);
+  }
+}
+
+.gtheme-candle .btn {
+  color: var(--c3);
+  text-shadow: none;
+  background: linear-gradient(color-mix(in srgb, var(--c2) 40%, var(--c1)) 0 50%, var(--c1) 50%);
+  box-shadow:
+    0 0 0 2px var(--c2),
+    inset 0 2px 0 0 color-mix(in srgb, var(--c3) 60%, transparent),
+    inset 0 -4px 0 0 var(--c0),
+    0 6px 0 0 color-mix(in srgb, var(--c0) 70%, transparent);
+}
+
+.gtheme-candle .btn:hover {
+  color: var(--c4);
+  filter: none;
+  transform: translateY(-2px);
+  background: linear-gradient(color-mix(in srgb, var(--c3) 45%, var(--c2)) 0 50%, var(--c2) 50%);
+  box-shadow:
+    0 0 0 2px var(--c3),
+    inset 0 2px 0 0 var(--c4),
+    inset 0 -4px 0 0 var(--c1),
+    0 6px 0 0 color-mix(in srgb, var(--c0) 70%, transparent);
+}
+
+.gtheme-candle .btn-fight {
+  color: var(--a-flame);
+  box-shadow:
+    0 0 0 2px var(--a-flame),
+    0 0 0 6px color-mix(in srgb, var(--a-flame) 22%, transparent),
+    inset 0 2px 0 0 color-mix(in srgb, var(--a-flame) 55%, transparent),
+    inset 0 -4px 0 0 var(--c0);
+}
+
+.gtheme-candle .btn-fight:hover {
+  color: var(--c0);
+  background: linear-gradient(var(--c4) 0 50%, var(--a-flame) 50%);
+}
+
+.gtheme-candle .btn.active {
+  color: var(--c0);
+  background: var(--a-flame);
+}
+
+.gtheme-candle .btn:active {
+  transform: translateY(2px);
+}
+
+.gtheme-candle .btn:disabled {
+  color: var(--c2);
+  filter: none;
+  transform: none;
+  background: color-mix(in srgb, var(--c0) 75%, transparent);
+  box-shadow: 0 0 0 2px var(--c1);
+}
+
+.gtheme-candle .hpbar {
+  background: var(--c1);
+  box-shadow: 0 0 0 2px var(--c2);
+}
+
+.gtheme-candle .tile {
+  box-shadow: 0 0 0 2px var(--c1);
+}
+
+.gtheme-candle .tile:hover,
+.gtheme-candle .tile.selected {
+  box-shadow: 0 0 0 2px var(--a-flame), inset 0 0 0 2px var(--c2);
+}
+
+.gtheme-candle .clicked {
+  animation: gcandle-flash 0.35s steps(1);
+}
+
+@keyframes gcandle-flash {
+  0% {
+    box-shadow:
+      0 0 0 2px var(--c4),
+      0 0 0 8px color-mix(in srgb, var(--a-flame) 45%, transparent);
+    filter: brightness(1.4);
+    transform: translateY(3px);
+  }
+  50% {
+    box-shadow:
+      0 0 0 2px var(--a-flame),
+      0 0 0 12px color-mix(in srgb, var(--a-flame) 15%, transparent);
+    filter: brightness(1.15);
+  }
+}
+
+.gtheme-candle .gfx {
+  --p1: var(--c4);
+  --p2: var(--a-flame);
+  --spread: 1.7;
+  --gfx-dur: 0.55s;
+}
+
+.gtheme-candle .gfx b {
+  width: 1px;
+  height: 1px;
+  box-shadow: 1px 0 var(--a-pink), -1px 0 var(--a-pink), 0 1px var(--a-pink), 0 -1px var(--a-pink);
+}
+
+/* =====================================================================
+   IDLE CRYSTAL – Bonbon-Knöpfe, alle Farben
+   ===================================================================== */
+
+.gtheme-idle {
+  --ink: #0f0420;
+  --muted: #b2caff;
+  --gold: #fac053;
+  --round:
+    0 0 0 var(--p) var(--ink),
+    0 calc(var(--p) * -2) 0 calc(var(--p) * -1) var(--ink),
+    0 calc(var(--p) * 2) 0 calc(var(--p) * -1) var(--ink),
+    calc(var(--p) * -2) 0 0 calc(var(--p) * -1) var(--ink),
+    calc(var(--p) * 2) 0 0 calc(var(--p) * -1) var(--ink);
+  --tx: 2px 0 0 var(--ink), -2px 0 0 var(--ink), 0 2px 0 var(--ink), 0 -2px 0 var(--ink), 0 4px 0 var(--ink);
+}
+
+.gtheme-idle .px-box {
+  background: color-mix(in srgb, var(--a-navy) 93%, transparent);
+  box-shadow:
+    inset 0 2px 0 0 var(--c2),
+    var(--round),
+    0 calc(var(--p) * 3) 0 calc(var(--p) * -1) color-mix(in srgb, var(--ink) 55%, transparent);
+}
+
+.gtheme-idle .card {
+  background: var(--a-navy);
+  box-shadow:
+    inset 0 0 0 calc(var(--p) * 1.5) var(--a-gold),
+    inset 0 0 0 calc(var(--p) * 2) var(--a-dgold),
+    var(--round);
+  overflow: hidden;
+}
+
+.gtheme-idle .card::after {
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: -60px;
+  width: 20px;
+  height: 300px;
+  background: color-mix(in srgb, #fff 30%, transparent);
+  transform: rotate(20deg);
+  animation: gidle-shine 3s steps(30) infinite;
+  pointer-events: none;
+}
+
+@keyframes gidle-shine {
+  0%,
+  40% {
+    left: -60px;
+  }
+  100% {
+    left: 200px;
+  }
+}
+
+.gtheme-idle .card-name {
+  color: #fff;
+  text-shadow: var(--tx);
+}
+
+.gtheme-idle .hud-label,
+.gtheme-idle .hud-units,
+.gtheme-idle .hud-time,
+.gtheme-idle .opt-label,
+.gtheme-idle h2 {
+  text-shadow: var(--tx);
+}
+
+.gtheme-idle .title .l {
+  text-shadow:
+    2px 0 0 var(--ink), -2px 0 0 var(--ink), 0 2px 0 var(--ink), 0 -2px 0 var(--ink),
+    2px 2px 0 var(--ink), -2px 2px 0 var(--ink), 0 5px 0 var(--ink);
+  animation: gidle-wave 1s steps(2) infinite;
+}
+
+.gtheme-idle .title .l:nth-child(9n + 1) { color: #ff5a5a; animation-delay: 0s; }
+.gtheme-idle .title .l:nth-child(9n + 2) { color: #ff9d4f; animation-delay: -0.11s; }
+.gtheme-idle .title .l:nth-child(9n + 3) { color: #f6e742; animation-delay: -0.22s; }
+.gtheme-idle .title .l:nth-child(9n + 4) { color: #acd470; animation-delay: -0.33s; }
+.gtheme-idle .title .l:nth-child(9n + 5) { color: #68ead8; animation-delay: -0.44s; }
+.gtheme-idle .title .l:nth-child(9n + 6) { color: #7ecff6; animation-delay: -0.55s; }
+.gtheme-idle .title .l:nth-child(9n + 7) { color: #bb7be0; animation-delay: -0.66s; }
+.gtheme-idle .title .l:nth-child(9n + 8) { color: #f4869e; animation-delay: -0.77s; }
+.gtheme-idle .title .l:nth-child(9n + 9) { color: #ffffff; animation-delay: -0.88s; }
+
+@keyframes gidle-wave {
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.gtheme-idle .btn {
+  --f: #478eec;
+  --h: #7ecff6;
+  --d: #1e2e77;
+  color: #fff;
+  text-shadow: var(--tx);
+  background: linear-gradient(var(--h) 0 42%, var(--f) 42%);
+  box-shadow:
+    inset 0 calc(var(--p) * -1.5) 0 0 var(--d),
+    inset 0 2px 0 0 color-mix(in srgb, #fff 55%, transparent),
+    var(--round),
+    0 calc(var(--p) * 2.5) 0 calc(var(--p) * -1) color-mix(in srgb, var(--ink) 55%, transparent);
+}
+
+.gtheme-idle .btn-fight {
+  --f: #4e8d2b;
+  --h: #8bbd52;
+  --d: #215c1f;
+  animation: gidle-breathe 1.4s steps(2) infinite;
+}
+
+@keyframes gidle-breathe {
+  50% {
+    filter: brightness(1.12);
+  }
+}
+
+.gtheme-idle .btn-secondary,
+.gtheme-idle .btn-small {
+  --f: #8545b0;
+  --h: #a15eca;
+  --d: #30114a;
+}
+
+.gtheme-idle .btn.active {
+  --f: #fb7f00;
+  --h: #fac053;
+  --d: #b15901;
+}
+
+.gtheme-idle .btn:hover {
+  filter: brightness(1.1);
+}
+
+.gtheme-idle .btn:active,
+.gtheme-idle .btn.active {
+  transform: translateY(var(--p));
+}
+
+.gtheme-idle .btn:disabled {
+  --f: #646870;
+  --h: #7b7e85;
+  --d: #393e47;
+  color: #c3c5c9;
+  filter: none;
+  animation: none;
+}
+
+.gtheme-idle .hpbar {
+  background: var(--ink);
+  box-shadow: 0 0 0 2px #fff;
+}
+
+.gtheme-idle .hpbar-fill {
+  background: repeating-linear-gradient(135deg, #7fdcff 0 6px, #3ec5ff 6px 12px);
+  background-size: 17px 17px;
+  animation: gidle-stripes 0.6s steps(4) infinite;
+}
+
+.gtheme-idle .right .hpbar-fill {
+  background: repeating-linear-gradient(135deg, #ffe38a 0 6px, #ffcc33 6px 12px);
+  background-size: 17px 17px;
+}
+
+@keyframes gidle-stripes {
+  to {
+    background-position: 17px 0;
+  }
+}
+
+.gtheme-idle .tile {
+  background: var(--a-navy);
+  box-shadow: var(--round);
+}
+
+.gtheme-idle .tile:hover,
+.gtheme-idle .tile.selected {
+  background: #1e2e77;
+  box-shadow:
+    inset 0 0 0 2px var(--a-gold),
+    var(--round);
+}
+
+.gtheme-idle .clicked {
+  animation: gidle-squash 0.3s steps(1);
+}
+
+@keyframes gidle-squash {
+  0% {
+    transform: scale(1.08, 0.86);
+  }
+  35% {
+    transform: scale(0.94, 1.08);
+  }
+  70% {
+    transform: scale(1.02, 0.98);
+  }
+}
+
+.gtheme-idle .gfx {
+  --p1: #f6e742;
+  --p2: #efa323;
+  --g: 12px;
+  --spread: 1.5;
+  --gfx-dur: 0.6s;
+}
+
+.gtheme-idle .gfx b {
+  width: 4px;
+  height: 4px;
+  left: -2px;
+  top: -2px;
+  box-shadow: 0 0 0 1px #0f0420;
+}
+
+.gtheme-idle .gfx em {
+  display: block;
+  position: absolute;
+  left: -8px;
+  top: -14px;
+  font-style: normal;
+  font-family: 'Weiholmir', monospace;
+  font-size: 8px;
+  color: #f6e742;
+  text-shadow: 1px 0 #0f0420, -1px 0 #0f0420, 0 1px #0f0420, 0 -1px #0f0420;
+  animation: gidle-plus 0.8s steps(8) forwards;
+}
+
+@keyframes gidle-plus {
+  to {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+}
+
+/* Schieberegler-Spur vom Panel absetzen */
+.gtheme input[type='range']::-webkit-slider-runnable-track {
+  background: var(--c1);
+  box-shadow: 0 0 0 2px var(--c0), inset 0 1px 0 0 var(--c2);
+}
+
+.gtheme input[type='range']::-moz-range-track {
+  background: var(--c1);
+  box-shadow: 0 0 0 2px var(--c0);
+}

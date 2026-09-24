@@ -2,6 +2,8 @@ import '@fontsource/vt323/400.css';
 import '@fontsource/silkscreen/400.css';
 import '@fontsource/silkscreen/700.css';
 import './style.css';
+import './fonts.css';
+import './game-themes.css';
 
 import { Application, TextureSource } from 'pixi.js';
 import { buildAtlas } from './art/atlas';
@@ -10,18 +12,25 @@ import { cardById } from './data/cards';
 import { BattleView } from './render/battleView';
 import { Battle, DT, FIELD_H, FIELD_W, type SideSetup } from './sim/battle';
 import { Ui } from './ui/ui';
+import { applyThemeDom, applyThemeRenderer, readThemeId } from './game/theme';
 
 TextureSource.defaultOptions.scaleMode = 'nearest';
 
 const SPEEDS = [1, 2, 4];
 
 async function boot(): Promise<void> {
+  // Optionales UI-Design aus dem UI-Lab (index.html?theme=…)
+  const themeId = readThemeId();
+  if (themeId) applyThemeDom(themeId);
+
   const stage = document.getElementById('stage')!;
   const app = new Application();
   await app.init({ background: '#16261a', antialias: false, resolution: 1, autoDensity: false, roundPixels: true, preference: 'webgl' });
   stage.appendChild(app.canvas);
 
   document.documentElement.style.setProperty('--panel-pattern', `url(${panelPattern('#2a2136', 3)})`);
+
+  const theme = themeId ? applyThemeRenderer(themeId, app) : null;
 
   const atlas = buildAtlas();
   const battle = new Battle(atlas.visOf);
@@ -66,6 +75,20 @@ async function boot(): Promise<void> {
       setupBattle();
     },
   });
+
+  // Zurück zum UI-Lab + Schlachtfeld-Palette an/aus
+  if (theme) {
+    const row = document.createElement('div');
+    row.className = 'row theme-row';
+    row.innerHTML = `<a class="btn btn-small" href="ui-lab.html#theme=${theme.id}&screen=menu">&lt; UI-Lab</a><button class="btn btn-small" id="btn-palette">Palette: an</button>`;
+    document.querySelector('.hud-center')!.appendChild(row);
+    const btn = document.getElementById('btn-palette')!;
+    const toggle = () => (btn.textContent = `Palette: ${theme.togglePalette() ? 'an' : 'aus'}`);
+    btn.addEventListener('click', toggle);
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'p' || e.key === 'P') toggle();
+    });
+  }
 
   // --- Skalierung: ganzzahlig, damit die Pixel scharf bleiben ------------------
   const resize = () => {

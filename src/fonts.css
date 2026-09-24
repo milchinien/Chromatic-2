@@ -1,0 +1,8 @@
+/* Pixel-Schrift „Weiholmir Standard" (aus assets/font/Weiholmir_full_sheet.png
+   erzeugt mit scripts/build_weiholmir.py). 1 Schriftpixel = font-size / 8,
+   pixelgenau bei 8 / 16 / 24 / 32 px. */
+@font-face {
+  font-family: 'Weiholmir';
+  src: url('../assets/font/Weiholmir.ttf') format('truetype');
+  font-display: block;
+}

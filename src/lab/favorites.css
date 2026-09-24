@@ -1,0 +1,831 @@
+/* =====================================================================
+   Ausgebaute Lieblings-Designs: Ridge (12), Lantern (13), Orbit (14),
+   Candle (20). Überschreibt die Grundversion in palette-themes*.css:
+   besser lesbare Schriften, mehr Details, Stile für Deck/Shop/Kampf.
+   ===================================================================== */
+
+/* =====================================================================
+   12 · RIDGE
+   ===================================================================== */
+
+.theme-ridge {
+  font-family: 'Silkscreen', monospace;
+  font-size: 8px;
+}
+
+.theme-ridge .logo-main,
+.theme-ridge .logo-num {
+  font-family: 'Tiny5', monospace;
+}
+
+/* Bergpanels: helle Kante oben wie Abendlicht auf dem Grat */
+.theme-ridge .panel,
+.theme-ridge .card,
+.theme-ridge .toast {
+  background: linear-gradient(var(--c1) 0 11px, var(--c0) 11px);
+}
+
+.theme-ridge .card.mini {
+  padding: 12px 5px 5px;
+}
+
+.theme-ridge .card-text {
+  line-height: 1.25;
+}
+
+/* Wegweiser: Pfahl hinter den Pfeil-Knöpfen */
+.theme-ridge.s-menu .menu {
+  position: relative;
+}
+
+.theme-ridge.s-menu .menu::before {
+  content: '';
+  position: absolute;
+  right: 44px;
+  top: -4px;
+  bottom: -44px;
+  width: 5px;
+  z-index: -1;
+  background: var(--c0);
+  box-shadow: inset 1px 0 0 0 var(--c1);
+}
+
+.theme-ridge.s-menu .menu::after {
+  content: '';
+  position: absolute;
+  right: 42px;
+  top: -8px;
+  width: 9px;
+  height: 5px;
+  background: var(--c0);
+}
+
+.theme-ridge .btn .ico {
+  color: var(--c3);
+}
+
+.theme-ridge .btn.primary .ico {
+  color: var(--c0);
+}
+
+.theme-ridge .btn:hover .ico {
+  color: var(--c4);
+}
+
+.theme-ridge .page-title {
+  font-family: 'Tiny5', monospace;
+  font-size: 16px;
+  color: var(--c4);
+  padding: 2px 16px 3px 12px;
+  background: var(--c0);
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 0 100%);
+}
+
+.theme-ridge .page-title em {
+  color: var(--c3);
+}
+
+.theme-ridge .page-title .ico {
+  color: var(--c4);
+}
+
+.theme-ridge .card.selected {
+  background: linear-gradient(var(--c3) 0 11px, var(--c0) 11px);
+}
+
+.theme-ridge .card-stars {
+  color: var(--c4);
+}
+
+.theme-ridge .scroll {
+  background: var(--c1);
+}
+
+.theme-ridge .scroll i {
+  background: var(--c3);
+}
+
+.theme-ridge.s-deck .deck-panel,
+.theme-ridge.s-shop .offers,
+.theme-ridge.s-shop .upgrades {
+  padding-top: 16px;
+}
+
+.theme-ridge .up-row {
+  padding: 2px 4px;
+  background: var(--c1);
+  clip-path: polygon(4px 0, 100% 0, 100% 100%, 4px 100%, 0 50%);
+}
+
+.theme-ridge .up-btn {
+  height: 16px;
+  padding: 0 5px 0 10px;
+}
+
+.theme-ridge .detail-actions .btn,
+.theme-ridge .shop-actions .btn,
+.theme-ridge .offer .buy {
+  height: 22px;
+}
+
+.theme-ridge .hud .army-head {
+  color: var(--c4);
+  text-shadow: 1px 1px var(--c0);
+}
+
+.theme-ridge .hud .army-head b {
+  font-family: 'Tiny5', monospace;
+  font-size: 16px;
+}
+
+.theme-ridge .bar {
+  height: 9px;
+  background: var(--c0);
+  box-shadow: none;
+  clip-path: polygon(4px 0, calc(100% - 4px) 0, 100% 50%, calc(100% - 4px) 100%, 4px 100%, 0 50%);
+}
+
+.theme-ridge .army.you .bar i {
+  background: var(--c3);
+}
+
+.theme-ridge .army.foe .bar i {
+  background: var(--c2);
+}
+
+.theme-ridge .timer {
+  font-family: 'Tiny5', monospace;
+  font-size: 24px;
+  color: var(--c4);
+  text-shadow: 0 2px var(--c1), 0 4px var(--c0);
+}
+
+.theme-ridge .hud-sub {
+  color: var(--c0);
+}
+
+.theme-ridge .bonus-badge {
+  background: var(--c0);
+  color: var(--c3);
+  clip-path: polygon(6px 0, calc(100% - 6px) 0, 100% 50%, calc(100% - 6px) 100%, 6px 100%, 0 50%);
+  padding: 3px 12px;
+}
+
+.theme-ridge .slot-label {
+  padding: 1px 8px;
+  background: var(--c0);
+  color: var(--c3);
+  clip-path: polygon(4px 0, calc(100% - 4px) 0, 100% 50%, calc(100% - 4px) 100%, 4px 100%, 0 50%);
+}
+
+.theme-ridge .controls {
+  padding-top: 16px;
+}
+
+.theme-ridge .controls .fight {
+  height: 26px;
+}
+
+.theme-ridge .btn.small {
+  height: 16px;
+  padding: 0 6px 0 12px;
+}
+
+.theme-ridge.fighting .fight {
+  background: var(--c2);
+  color: var(--c4);
+}
+
+/* =====================================================================
+   13 · LANTERN
+   ===================================================================== */
+
+.theme-lantern {
+  font-family: 'Jersey 10', monospace;
+  font-size: 15px;
+}
+
+.theme-lantern .btn,
+.theme-lantern .seg {
+  font-weight: normal;
+  font-size: 17px;
+  letter-spacing: 1px;
+}
+
+.theme-lantern .seg {
+  font-size: 14px;
+}
+
+.theme-lantern .card-top,
+.theme-lantern .panel-title {
+  font-weight: normal;
+  font-size: 16px;
+}
+
+.theme-lantern .card-type {
+  font-size: 13px;
+}
+
+.theme-lantern .card-text {
+  font-size: 13px;
+  line-height: 0.95;
+}
+
+.theme-lantern .stat {
+  font-weight: normal;
+  font-size: 15px;
+}
+
+.theme-lantern .door,
+.theme-lantern .stat-chip {
+  font-weight: normal;
+  font-size: 14px;
+}
+
+/* Logo als Wirtshausschild an Ketten */
+.theme-lantern.s-menu .logo {
+  justify-self: start;
+  padding: 4px 16px 8px;
+  background:
+    linear-gradient(var(--c4), var(--c4)) 4px 4px / 2px 2px no-repeat,
+    linear-gradient(var(--c4), var(--c4)) right 4px top 4px / 2px 2px no-repeat,
+    repeating-linear-gradient(180deg, transparent 0 9px, color-mix(in srgb, var(--c0) 40%, transparent) 9px 10px),
+    var(--c1);
+  box-shadow:
+    0 0 0 2px var(--c0),
+    inset 1px 1px 0 0 var(--c2),
+    inset 0 0 0 5px var(--c1),
+    inset 0 0 0 6px var(--c2),
+    4px 5px 0 1px color-mix(in srgb, var(--c0) 70%, transparent);
+}
+
+.theme-lantern.s-menu .logo::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: 18px;
+  right: 18px;
+  height: 18px;
+  background:
+    repeating-linear-gradient(180deg, var(--c3) 0 2px, transparent 2px 4px) left / 2px 100% no-repeat,
+    repeating-linear-gradient(180deg, var(--c3) 0 2px, transparent 2px 4px) right / 2px 100% no-repeat;
+}
+
+.theme-lantern .logo-main,
+.theme-lantern .logo-num {
+  font-size: 52px;
+  animation: lantern-glow 1.6s steps(1) infinite;
+}
+
+@keyframes lantern-glow {
+  50% {
+    color: var(--c3);
+  }
+}
+
+.theme-lantern .logo-num {
+  animation-name: none;
+}
+
+.theme-lantern.s-menu .logo-sub {
+  margin-top: 2px;
+}
+
+/* Ketten über Panels */
+.theme-lantern .doors-panel::before,
+.theme-lantern .deck-panel::before,
+.theme-lantern .offers::before,
+.theme-lantern .upgrades::before {
+  content: '';
+  position: absolute;
+  top: -12px;
+  left: 20px;
+  right: 20px;
+  height: 10px;
+  background:
+    repeating-linear-gradient(180deg, var(--c3) 0 2px, transparent 2px 4px) left / 2px 100% no-repeat,
+    repeating-linear-gradient(180deg, var(--c3) 0 2px, transparent 2px 4px) right / 2px 100% no-repeat;
+}
+
+.theme-lantern .page-title {
+  font-size: 26px;
+  color: var(--c4);
+  text-shadow: 2px 0 var(--c0), -2px 0 var(--c0), 0 2px var(--c0), 0 -2px var(--c0), 0 4px var(--c1);
+}
+
+.theme-lantern .page-title .ico {
+  color: var(--c3);
+}
+
+.theme-lantern .card.mini {
+  padding: 7px;
+}
+
+.theme-lantern {
+  --art-pos-mini: -440px -150px;
+}
+
+.theme-lantern .card.selected {
+  box-shadow:
+    0 0 0 2px var(--c4),
+    inset 1px 1px 0 0 var(--c2),
+    inset 0 0 0 6px var(--c1),
+    inset 0 0 0 7px var(--c3);
+}
+
+.theme-lantern .card-stars {
+  color: var(--c4);
+}
+
+.theme-lantern.s-deck .deck-panel,
+.theme-lantern.s-shop .offers,
+.theme-lantern.s-shop .upgrades {
+  padding: 11px 12px 12px;
+}
+
+.theme-lantern .up-row {
+  padding: 1px 3px;
+  background: var(--c0);
+  box-shadow: inset 0 0 0 1px var(--c2);
+}
+
+.theme-lantern .up-btn {
+  height: 16px;
+  font-size: 13px;
+  padding: 0 5px;
+}
+
+.theme-lantern .hud .army {
+  padding: 5px 8px 7px;
+  background: var(--c1);
+  box-shadow: 0 0 0 2px var(--c0), inset 1px 1px 0 0 var(--c2);
+}
+
+.theme-lantern .hud .army-head b {
+  font-size: 20px;
+  color: var(--c4);
+}
+
+.theme-lantern .bar {
+  height: 8px;
+  background: var(--c0);
+  box-shadow: 0 0 0 1px var(--c2);
+}
+
+.theme-lantern .army.you .bar i {
+  background: repeating-linear-gradient(90deg, var(--c4) 0 6px, var(--c3) 6px 7px);
+}
+
+.theme-lantern .army.foe .bar i {
+  background: repeating-linear-gradient(90deg, var(--c2) 0 6px, var(--c1) 6px 7px);
+}
+
+.theme-lantern .timer {
+  font-size: 30px;
+  color: var(--c4);
+  text-shadow: 2px 0 var(--c0), -2px 0 var(--c0), 0 2px var(--c0), 0 -2px var(--c0);
+}
+
+.theme-lantern .hud-sub .ico {
+  color: var(--c4);
+}
+
+.theme-lantern .bonus-badge {
+  background: var(--c1);
+  color: var(--c4);
+  box-shadow: 0 0 0 2px var(--c0), inset 1px 1px 0 0 var(--c2);
+}
+
+.theme-lantern .slot-label {
+  padding: 0 6px;
+  font-size: 13px;
+  color: var(--c0);
+  background: var(--c3);
+  box-shadow: 0 0 0 1px var(--c0);
+}
+
+.theme-lantern .controls .fight {
+  height: 28px;
+  font-size: 20px;
+}
+
+.theme-lantern .btn.small {
+  height: 18px;
+  font-size: 14px;
+  padding: 0 8px;
+}
+
+.theme-lantern.fighting .fight {
+  --b: var(--c2);
+  color: var(--c4);
+}
+
+/* =====================================================================
+   14 · ORBIT
+   ===================================================================== */
+
+.theme-orbit {
+  font-family: 'VT323', monospace;
+  font-size: 15px;
+}
+
+.theme-orbit .logo-main,
+.theme-orbit .logo-num,
+.theme-orbit .page-title,
+.theme-orbit .timer {
+  font-family: 'Tiny5', monospace;
+}
+
+.theme-orbit .btn {
+  font-size: 17px;
+  letter-spacing: 2px;
+}
+
+.theme-orbit .card-text {
+  line-height: 0.9;
+}
+
+.theme-orbit .stat {
+  font-family: 'VT323', monospace;
+  font-weight: normal;
+  font-size: 16px;
+}
+
+/* Blinkender Cursor hinter dem aktiven Menüpunkt */
+.theme-orbit .btn:hover > span:not(.price)::after {
+  content: '_';
+  animation: blink 0.8s steps(1) infinite;
+}
+
+/* Scanlinie läuft über Panels */
+.theme-orbit .panel,
+.theme-orbit .card:not(.mini) {
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-orbit .panel::after,
+.theme-orbit .card:not(.mini)::after {
+  content: '';
+  position: absolute;
+  left: 1px;
+  right: 1px;
+  top: 0;
+  height: 1px;
+  background: color-mix(in srgb, var(--c3) 45%, transparent);
+  animation: orbit-scan 3.2s steps(80) infinite;
+  pointer-events: none;
+}
+
+@keyframes orbit-scan {
+  to {
+    top: 100%;
+  }
+}
+
+.theme-orbit .foot .blink::before {
+  content: 'SYS > ';
+  color: var(--c2);
+}
+
+.theme-orbit .foot .ver::before {
+  content: 'SECTOR 7-G · ';
+  color: var(--c2);
+}
+
+.theme-orbit .foot {
+  white-space: nowrap;
+  letter-spacing: 1px;
+}
+
+.theme-orbit .foot > span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.theme-orbit .card-type {
+  letter-spacing: 0;
+}
+
+.theme-orbit .page-title {
+  font-size: 18px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: var(--c4);
+}
+
+.theme-orbit .page-title em {
+  font-family: 'VT323', monospace;
+  font-size: 15px;
+  letter-spacing: 1px;
+  color: var(--c3);
+}
+
+.theme-orbit .page-title .ico {
+  color: var(--c3);
+}
+
+.theme-orbit .card.mini {
+  padding: 5px;
+}
+
+.theme-orbit .card.selected {
+  background: var(--brk), var(--c1);
+}
+
+.theme-orbit .card-stars {
+  color: var(--c3);
+}
+
+.theme-orbit .up-row {
+  padding: 1px 4px;
+  box-shadow: inset 0 -1px 0 0 var(--c1);
+}
+
+.theme-orbit .up-btn {
+  height: 16px;
+  font-size: 14px;
+  padding: 0 4px;
+  box-shadow: inset 0 0 0 1px var(--c2);
+}
+
+.theme-orbit .offer .buy,
+.theme-orbit .detail-actions .btn,
+.theme-orbit .shop-actions .btn {
+  box-shadow: inset 0 0 0 1px var(--c2);
+}
+
+.theme-orbit .offer .buy.primary,
+.theme-orbit .detail-actions .btn.primary {
+  box-shadow: inset 0 0 0 1px var(--c4);
+}
+
+.theme-orbit .hud .army-head {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--c3);
+}
+
+.theme-orbit .hud .army-head b {
+  color: var(--c4);
+  font-size: 18px;
+}
+
+.theme-orbit .bar {
+  height: 6px;
+  background: repeating-linear-gradient(90deg, var(--c1) 0 3px, transparent 3px 4px);
+  box-shadow: none;
+}
+
+.theme-orbit .bar i {
+  background: repeating-linear-gradient(90deg, var(--c4) 0 3px, transparent 3px 4px);
+}
+
+.theme-orbit .army.foe .bar i {
+  background: repeating-linear-gradient(90deg, var(--c2) 0 3px, transparent 3px 4px);
+}
+
+.theme-orbit .timer {
+  font-size: 22px;
+  letter-spacing: 4px;
+  color: var(--c4);
+}
+
+.theme-orbit .hud-sub {
+  color: var(--c2);
+}
+
+.theme-orbit .hud-sub .ico {
+  color: var(--c3);
+}
+
+.theme-orbit .bonus-badge {
+  background: var(--brk), color-mix(in srgb, var(--c0) 80%, transparent);
+  color: var(--c3);
+  letter-spacing: 1px;
+}
+
+.theme-orbit .slot-label {
+  padding: 0 4px;
+  background: color-mix(in srgb, var(--c0) 85%, transparent);
+  color: var(--c3);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.theme-orbit .slot-label::before {
+  content: '[ ';
+  color: var(--c2);
+}
+
+.theme-orbit .slot-label::after {
+  content: ' ]';
+  color: var(--c2);
+}
+
+.theme-orbit .controls .fight {
+  height: 26px;
+  font-size: 20px;
+  box-shadow: inset 0 0 0 1px var(--c4);
+}
+
+.theme-orbit .btn.small {
+  height: 18px;
+  font-size: 15px;
+  padding: 0 6px;
+  box-shadow: inset 0 0 0 1px var(--c2);
+}
+
+.theme-orbit.fighting .fight {
+  background: var(--c3);
+  color: var(--c0);
+}
+
+/* =====================================================================
+   20 · CANDLE
+   ===================================================================== */
+
+.theme-candle {
+  font-family: 'Jersey 10', monospace;
+  font-size: 15px;
+}
+
+.theme-candle .btn {
+  font-size: 19px;
+  letter-spacing: 1px;
+}
+
+.theme-candle .card-type {
+  font-size: 14px;
+}
+
+.theme-candle .card-text {
+  font-size: 13px;
+  line-height: 0.95;
+}
+
+.theme-candle .stat {
+  font-size: 15px;
+}
+
+.theme-candle .door {
+  font-size: 14px;
+}
+
+.theme-candle .panel-title {
+  font-size: 16px;
+  letter-spacing: 2px;
+}
+
+/* Flackerndes Logo */
+.theme-candle .logo-main {
+  animation: candle-flicker 0.9s steps(1) infinite;
+}
+
+@keyframes candle-flicker {
+  33% {
+    text-shadow: 0 2px var(--c3), 0 4px var(--c2), 0 6px var(--c1), 0 -1px color-mix(in srgb, var(--a-flame) 45%, transparent);
+  }
+  66% {
+    text-shadow: 0 2px var(--c3), 0 4px var(--c2), 0 6px var(--c1);
+  }
+}
+
+.theme-candle .logo-num {
+  animation: candle-num 0.5s steps(1) infinite;
+}
+
+@keyframes candle-num {
+  50% {
+    color: var(--c4);
+  }
+}
+
+.theme-candle .page-title {
+  font-size: 24px;
+  letter-spacing: 3px;
+  color: var(--c4);
+  text-shadow: 0 2px var(--c2), 0 3px var(--c1);
+}
+
+.theme-candle .page-title em {
+  font-size: 15px;
+  color: var(--c3);
+  text-shadow: none;
+}
+
+.theme-candle .page-title .ico {
+  color: var(--a-flame);
+}
+
+.theme-candle .card.mini {
+  padding: 5px;
+}
+
+.theme-candle .card.selected {
+  box-shadow: 0 0 0 1px var(--a-flame), inset 0 0 0 1px var(--c2);
+}
+
+.theme-candle .card-stars {
+  color: var(--a-flame);
+}
+
+.theme-candle .up-row {
+  padding: 1px 4px;
+  box-shadow: inset 0 0 0 1px var(--c1);
+}
+
+.theme-candle .up-btn {
+  height: 16px;
+  font-size: 14px;
+  padding: 0 4px;
+  color: var(--a-flame);
+  box-shadow: inset 0 0 0 1px var(--c2);
+}
+
+.theme-candle .up-btn .ico {
+  display: inline-block;
+  color: var(--a-flame);
+}
+
+.theme-candle .offer .buy,
+.theme-candle .detail-actions .btn,
+.theme-candle .shop-actions .btn {
+  justify-content: center;
+  padding: 0 8px;
+  box-shadow: inset 0 0 0 1px var(--c2);
+}
+
+.theme-candle .offer .buy .ico,
+.theme-candle .price .ico,
+.theme-candle .detail-actions .btn .ico,
+.theme-candle .shop-actions .btn .ico {
+  display: inline-block;
+  color: var(--a-flame);
+}
+
+.theme-candle .hud .army-head {
+  color: var(--c3);
+  letter-spacing: 1px;
+}
+
+.theme-candle .hud .army-head b {
+  font-size: 20px;
+  color: var(--c4);
+}
+
+.theme-candle .bar {
+  height: 6px;
+  background: var(--c1);
+  box-shadow: 0 0 0 1px var(--c2);
+}
+
+.theme-candle .army.you .bar i {
+  background: linear-gradient(90deg, var(--c3), var(--c4));
+}
+
+.theme-candle .army.foe .bar i {
+  background: var(--a-violet);
+}
+
+.theme-candle .timer {
+  font-size: 30px;
+  color: var(--a-flame);
+  text-shadow: 0 2px var(--c1);
+}
+
+.theme-candle .hud-sub {
+  color: var(--c3);
+}
+
+.theme-candle .bonus-badge {
+  color: var(--c3);
+  background: color-mix(in srgb, var(--c0) 80%, transparent);
+  box-shadow: 0 0 0 1px var(--c2);
+}
+
+.theme-candle .slot-label {
+  color: var(--c3);
+  letter-spacing: 2px;
+}
+
+.theme-candle .controls .fight {
+  height: 26px;
+  font-size: 22px;
+  color: var(--a-flame);
+  box-shadow: inset 0 0 0 1px var(--c3);
+}
+
+.theme-candle .controls .fight .ico {
+  display: inline-block;
+}
+
+.theme-candle .btn.small {
+  height: 18px;
+  font-size: 15px;
+  padding: 0 6px;
+}
+
+.theme-candle.fighting .fight {
+  background: var(--c1);
+}

@@ -1,0 +1,1820 @@
+/* =====================================================================
+   Paletten-Designs (9–16). Jede Variante nutzt nur ihre 5 Farben:
+   --c0 (dunkelste) … --c4 (hellste). Die Variablen und die Hintergrund-
+   szene (--scene) setzt main.ts pro Bildschirm.
+   ===================================================================== */
+
+.pal .bg {
+  background: var(--scene) 0 0 / 640px 360px;
+}
+
+.pal .card-art {
+  background: var(--scene) var(--art-pos, -300px -150px) / 640px 360px;
+}
+
+.pal .ico.empty {
+  opacity: 0.35;
+}
+
+/* =====================================================================
+   9 · SLIMY – hohle Schrift, Kugel-Knöpfe
+   ===================================================================== */
+
+.theme-slimy {
+  --art-pos: -302px -162px;
+  font-family: 'Silkscreen', monospace;
+  font-size: 8px;
+  color: var(--c4);
+}
+
+.theme-slimy .panel,
+.theme-slimy .stat-chip,
+.theme-slimy .card,
+.theme-slimy .btn,
+.theme-slimy .seg,
+.theme-slimy .door,
+.theme-slimy .toast {
+  --f: var(--c0);
+  --ln: var(--c2);
+  background: var(--f);
+  box-shadow:
+    inset 0 0 0 1px var(--c1),
+    0 0 0 1px var(--ln),
+    0 -3px 0 -1px var(--ln),
+    0 3px 0 -1px var(--ln),
+    -3px 0 0 -1px var(--ln),
+    3px 0 0 -1px var(--ln);
+}
+
+.theme-slimy .stat-chip {
+  height: 16px;
+}
+
+.theme-slimy .lives .ico,
+.theme-slimy .world .ico,
+.theme-slimy .door-stars {
+  color: var(--c3);
+}
+
+.theme-slimy .logo-main,
+.theme-slimy .logo-num {
+  font-weight: 700;
+  font-size: 40px;
+  letter-spacing: 2px;
+  color: var(--c0);
+  text-shadow:
+    2px 0 var(--c3), -2px 0 var(--c3), 0 2px var(--c3), 0 -2px var(--c3),
+    2px 2px var(--c3), -2px -2px var(--c3), 2px -2px var(--c3), -2px 2px var(--c3),
+    0 5px var(--c1), 2px 5px var(--c1), -2px 5px var(--c1);
+}
+
+.theme-slimy .logo-num {
+  color: var(--c3);
+  text-shadow: 0 4px var(--c1);
+}
+
+.theme-slimy .logo-sub {
+  margin-top: 10px;
+  color: var(--c3);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+
+.theme-slimy .btn {
+  height: 24px;
+  padding: 0 10px 0 4px;
+  gap: 8px;
+  text-transform: uppercase;
+}
+
+.theme-slimy .btn .ico {
+  box-sizing: content-box;
+  padding: 4px;
+  background: var(--c2);
+  color: var(--c4);
+  clip-path: var(--pixel-circle);
+}
+
+.theme-slimy .btn:hover,
+.theme-slimy .seg:hover {
+  --f: var(--c1);
+  --ln: var(--c3);
+}
+
+.theme-slimy .btn:hover .ico {
+  background: var(--c3);
+  color: var(--c0);
+}
+
+.theme-slimy .btn:active {
+  transform: translateY(1px);
+}
+
+.theme-slimy .btn.primary,
+.theme-slimy .seg.active {
+  --f: var(--c3);
+  --ln: var(--c4);
+  color: var(--c0);
+}
+
+.theme-slimy .btn.primary .ico {
+  background: var(--c0);
+  color: var(--c3);
+}
+
+.theme-slimy .btn:disabled {
+  --ln: var(--c1);
+  color: var(--c2);
+}
+
+.theme-slimy .btn:disabled .ico {
+  background: var(--c1);
+  color: var(--c2);
+}
+
+.theme-slimy .seg {
+  padding: 3px 6px !important;
+}
+
+.theme-slimy .panel {
+  padding: 8px;
+}
+
+.theme-slimy .panel-title {
+  color: var(--c3);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.theme-slimy .door {
+  text-transform: uppercase;
+}
+
+.theme-slimy .door > .ico {
+  --is: 2px;
+  color: var(--c3);
+}
+
+.theme-slimy .door.selected {
+  --f: var(--c1);
+  --ln: var(--c4);
+}
+
+.theme-slimy .card {
+  padding: 6px;
+}
+
+.theme-slimy .card-class,
+.theme-slimy .card-troops {
+  color: var(--c3);
+}
+
+.theme-slimy .card-art {
+  margin-top: 5px;
+  box-shadow: 0 0 0 1px var(--c2);
+}
+
+.theme-slimy .card-type {
+  margin-top: 5px;
+  color: var(--c3);
+}
+
+.theme-slimy .card-text {
+  margin-top: 3px;
+  line-height: 1.2;
+}
+
+.theme-slimy .card-stats {
+  margin-top: 4px;
+}
+
+.theme-slimy .stat {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  font-weight: 700;
+  clip-path: var(--pixel-circle);
+}
+
+.theme-slimy .stat .ico {
+  display: none;
+}
+
+.theme-slimy .stat.dmg {
+  background: var(--c2);
+  box-shadow: inset -3px -3px 0 0 var(--c1), inset 3px 3px 0 0 var(--c3);
+}
+
+.theme-slimy .stat.hp {
+  background: var(--c3);
+  color: var(--c0);
+  box-shadow: inset -3px -3px 0 0 var(--c2), inset 3px 3px 0 0 var(--c4);
+}
+
+.theme-slimy .foot {
+  color: var(--c2);
+  padding: 0 4px;
+}
+
+/* =====================================================================
+   10 · SUNSET BEACH – flache, sonnige Blöcke
+   ===================================================================== */
+
+.theme-sunset {
+  --art-pos: -272px -196px;
+  font-family: 'Pixelify Sans', monospace;
+  font-size: 11px;
+  color: var(--c0);
+  grid-template-columns: 176px 1fr 128px;
+  grid-template-areas:
+    'top top top'
+    'logo logo logo'
+    'doors menu card'
+    'foot foot foot';
+}
+
+.theme-sunset .panel,
+.theme-sunset .stat-chip,
+.theme-sunset .card,
+.theme-sunset .toast {
+  background: var(--c4);
+  box-shadow: inset 0 -3px 0 0 var(--c3);
+}
+
+.theme-sunset .stat-chip {
+  height: 18px;
+  font-weight: 700;
+}
+
+.theme-sunset .lives .ico {
+  color: var(--c1);
+}
+
+.theme-sunset .gold .ico,
+.theme-sunset .world .ico {
+  color: var(--c2);
+}
+
+.theme-sunset .logo {
+  justify-self: center;
+  text-align: center;
+}
+
+.theme-sunset .logo-line {
+  justify-content: center;
+  align-items: center;
+}
+
+.theme-sunset .logo-main {
+  font-family: 'Silkscreen', monospace;
+  font-weight: 700;
+  font-size: 38px;
+  color: var(--c4);
+  text-shadow: 0 3px var(--c2), 0 6px var(--c1), 0 9px var(--c0);
+}
+
+.theme-sunset .logo-num {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  font-family: 'Silkscreen', monospace;
+  font-weight: 700;
+  font-size: 24px;
+  background: var(--c3);
+  color: var(--c0);
+  clip-path: var(--pixel-circle);
+  box-shadow: inset 0 -4px 0 0 var(--c2);
+}
+
+.theme-sunset .logo-sub {
+  margin-top: 12px;
+  color: var(--c0);
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.theme-sunset .menu {
+  align-items: center;
+  justify-self: center;
+  gap: 5px;
+}
+
+.theme-sunset .menu .btn {
+  width: 160px;
+}
+
+.theme-sunset .btn,
+.theme-sunset .seg {
+  justify-content: center;
+  height: 26px;
+  padding: 0 12px 3px;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--c4);
+  background: var(--c2);
+  box-shadow: inset 0 -3px 0 0 var(--c1);
+}
+
+.theme-sunset .seg {
+  height: 18px;
+  font-size: 10px;
+  padding: 0 6px 3px !important;
+}
+
+.theme-sunset .btn:hover,
+.theme-sunset .seg:hover {
+  background: var(--c3);
+  color: var(--c0);
+  box-shadow: inset 0 -3px 0 0 var(--c2);
+}
+
+.theme-sunset .btn:active {
+  transform: translateY(2px);
+  box-shadow: inset 0 -1px 0 0 var(--c2);
+}
+
+.theme-sunset .btn.primary,
+.theme-sunset .seg.active {
+  background: var(--c1);
+  box-shadow: inset 0 -3px 0 0 var(--c0);
+  color: var(--c4);
+}
+
+.theme-sunset .btn:disabled {
+  background: var(--c4);
+  color: var(--c3);
+  box-shadow: inset 0 -3px 0 0 var(--c3);
+}
+
+.theme-sunset .panel {
+  padding: 8px 8px 11px;
+  align-self: start;
+}
+
+.theme-sunset .panel-title {
+  text-align: center;
+  font-weight: 700;
+  font-size: 12px;
+  margin-bottom: 8px;
+  color: var(--c1);
+}
+
+.theme-sunset .door {
+  background: var(--c3);
+  font-weight: 700;
+  box-shadow: inset 0 -3px 0 0 var(--c2);
+  padding: 6px 2px 8px;
+}
+
+.theme-sunset .door > .ico {
+  --is: 2px;
+  color: var(--c1);
+}
+
+.theme-sunset .door-stars {
+  color: var(--c4);
+}
+
+.theme-sunset .door.selected {
+  background: var(--c1);
+  color: var(--c4);
+  box-shadow: inset 0 -3px 0 0 var(--c0);
+}
+
+.theme-sunset .door.selected > .ico {
+  color: var(--c3);
+}
+
+.theme-sunset .card {
+  padding: 0 0 7px;
+}
+
+.theme-sunset .card-top {
+  height: 20px;
+  padding: 0 6px;
+  background: var(--c1);
+  color: var(--c4);
+  font-weight: 700;
+}
+
+.theme-sunset .card-art {
+  margin: 0;
+}
+
+.theme-sunset .card-type {
+  margin: 5px 6px 0;
+  color: var(--c1);
+  font-size: 10px;
+}
+
+.theme-sunset .card-text {
+  margin: 3px 6px 0;
+  font-size: 9px;
+  line-height: 1.15;
+}
+
+.theme-sunset .card-stats {
+  margin: 5px 6px 0;
+}
+
+.theme-sunset .stat {
+  padding: 2px 6px 4px;
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--c4);
+}
+
+.theme-sunset .stat.dmg {
+  background: var(--c1);
+  box-shadow: inset 0 -2px 0 0 var(--c0);
+}
+
+.theme-sunset .stat.hp {
+  background: var(--c2);
+  box-shadow: inset 0 -2px 0 0 var(--c1);
+}
+
+.theme-sunset .foot {
+  color: var(--c0);
+  font-weight: 700;
+  padding: 0 4px;
+}
+
+/* =====================================================================
+   11 · NOIR – Filmbalken, schräge Knöpfe
+   ===================================================================== */
+
+.theme-noir {
+  --art-pos: -350px -60px;
+  font-family: 'Jersey 10', monospace;
+  font-size: 14px;
+  color: var(--c4);
+}
+
+.theme-noir .bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  box-shadow:
+    inset 0 34px 0 0 var(--c0),
+    inset 0 -24px 0 0 var(--c0);
+}
+
+.theme-noir .stat-chip {
+  color: var(--c3);
+  font-size: 16px;
+}
+
+.theme-noir .ico {
+  color: var(--c3);
+}
+
+.theme-noir .logo-main {
+  font-size: 60px;
+  letter-spacing: 4px;
+  color: var(--c4);
+  text-shadow: 4px 4px var(--c1);
+}
+
+.theme-noir .logo-num {
+  font-size: 60px;
+  color: var(--c3);
+  text-shadow: 4px 4px var(--c1);
+}
+
+.theme-noir .logo-sub {
+  color: var(--c3);
+  font-size: 16px;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+}
+
+.theme-noir .logo-sub::before,
+.theme-noir .logo-sub::after {
+  content: ' — ';
+  color: var(--c2);
+}
+
+.theme-noir .menu {
+  gap: 7px;
+  filter: drop-shadow(4px 4px 0 var(--c1));
+}
+
+.theme-noir .btn,
+.theme-noir .seg {
+  height: 24px;
+  padding: 0 16px 0 14px;
+  font-size: 20px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--c3);
+  background: var(--c0);
+  clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+}
+
+.theme-noir .seg {
+  height: 18px;
+  font-size: 16px;
+  padding: 0 10px !important;
+  clip-path: polygon(5px 0, 100% 0, calc(100% - 5px) 100%, 0 100%);
+}
+
+.theme-noir .btn .ico {
+  color: var(--c2);
+}
+
+.theme-noir .btn:hover,
+.theme-noir .seg:hover,
+.theme-noir .seg.active {
+  background: var(--c3);
+  color: var(--c0);
+}
+
+.theme-noir .btn:hover .ico {
+  color: var(--c0);
+}
+
+.theme-noir .btn:hover {
+  transform: translateX(4px);
+}
+
+.theme-noir .btn.primary {
+  background: var(--c4);
+  color: var(--c0);
+}
+
+.theme-noir .btn.primary .ico {
+  color: var(--c1);
+}
+
+.theme-noir .btn:disabled {
+  color: var(--c1);
+  background: var(--c0);
+  transform: none;
+}
+
+.theme-noir .panel,
+.theme-noir .toast {
+  background: var(--c0);
+  box-shadow:
+    0 0 0 1px var(--c2),
+    5px 5px 0 0 var(--c1);
+}
+
+.theme-noir .panel {
+  padding: 8px;
+}
+
+.theme-noir .panel-title {
+  color: var(--c4);
+  font-size: 18px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.theme-noir .door {
+  font-size: 16px;
+  text-transform: uppercase;
+  color: var(--c3);
+  box-shadow: inset 0 0 0 1px var(--c1);
+}
+
+.theme-noir .door > .ico {
+  --is: 2px;
+}
+
+.theme-noir .door:hover {
+  box-shadow: inset 0 0 0 1px var(--c3);
+}
+
+.theme-noir .door.selected {
+  background: var(--c3);
+  color: var(--c0);
+}
+
+.theme-noir .door.selected .ico {
+  color: var(--c0);
+}
+
+.theme-noir .card {
+  padding: 5px;
+  background: var(--c4);
+  color: var(--c0);
+  box-shadow:
+    0 0 0 3px var(--c0),
+    6px 6px 0 3px var(--c1);
+}
+
+.theme-noir .card-top {
+  font-size: 18px;
+  text-transform: uppercase;
+}
+
+.theme-noir .card-top .ico {
+  color: var(--c1);
+}
+
+.theme-noir .card-troops {
+  color: var(--c1);
+}
+
+.theme-noir .card-art {
+  margin-top: 3px;
+  box-shadow: 0 0 0 1px var(--c0);
+}
+
+.theme-noir .card-type {
+  margin-top: 4px;
+  color: var(--c2);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.theme-noir .card-text {
+  margin-top: 2px;
+  line-height: 0.95;
+}
+
+.theme-noir .stat {
+  padding: 1px 6px;
+  font-size: 18px;
+  background: var(--c0);
+  color: var(--c4);
+}
+
+.theme-noir .stat .ico {
+  color: var(--c3);
+}
+
+.theme-noir .foot {
+  color: var(--c2);
+  font-size: 14px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+/* =====================================================================
+   12 · RIDGE – Berge, Menü rechts, Pfeil-Knöpfe
+   ===================================================================== */
+
+.theme-ridge {
+  --art-pos: -372px -134px;
+  --ridge: polygon(0 8px, 9% 3px, 17% 7px, 28% 0, 40% 6px, 52% 2px, 63% 8px, 74% 1px, 86% 6px, 100% 2px, 100% 100%, 0 100%);
+  font-family: 'Tiny5', monospace;
+  font-size: 10px;
+  color: var(--c4);
+  grid-template-columns: 128px 176px 1fr;
+  grid-template-areas:
+    'top top top'
+    'card logo logo'
+    'card doors menu'
+    'foot foot foot';
+}
+
+.theme-ridge .stat-chip {
+  background: var(--c0);
+  clip-path: polygon(4px 0, calc(100% - 4px) 0, 100% 50%, calc(100% - 4px) 100%, 4px 100%, 0 50%);
+  padding: 0 9px;
+  height: 16px;
+}
+
+.theme-ridge .lives .ico {
+  color: var(--c2);
+}
+
+.theme-ridge .gold .ico,
+.theme-ridge .world .ico,
+.theme-ridge .door-stars {
+  color: var(--c4);
+}
+
+.theme-ridge .logo {
+  justify-self: end;
+  text-align: right;
+}
+
+.theme-ridge .logo-line {
+  justify-content: flex-end;
+}
+
+.theme-ridge .logo-main,
+.theme-ridge .logo-num {
+  font-size: 46px;
+  letter-spacing: 2px;
+  color: var(--c4);
+  text-shadow: 0 3px var(--c2), 0 6px var(--c1), 0 9px var(--c0);
+}
+
+.theme-ridge .logo-num {
+  color: var(--c3);
+}
+
+.theme-ridge .logo-sub {
+  margin-top: 12px;
+  color: var(--c0);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+
+.theme-ridge .menu {
+  align-items: flex-end;
+  gap: 5px;
+}
+
+.theme-ridge .btn,
+.theme-ridge .seg {
+  height: 24px;
+  padding: 0 10px 0 18px;
+  text-transform: uppercase;
+  color: var(--c4);
+  background: var(--c1);
+  clip-path: polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 50%);
+}
+
+.theme-ridge .menu .btn {
+  width: 170px;
+}
+
+.theme-ridge .seg {
+  height: 16px;
+  padding: 0 6px 0 10px !important;
+  clip-path: polygon(5px 0, 100% 0, 100% 100%, 5px 100%, 0 50%);
+}
+
+.theme-ridge .btn:hover,
+.theme-ridge .seg:hover {
+  background: var(--c2);
+  transform: translateX(-6px);
+}
+
+.theme-ridge .seg:hover {
+  transform: none;
+}
+
+.theme-ridge .btn.primary,
+.theme-ridge .seg.active {
+  background: var(--c3);
+  color: var(--c0);
+}
+
+.theme-ridge .btn.primary:hover {
+  background: var(--c4);
+}
+
+.theme-ridge .btn:disabled {
+  background: var(--c0);
+  color: var(--c1);
+  transform: none;
+}
+
+.theme-ridge .panel,
+.theme-ridge .card,
+.theme-ridge .toast {
+  background: var(--c0);
+  clip-path: var(--ridge);
+}
+
+.theme-ridge .panel {
+  padding: 14px 8px 8px;
+}
+
+.theme-ridge .panel-title {
+  color: var(--c3);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.theme-ridge .doors-panel {
+  align-self: end;
+}
+
+.theme-ridge .door {
+  background: var(--c1);
+  text-transform: uppercase;
+}
+
+.theme-ridge .door > .ico {
+  --is: 2px;
+  color: var(--c3);
+}
+
+.theme-ridge .door:hover {
+  background: var(--c2);
+}
+
+.theme-ridge .door.selected {
+  background: var(--c3);
+  color: var(--c0);
+}
+
+.theme-ridge .door.selected > .ico,
+.theme-ridge .door.selected .door-stars {
+  color: var(--c0);
+}
+
+.theme-ridge .card {
+  padding: 14px 6px 6px;
+  align-self: end;
+}
+
+.theme-ridge .card-top {
+  text-transform: uppercase;
+}
+
+.theme-ridge .card-class,
+.theme-ridge .card-troops {
+  color: var(--c3);
+}
+
+.theme-ridge .card-art {
+  margin-top: 5px;
+}
+
+.theme-ridge .card-type {
+  margin-top: 5px;
+  color: var(--c2);
+  text-transform: uppercase;
+}
+
+.theme-ridge .card-text {
+  margin-top: 3px;
+  line-height: 1;
+}
+
+.theme-ridge .card-stats {
+  margin-top: 5px;
+}
+
+.theme-ridge .stat {
+  padding: 2px 6px;
+  font-size: 12px;
+}
+
+.theme-ridge .stat.dmg {
+  background: var(--c2);
+}
+
+.theme-ridge .stat.hp {
+  background: var(--c3);
+  color: var(--c0);
+}
+
+.theme-ridge .foot {
+  color: var(--c3);
+  text-transform: uppercase;
+  justify-content: flex-end;
+  gap: 20px;
+}
+
+.theme-ridge .dialog {
+  padding-top: 18px;
+}
+
+/* =====================================================================
+   13 · LANTERN – geschnitztes Holz, Messingschilder
+   ===================================================================== */
+
+.theme-lantern {
+  --art-pos: -262px -10px;
+  font-family: 'Pixelify Sans', monospace;
+  font-size: 11px;
+  color: var(--c4);
+}
+
+.theme-lantern .panel,
+.theme-lantern .card,
+.theme-lantern .stat-chip,
+.theme-lantern .toast {
+  background:
+    linear-gradient(var(--c4), var(--c4)) 3px 3px / 2px 2px no-repeat,
+    linear-gradient(var(--c4), var(--c4)) right 3px top 3px / 2px 2px no-repeat,
+    linear-gradient(var(--c4), var(--c4)) left 3px bottom 3px / 2px 2px no-repeat,
+    linear-gradient(var(--c4), var(--c4)) right 3px bottom 3px / 2px 2px no-repeat,
+    var(--c1);
+  box-shadow:
+    0 0 0 2px var(--c0),
+    inset 1px 1px 0 0 var(--c2),
+    inset -1px -1px 0 0 var(--c0),
+    inset 0 0 0 6px var(--c1),
+    inset 0 0 0 7px var(--c2),
+    4px 5px 0 1px color-mix(in srgb, var(--c0) 70%, transparent);
+}
+
+.theme-lantern .stat-chip {
+  background: var(--c1);
+  box-shadow:
+    0 0 0 2px var(--c0),
+    inset 1px 1px 0 0 var(--c2);
+  height: 18px;
+}
+
+.theme-lantern .ico {
+  color: var(--c4);
+}
+
+.theme-lantern .lives .ico {
+  color: var(--c3);
+}
+
+.theme-lantern .logo-main,
+.theme-lantern .logo-num {
+  font-family: 'Jersey 10', monospace;
+  font-size: 58px;
+  letter-spacing: 3px;
+  color: var(--c4);
+  text-shadow:
+    2px 0 var(--c0), -2px 0 var(--c0), 0 2px var(--c0), 0 -2px var(--c0),
+    0 4px var(--c2), 0 6px var(--c0);
+}
+
+.theme-lantern .logo-num {
+  color: var(--c3);
+}
+
+.theme-lantern .logo-sub {
+  color: var(--c3);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-shadow: 1px 1px var(--c0);
+}
+
+.theme-lantern .btn,
+.theme-lantern .seg {
+  --b: var(--c3);
+  height: 24px;
+  padding: 0 14px;
+  justify-content: flex-start;
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--c0);
+  background:
+    linear-gradient(var(--c0), var(--c0)) 5px 50% / 2px 2px no-repeat,
+    linear-gradient(var(--c0), var(--c0)) right 5px top 50% / 2px 2px no-repeat,
+    var(--b);
+  box-shadow:
+    0 0 0 2px var(--c0),
+    inset 0 1px 0 0 var(--c4),
+    inset 0 -2px 0 0 var(--c2),
+    3px 4px 0 1px color-mix(in srgb, var(--c0) 70%, transparent);
+}
+
+.theme-lantern .btn .ico {
+  color: var(--c1);
+  margin-left: 4px;
+}
+
+.theme-lantern .seg {
+  height: 18px;
+  padding: 0 7px !important;
+  background: var(--b);
+}
+
+.theme-lantern .btn:hover,
+.theme-lantern .seg:hover {
+  --b: var(--c4);
+}
+
+.theme-lantern .btn:active {
+  transform: translateY(2px);
+}
+
+.theme-lantern .btn.primary,
+.theme-lantern .seg.active {
+  --b: var(--c4);
+}
+
+.theme-lantern .btn.primary:hover {
+  --b: var(--c3);
+}
+
+.theme-lantern .btn:disabled {
+  --b: var(--c2);
+  color: var(--c1);
+  transform: none;
+}
+
+.theme-lantern .panel {
+  padding: 11px 12px 12px;
+}
+
+.theme-lantern .panel-title {
+  color: var(--c4);
+  font-weight: 700;
+  font-size: 12px;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.theme-lantern .door {
+  color: var(--c4);
+  font-weight: 700;
+  background: var(--c0);
+  box-shadow: inset 0 0 0 1px var(--c2);
+}
+
+.theme-lantern .door > .ico {
+  --is: 2px;
+  color: var(--c3);
+}
+
+.theme-lantern .door:hover {
+  box-shadow: inset 0 0 0 1px var(--c4);
+}
+
+.theme-lantern .door.selected {
+  background: var(--c2);
+  box-shadow: inset 0 0 0 1px var(--c4), 0 0 0 1px var(--c4);
+}
+
+.theme-lantern .door.selected > .ico {
+  color: var(--c4);
+}
+
+.theme-lantern .card {
+  padding: 9px;
+}
+
+.theme-lantern .card-top {
+  font-weight: 700;
+}
+
+.theme-lantern .card-troops {
+  color: var(--c3);
+}
+
+.theme-lantern .card-art {
+  margin-top: 5px;
+  box-shadow: 0 0 0 1px var(--c0), 0 0 0 2px var(--c3);
+}
+
+.theme-lantern .card-type {
+  margin-top: 6px;
+  color: var(--c3);
+  font-size: 10px;
+}
+
+.theme-lantern .card-text {
+  margin-top: 3px;
+  font-size: 9px;
+  line-height: 1.15;
+}
+
+.theme-lantern .card-stats {
+  margin-top: 5px;
+}
+
+.theme-lantern .stat {
+  padding: 2px 5px;
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--c0);
+  box-shadow: 0 0 0 1px var(--c0), inset 0 1px 0 0 var(--c4);
+}
+
+.theme-lantern .stat .ico {
+  color: var(--c1);
+}
+
+.theme-lantern .stat.dmg {
+  background: var(--c3);
+}
+
+.theme-lantern .stat.hp {
+  background: var(--c4);
+}
+
+.theme-lantern .foot {
+  color: var(--c3);
+  padding: 0 4px;
+}
+
+/* =====================================================================
+   14 · ORBIT – Sci-Fi-HUD mit Eckklammern
+   ===================================================================== */
+
+.theme-orbit {
+  --art-pos: -272px -62px;
+  --brk:
+    linear-gradient(var(--c3), var(--c3)) left top / 7px 1px no-repeat,
+    linear-gradient(var(--c3), var(--c3)) left top / 1px 7px no-repeat,
+    linear-gradient(var(--c3), var(--c3)) right top / 7px 1px no-repeat,
+    linear-gradient(var(--c3), var(--c3)) right top / 1px 7px no-repeat,
+    linear-gradient(var(--c3), var(--c3)) left bottom / 7px 1px no-repeat,
+    linear-gradient(var(--c3), var(--c3)) left bottom / 1px 7px no-repeat,
+    linear-gradient(var(--c3), var(--c3)) right bottom / 7px 1px no-repeat,
+    linear-gradient(var(--c3), var(--c3)) right bottom / 1px 7px no-repeat;
+  font-family: 'Tiny5', monospace;
+  font-size: 10px;
+  color: var(--c4);
+}
+
+.theme-orbit .panel,
+.theme-orbit .card,
+.theme-orbit .stat-chip,
+.theme-orbit .toast,
+.theme-orbit .segmented {
+  background: var(--brk), color-mix(in srgb, var(--c0) 78%, transparent);
+  box-shadow: inset 0 0 0 1px var(--c1);
+}
+
+.theme-orbit .stat-chip {
+  height: 16px;
+}
+
+.theme-orbit .ico {
+  color: var(--c3);
+}
+
+.theme-orbit .segmented {
+  padding: 2px;
+}
+
+.theme-orbit .seg {
+  color: var(--c2);
+}
+
+.theme-orbit .seg.active {
+  color: var(--c0);
+  background: var(--c3);
+}
+
+.theme-orbit .logo-line {
+  padding-bottom: 6px;
+  box-shadow: 0 1px 0 0 var(--c2);
+  align-items: flex-start;
+}
+
+.theme-orbit .logo-main {
+  font-size: 38px;
+  letter-spacing: 9px;
+  color: var(--c4);
+}
+
+.theme-orbit .logo-num {
+  font-size: 14px;
+  color: var(--c3);
+  padding: 2px 4px;
+  box-shadow: inset 0 0 0 1px var(--c3);
+}
+
+.theme-orbit .logo-sub {
+  margin-top: 6px;
+  color: var(--c3);
+  letter-spacing: 5px;
+  text-transform: uppercase;
+}
+
+.theme-orbit .logo-sub::before {
+  content: '// ';
+  color: var(--c2);
+}
+
+.theme-orbit .menu {
+  gap: 3px;
+}
+
+.theme-orbit .btn {
+  height: 22px;
+  padding: 0 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--c3);
+}
+
+.theme-orbit .btn .ico {
+  color: var(--c2);
+}
+
+.theme-orbit .btn:hover {
+  background: var(--brk), color-mix(in srgb, var(--c1) 85%, transparent);
+  color: var(--c4);
+}
+
+.theme-orbit .btn:hover .ico {
+  color: var(--c4);
+}
+
+.theme-orbit .btn:active {
+  background: var(--c3);
+  color: var(--c0);
+}
+
+.theme-orbit .btn.primary {
+  color: var(--c4);
+  box-shadow: inset 2px 0 0 0 var(--c4);
+}
+
+.theme-orbit .btn:disabled {
+  color: var(--c2);
+  background: none;
+}
+
+.theme-orbit .btn:disabled .ico {
+  color: var(--c1);
+}
+
+.theme-orbit .panel {
+  padding: 8px;
+}
+
+.theme-orbit .panel-title {
+  color: var(--c3);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.theme-orbit .panel-title::before {
+  content: '> ';
+  color: var(--c2);
+}
+
+.theme-orbit .door {
+  color: var(--c3);
+  text-transform: uppercase;
+  box-shadow: inset 0 0 0 1px var(--c1);
+}
+
+.theme-orbit .door > .ico {
+  --is: 2px;
+}
+
+.theme-orbit .door:hover {
+  box-shadow: inset 0 0 0 1px var(--c3);
+}
+
+.theme-orbit .door.selected {
+  background: var(--brk), var(--c1);
+  color: var(--c4);
+  box-shadow: none;
+}
+
+.theme-orbit .door.selected .ico {
+  color: var(--c4);
+}
+
+.theme-orbit .card {
+  padding: 6px;
+}
+
+.theme-orbit .card-top {
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.theme-orbit .card-art {
+  margin-top: 5px;
+  box-shadow: inset 0 0 0 1px var(--c2);
+}
+
+.theme-orbit .card-type {
+  margin-top: 5px;
+  color: var(--c2);
+  text-transform: uppercase;
+}
+
+.theme-orbit .card-text {
+  margin-top: 3px;
+  line-height: 1;
+  color: var(--c3);
+}
+
+.theme-orbit .card-stats {
+  margin-top: 5px;
+}
+
+.theme-orbit .stat {
+  padding: 2px 5px;
+  font-size: 12px;
+}
+
+.theme-orbit .stat.dmg {
+  box-shadow: inset 0 0 0 1px var(--c3);
+}
+
+.theme-orbit .stat.hp {
+  background: var(--c3);
+  color: var(--c0);
+}
+
+.theme-orbit .stat.hp .ico {
+  color: var(--c0);
+}
+
+.theme-orbit .foot {
+  color: var(--c2);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: 0 4px;
+}
+
+/* =====================================================================
+   15 · SEPIA FILM – Filmstreifen, Titelkarten
+   ===================================================================== */
+
+.theme-sepia {
+  --art-pos: -372px -160px;
+  font-family: 'Jersey 10', monospace;
+  font-size: 14px;
+  color: var(--c4);
+  grid-template-rows: 22px auto 1fr 12px;
+  grid-template-areas:
+    'top top top'
+    'logo logo logo'
+    'menu doors card'
+    'foot foot foot';
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+.theme-sepia .bg::before,
+.theme-sepia .bg::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 11px;
+  background:
+    linear-gradient(var(--c0), var(--c0)) 0 0 / 100% 3px repeat-x,
+    linear-gradient(var(--c0), var(--c0)) 0 8px / 100% 3px repeat-x,
+    repeating-linear-gradient(90deg, var(--c0) 0 5px, var(--c3) 5px 10px, var(--c0) 10px 14px);
+}
+
+.theme-sepia .bg::before {
+  top: 0;
+}
+
+.theme-sepia .bg::after {
+  bottom: 0;
+}
+
+.theme-sepia .stat-chip {
+  background: var(--c0);
+  padding: 0 7px;
+  height: 18px;
+  font-size: 16px;
+}
+
+.theme-sepia .ico {
+  color: var(--c3);
+}
+
+.theme-sepia .logo {
+  justify-self: center;
+  text-align: center;
+}
+
+.theme-sepia .logo-line {
+  justify-content: center;
+  padding: 2px 14px;
+  background: var(--c0);
+  box-shadow: 0 0 0 1px var(--c3), 0 0 0 3px var(--c0), 0 0 0 4px var(--c2);
+}
+
+.theme-sepia .logo-main,
+.theme-sepia .logo-num {
+  font-size: 52px;
+  letter-spacing: 6px;
+  color: var(--c4);
+  text-shadow: 0 3px var(--c1);
+}
+
+.theme-sepia .logo-num {
+  color: var(--c3);
+}
+
+.theme-sepia .logo-sub {
+  margin-top: 10px;
+  color: var(--c4);
+  font-size: 16px;
+  letter-spacing: 8px;
+  text-transform: uppercase;
+  text-shadow: 1px 1px var(--c0), -1px 0 var(--c0), 0 -1px var(--c0), 1px 0 var(--c0);
+}
+
+.theme-sepia .menu {
+  gap: 4px;
+}
+
+.theme-sepia .btn,
+.theme-sepia .seg {
+  height: 22px;
+  justify-content: center;
+  font-size: 18px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--c3);
+  background: var(--c0);
+  box-shadow: inset 0 0 0 1px var(--c1);
+}
+
+.theme-sepia .btn .ico {
+  display: none;
+}
+
+.theme-sepia .btn::before,
+.theme-sepia .btn::after {
+  content: '';
+  width: 10px;
+  height: 1px;
+  background: var(--c2);
+}
+
+.theme-sepia .seg {
+  height: 18px;
+  font-size: 14px;
+  padding: 0 7px !important;
+}
+
+.theme-sepia .btn:hover,
+.theme-sepia .seg:hover,
+.theme-sepia .seg.active {
+  color: var(--c0);
+  background: var(--c3);
+}
+
+.theme-sepia .btn:hover::before,
+.theme-sepia .btn:hover::after {
+  background: var(--c0);
+}
+
+.theme-sepia .btn.primary {
+  color: var(--c4);
+  box-shadow: inset 0 0 0 1px var(--c3);
+}
+
+.theme-sepia .btn.primary:hover {
+  color: var(--c0);
+  background: var(--c4);
+}
+
+.theme-sepia .btn:disabled {
+  color: var(--c1);
+  background: var(--c0);
+}
+
+.theme-sepia .btn:disabled::before,
+.theme-sepia .btn:disabled::after {
+  background: var(--c1);
+}
+
+.theme-sepia .panel,
+.theme-sepia .card,
+.theme-sepia .toast {
+  background: var(--c0);
+  box-shadow: inset 0 0 0 1px var(--c3), inset 0 0 0 3px var(--c0), inset 0 0 0 4px var(--c1);
+}
+
+.theme-sepia .panel {
+  padding: 9px 10px 10px;
+}
+
+.theme-sepia .panel-title {
+  text-align: center;
+  font-size: 16px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 7px;
+  color: var(--c4);
+}
+
+.theme-sepia .door {
+  color: var(--c3);
+  font-size: 14px;
+  text-transform: uppercase;
+  box-shadow: inset 0 0 0 1px var(--c1);
+}
+
+.theme-sepia .door > .ico {
+  --is: 2px;
+}
+
+.theme-sepia .door.selected,
+.theme-sepia .door:hover {
+  color: var(--c4);
+  box-shadow: inset 0 0 0 1px var(--c4);
+}
+
+.theme-sepia .door.selected {
+  background: var(--c1);
+}
+
+.theme-sepia .door.selected .ico {
+  color: var(--c4);
+}
+
+.theme-sepia .card {
+  padding: 7px;
+}
+
+.theme-sepia .card-top {
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.theme-sepia .card-art {
+  margin-top: 4px;
+  box-shadow: 0 0 0 1px var(--c2);
+}
+
+.theme-sepia .card-type {
+  margin-top: 5px;
+  color: var(--c3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.theme-sepia .card-text {
+  margin-top: 2px;
+  line-height: 0.95;
+}
+
+.theme-sepia .card-stats {
+  margin-top: 4px;
+}
+
+.theme-sepia .stat {
+  padding: 0 5px;
+  font-size: 18px;
+}
+
+.theme-sepia .stat.dmg {
+  background: var(--c1);
+}
+
+.theme-sepia .stat.hp {
+  background: var(--c3);
+  color: var(--c0);
+}
+
+.theme-sepia .stat.hp .ico {
+  color: var(--c0);
+}
+
+.theme-sepia .foot {
+  color: var(--c4);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-shadow: 1px 1px var(--c0);
+  padding: 0 4px;
+}
+
+/* =====================================================================
+   16 · DUSK BLOCKS – flach, dicke Umrisse, harte Schatten
+   ===================================================================== */
+
+.theme-dusk {
+  --art-pos: -500px -34px;
+  font-family: 'Silkscreen', monospace;
+  font-size: 8px;
+  color: var(--c0);
+  grid-template-columns: 176px 1fr 128px;
+  grid-template-areas:
+    'top top top'
+    'logo logo logo'
+    'doors menu card'
+    'foot foot foot';
+}
+
+.theme-dusk .panel,
+.theme-dusk .card,
+.theme-dusk .stat-chip,
+.theme-dusk .btn,
+.theme-dusk .seg,
+.theme-dusk .door,
+.theme-dusk .toast {
+  --f: var(--c4);
+  background: var(--f);
+  box-shadow:
+    0 0 0 2px var(--c0),
+    5px 5px 0 2px var(--c0);
+}
+
+.theme-dusk .stat-chip {
+  height: 16px;
+}
+
+.theme-dusk .lives .ico {
+  color: var(--c3);
+}
+
+.theme-dusk .gold .ico,
+.theme-dusk .world .ico,
+.theme-dusk .door-stars {
+  color: var(--c2);
+}
+
+.theme-dusk .logo {
+  justify-self: center;
+  text-align: center;
+}
+
+.theme-dusk .logo-line {
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+.theme-dusk .logo-main {
+  font-weight: 700;
+  font-size: 40px;
+  color: var(--c4);
+  text-shadow: 4px 4px var(--c0);
+}
+
+.theme-dusk .logo-num {
+  font-weight: 700;
+  font-size: 26px;
+  padding: 4px 9px;
+  background: var(--c3);
+  color: var(--c0);
+  box-shadow:
+    0 0 0 2px var(--c0),
+    4px 4px 0 2px var(--c0);
+}
+
+.theme-dusk .logo-sub {
+  margin-top: 12px;
+  display: inline-block;
+  padding: 3px 8px;
+  background: var(--c0);
+  color: var(--c4);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.theme-dusk .menu {
+  align-items: center;
+  justify-self: center;
+  gap: 11px;
+}
+
+.theme-dusk .menu .btn {
+  width: 150px;
+}
+
+.theme-dusk .btn,
+.theme-dusk .seg {
+  justify-content: center;
+  height: 22px;
+  padding: 0 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.theme-dusk .seg {
+  height: 16px;
+  padding: 0 6px !important;
+}
+
+.theme-dusk .segmented {
+  gap: 8px;
+}
+
+.theme-dusk .btn:hover,
+.theme-dusk .seg:hover {
+  --f: var(--c3);
+}
+
+.theme-dusk .btn:active,
+.theme-dusk .seg:active {
+  transform: translate(4px, 4px);
+  box-shadow:
+    0 0 0 2px var(--c0),
+    1px 1px 0 2px var(--c0);
+}
+
+.theme-dusk .btn.primary,
+.theme-dusk .seg.active {
+  --f: var(--c3);
+}
+
+.theme-dusk .btn.primary:hover {
+  --f: var(--c4);
+}
+
+.theme-dusk .btn.danger {
+  --f: var(--c2);
+  color: var(--c4);
+}
+
+.theme-dusk .btn:disabled {
+  --f: var(--c1);
+  color: var(--c2);
+  transform: none;
+}
+
+.theme-dusk .panel {
+  padding: 8px;
+  align-self: start;
+}
+
+.theme-dusk .panel-title {
+  font-weight: 700;
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.theme-dusk .doors {
+  gap: 9px;
+}
+
+.theme-dusk .door {
+  box-shadow:
+    0 0 0 2px var(--c0),
+    3px 3px 0 2px var(--c0);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.theme-dusk .door > .ico {
+  --is: 2px;
+  color: var(--c1);
+}
+
+.theme-dusk .door:hover {
+  --f: var(--c3);
+}
+
+.theme-dusk .door.selected {
+  --f: var(--c1);
+  color: var(--c4);
+  transform: translate(3px, 3px);
+  box-shadow: 0 0 0 2px var(--c0);
+}
+
+.theme-dusk .door.selected > .ico {
+  color: var(--c3);
+}
+
+.theme-dusk .card {
+  padding: 6px;
+}
+
+.theme-dusk .card-top {
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.theme-dusk .card-class {
+  color: var(--c2);
+}
+
+.theme-dusk .card-art {
+  margin-top: 5px;
+  box-shadow: 0 0 0 2px var(--c0);
+}
+
+.theme-dusk .card-type {
+  margin-top: 6px;
+  color: var(--c2);
+  text-transform: uppercase;
+}
+
+.theme-dusk .card-text {
+  margin-top: 3px;
+  line-height: 1.2;
+}
+
+.theme-dusk .card-stats {
+  margin-top: 5px;
+}
+
+.theme-dusk .stat {
+  padding: 2px 5px;
+  font-weight: 700;
+  box-shadow: 0 0 0 2px var(--c0);
+}
+
+.theme-dusk .stat.dmg {
+  background: var(--c3);
+}
+
+.theme-dusk .stat.hp {
+  background: var(--c1);
+  color: var(--c4);
+}
+
+.theme-dusk .foot {
+  color: var(--c4);
+  padding: 0 4px;
+  text-shadow: 1px 1px var(--c0);
+}
+
+.theme-dusk .dialog-btns {
+  gap: 14px;
+}
+
+/* Tiny5 hat eine sehr schmale „8“ – Zahlenwerte in Silkscreen */
+.theme-ridge .stat,
+.theme-orbit .stat {
+  font-family: 'Silkscreen', monospace;
+  font-weight: 700;
+  font-size: 8px;
+}

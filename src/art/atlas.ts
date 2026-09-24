@@ -150,6 +150,12 @@ export function buildAtlas(): Atlas {
   };
 }
 
+/** Optionales Umfärben der Kartenbilder (z. B. auf die Palette eines UI-Designs). */
+let iconRemap: ((c: HTMLCanvasElement) => void) | null = null;
+export function setIconRemap(fn: ((c: HTMLCanvasElement) => void) | null): void {
+  iconRemap = fn;
+}
+
 /** Kartenbild für die Oberfläche (hochskaliert als PNG-DataURL). */
 export function cardIconUrl(card: CardDef, scale: number, team: 0 | 1 = 0): string {
   const f = buildUnitFrames(visualKindFor(card), card.color, team);
@@ -165,6 +171,7 @@ export function cardIconUrl(card: CardDef, scale: number, team: 0 | 1 = 0): stri
       ctx.fillStyle = col;
       ctx.fillRect(x * scale, y * scale, scale, scale);
     }
+  iconRemap?.(c);
   return c.toDataURL();
 }
 

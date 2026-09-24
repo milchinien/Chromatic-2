@@ -1,0 +1,781 @@
+/* =====================================================================
+   25 · IDLE CRYSTAL – typisches Idle-Game: knallbunt, dicke Umrisse,
+   Bonbon-Knöpfe, große Zahlen, Benachrichtigungen, Tab-Leiste.
+   ===================================================================== */
+
+.theme-idle {
+  --ink: #0f0420;
+  --win: color-mix(in srgb, var(--a-navy) 93%, transparent);
+  --tx: 1px 0 var(--ink), -1px 0 var(--ink), 0 1px var(--ink), 0 -1px var(--ink), 1px 1px var(--ink), -1px 1px var(--ink), 0 2px var(--ink);
+  --round:
+    0 0 0 1px var(--ink),
+    0 -3px 0 -1px var(--ink),
+    0 3px 0 -1px var(--ink),
+    -3px 0 0 -1px var(--ink),
+    3px 0 0 -1px var(--ink);
+  font-family: 'Silkscreen', monospace;
+  font-size: 8px;
+  color: #fff;
+  text-shadow: var(--tx);
+  grid-template-columns: 172px 1fr 136px;
+  grid-template-rows: 22px auto 1fr auto 30px;
+  grid-template-areas:
+    'top top top'
+    'logo logo logo'
+    'menu . card'
+    'menu doors card'
+    'foot foot foot';
+}
+
+.theme-idle.s-deck,
+.theme-idle.s-shop {
+  grid-template-rows: 22px 22px 1fr 30px;
+}
+
+.theme-idle .foot {
+  display: none;
+}
+
+.theme-idle .tabbar {
+  grid-area: foot;
+  display: flex;
+}
+
+.theme-idle .num-plain {
+  display: none;
+}
+
+.theme-idle .num-big,
+.theme-idle .stat-chip.gems,
+.theme-idle .dps {
+  display: inline;
+}
+
+.theme-idle .rate {
+  display: inline;
+  color: var(--a-lime);
+  font-size: 8px;
+}
+
+/* --- Fenster ----------------------------------------------------------- */
+
+.theme-idle .panel,
+.theme-idle .toast {
+  background: var(--win);
+  box-shadow:
+    inset 0 1px 0 0 var(--c2),
+    var(--round),
+    0 5px 0 -1px color-mix(in srgb, var(--ink) 55%, transparent);
+}
+
+.theme-idle .panel {
+  padding: 0 8px 9px;
+}
+
+.theme-idle .panel-title {
+  margin: 0 -8px 8px;
+  padding: 4px 8px 5px;
+  text-align: center;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background: linear-gradient(#a15eca 0 50%, var(--a-purple) 50%);
+  box-shadow: inset 0 -2px 0 0 var(--a-dpurple), 0 1px 0 0 var(--ink);
+}
+
+.theme-idle .dialog .panel-title {
+  justify-content: center;
+}
+
+/* --- Topbar: Ressourcen-Pillen ------------------------------------------ */
+
+.theme-idle .stat-chip {
+  height: 18px;
+  padding: 0 8px 0 2px;
+  gap: 4px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  background: color-mix(in srgb, var(--ink) 78%, transparent);
+  box-shadow: var(--round);
+}
+
+.theme-idle .stat-chip > .ico:first-child {
+  --is: 1px;
+  box-sizing: content-box;
+  padding: 3px;
+  margin-right: 1px;
+  clip-path: var(--pixel-circle);
+  color: #fff;
+}
+
+.theme-idle .lives {
+  padding-left: 6px;
+}
+
+.theme-idle .lives .ico {
+  color: var(--a-red);
+  clip-path: none !important;
+  padding: 0 !important;
+}
+
+.theme-idle .lives .ico.empty {
+  color: #fff;
+}
+
+.theme-idle .gold > .ico:first-child {
+  background: var(--a-gold);
+  color: var(--a-dgold);
+}
+
+.theme-idle .gems > .ico:first-child {
+  background: var(--a-pink);
+}
+
+.theme-idle .world .ico {
+  color: var(--a-gold);
+}
+
+.theme-idle .world {
+  font-family: 'Silkscreen', monospace;
+  padding-left: 8px;
+}
+
+.theme-idle .segmented {
+  gap: 4px;
+}
+
+/* --- Logo ---------------------------------------------------------------- */
+
+.theme-idle .logo {
+  justify-self: center;
+  text-align: center;
+}
+
+.theme-idle .logo-line {
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.theme-idle .logo-main {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 28px;
+  gap: 1px;
+}
+
+.theme-idle .logo-main .l {
+  text-shadow:
+    2px 0 var(--ink), -2px 0 var(--ink), 0 2px var(--ink), 0 -2px var(--ink),
+    2px 2px var(--ink), -2px -2px var(--ink), 2px -2px var(--ink), -2px 2px var(--ink),
+    0 5px var(--ink), 2px 5px var(--ink), -2px 5px var(--ink);
+  animation: idle-wave 1s steps(2) infinite;
+}
+
+.theme-idle .logo-main .l:nth-child(9n + 1) { color: #ff5a5a; animation-delay: 0s; }
+.theme-idle .logo-main .l:nth-child(9n + 2) { color: #ff9d4f; animation-delay: -0.11s; }
+.theme-idle .logo-main .l:nth-child(9n + 3) { color: #f6e742; animation-delay: -0.22s; }
+.theme-idle .logo-main .l:nth-child(9n + 4) { color: #acd470; animation-delay: -0.33s; }
+.theme-idle .logo-main .l:nth-child(9n + 5) { color: #68ead8; animation-delay: -0.44s; }
+.theme-idle .logo-main .l:nth-child(9n + 6) { color: #7ecff6; animation-delay: -0.55s; }
+.theme-idle .logo-main .l:nth-child(9n + 7) { color: #bb7be0; animation-delay: -0.66s; }
+.theme-idle .logo-main .l:nth-child(9n + 8) { color: #f4869e; animation-delay: -0.77s; }
+.theme-idle .logo-main .l:nth-child(9n + 9) { color: #ffffff; animation-delay: -0.88s; }
+
+@keyframes idle-wave {
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.theme-idle .logo-num {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 18px;
+  color: var(--ink);
+  text-shadow: 0 2px #fff6c0;
+  background: var(--a-gold);
+  clip-path: var(--pixel-circle);
+  box-shadow: inset 0 -4px 0 0 var(--a-orange), inset 0 3px 0 0 #fff6c0;
+  animation: idle-pop 1.2s steps(1) infinite;
+}
+
+@keyframes idle-pop {
+  50% {
+    transform: scale(1.08) rotate(-6deg);
+  }
+}
+
+.theme-idle .logo-sub {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 4px 14px 5px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background: linear-gradient(#f4869e 0 50%, #e47391 50%);
+  clip-path: polygon(0 0, 100% 0, calc(100% - 6px) 50%, 100% 100%, 0 100%, 6px 50%);
+  box-shadow: inset 0 -2px 0 0 #a44d6e;
+}
+
+/* --- Bonbon-Knöpfe ------------------------------------------------------ */
+
+.theme-idle .btn,
+.theme-idle .seg,
+.theme-idle .tab {
+  --f: #478eec;
+  --h: #7ecff6;
+  --d: #1e2e77;
+  position: relative;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: var(--tx);
+  background: linear-gradient(var(--h) 0 42%, var(--f) 42%);
+  box-shadow:
+    inset 0 -3px 0 0 var(--d),
+    inset 0 1px 0 0 color-mix(in srgb, #fff 55%, transparent),
+    var(--round),
+    0 4px 0 -1px color-mix(in srgb, var(--ink) 55%, transparent);
+}
+
+.theme-idle .btn {
+  height: 24px;
+  padding: 0 12px 3px;
+  justify-content: center;
+}
+
+.theme-idle .menu {
+  gap: 8px;
+  align-self: center;
+}
+
+.theme-idle .menu .btn {
+  width: 160px;
+  justify-content: flex-start;
+  font-size: 8px;
+}
+
+.theme-idle .btn .ico {
+  color: #fff;
+  filter: drop-shadow(1px 1px 0 var(--ink));
+}
+
+.theme-idle .seg {
+  padding: 2px 6px 4px !important;
+  --f: #524b8b;
+  --h: #7578bd;
+  --d: #302355;
+}
+
+.theme-idle .seg.active {
+  --f: var(--a-orange);
+  --h: #fac053;
+  --d: #b15901;
+}
+
+.theme-idle .btn.primary {
+  --f: #4e8d2b;
+  --h: #8bbd52;
+  --d: #215c1f;
+}
+
+.theme-idle .menu .btn:nth-child(3) {
+  --f: #2d5bb8;
+  --h: #478eec;
+  --d: #151c53;
+}
+
+.theme-idle .menu .btn:nth-child(4) {
+  --f: #8545b0;
+  --h: #a15eca;
+  --d: #30114a;
+}
+
+.theme-idle .btn.danger {
+  --f: #d64642;
+  --h: #e97970;
+  --d: #70001e;
+}
+
+.theme-idle .btn:hover,
+.theme-idle .seg:hover,
+.theme-idle .tab:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.1);
+}
+
+.theme-idle .btn:active,
+.theme-idle .seg:active,
+.theme-idle .tab:active {
+  transform: translateY(2px);
+  box-shadow:
+    inset 0 -1px 0 0 var(--d),
+    var(--round);
+}
+
+.theme-idle .btn.primary {
+  animation: idle-breathe 1.4s steps(2) infinite;
+}
+
+@keyframes idle-breathe {
+  50% {
+    filter: brightness(1.12);
+  }
+}
+
+.theme-idle .btn:disabled {
+  --f: #646870;
+  --h: #7b7e85;
+  --d: #393e47;
+  color: #c3c5c9;
+  transform: none;
+  filter: none;
+  animation: none;
+}
+
+/* Benachrichtigungs-Punkt */
+.theme-idle .badge {
+  display: grid;
+  place-items: center;
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 14px;
+  height: 14px;
+  padding: 0 3px;
+  font-style: normal;
+  font-size: 8px;
+  font-weight: 700;
+  color: #fff;
+  background: #ff2d2d;
+  clip-path: var(--pixel-circle);
+  box-shadow: inset 0 -2px 0 0 #8e0024;
+  animation: idle-bounce 0.8s steps(2) infinite;
+}
+
+@keyframes idle-bounce {
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+/* --- Türen als Missionen -------------------------------------------------- */
+
+.theme-idle .doors-panel {
+  align-self: end;
+}
+
+.theme-idle .doors {
+  gap: 7px;
+}
+
+.theme-idle .door {
+  --f: #d64642;
+  --h: #e97970;
+  --d: #70001e;
+  position: relative;
+  padding: 6px 2px 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: linear-gradient(var(--h) 0 40%, var(--f) 40%);
+  box-shadow: inset 0 -3px 0 0 var(--d), var(--round);
+}
+
+.theme-idle .door:nth-child(2) {
+  --f: #dd8800;
+  --h: #fac053;
+  --d: #75500f;
+}
+
+.theme-idle .door:nth-child(3) {
+  --f: #009fbc;
+  --h: #58c9da;
+  --d: #00544c;
+}
+
+.theme-idle .door > .ico {
+  --is: 2px;
+  color: #fff;
+  filter: drop-shadow(1px 1px 0 var(--ink));
+}
+
+.theme-idle .door-stars {
+  color: #f6e742;
+}
+
+.theme-idle .door:hover {
+  transform: translateY(-2px);
+}
+
+.theme-idle .door.selected {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 -3px 0 0 var(--d),
+    0 0 0 1px var(--ink),
+    0 0 0 3px #fff,
+    0 0 0 4px var(--ink);
+}
+
+.theme-idle .door.selected::after {
+  content: 'GO!';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 1px 4px 2px;
+  color: #fff;
+  background: #4e8d2b;
+  box-shadow: 0 0 0 1px var(--ink), inset 0 -2px 0 0 #215c1f;
+  animation: idle-bounce 0.6s steps(2) infinite;
+}
+
+/* --- Karte: goldene Sammelkarte mit Glanz ------------------------------------ */
+
+.theme-idle .card {
+  position: relative;
+  overflow: hidden;
+  padding: 5px;
+  background: var(--a-navy);
+  box-shadow:
+    inset 0 0 0 2px var(--a-gold),
+    inset 0 0 0 3px var(--a-dgold),
+    var(--round),
+    0 5px 0 -1px color-mix(in srgb, var(--ink) 55%, transparent);
+}
+
+.theme-idle .card:not(.mini)::after {
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: -60px;
+  width: 16px;
+  height: 260px;
+  background: color-mix(in srgb, #fff 35%, transparent);
+  transform: rotate(20deg);
+  animation: idle-shine 3s steps(30) infinite;
+  pointer-events: none;
+}
+
+@keyframes idle-shine {
+  0%,
+  40% {
+    left: -60px;
+  }
+  100% {
+    left: 200px;
+  }
+}
+
+.theme-idle .card-top {
+  height: 17px;
+  margin: -2px -2px 0;
+  padding: 0 4px;
+  font-weight: 700;
+  background: linear-gradient(#a15eca 0 50%, var(--a-purple) 50%);
+  box-shadow: 0 0 0 1px var(--ink);
+}
+
+.theme-idle .card-troops {
+  color: #f6e742;
+}
+
+.theme-idle .card-art {
+  margin-top: 5px;
+  box-shadow: 0 0 0 1px var(--ink);
+}
+
+.theme-idle .card-type {
+  margin-top: 5px;
+  color: var(--a-cyan);
+}
+
+.theme-idle .card-text {
+  margin-top: 3px;
+  line-height: 1.25;
+}
+
+.theme-idle .card-stars {
+  color: var(--a-gold);
+}
+
+.theme-idle .card-stats {
+  margin-top: 5px;
+}
+
+.theme-idle .stat {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  clip-path: var(--pixel-circle);
+}
+
+.theme-idle .stat .ico {
+  display: none;
+}
+
+.theme-idle .stat.dmg {
+  background: #d64642;
+  box-shadow: inset 0 -3px 0 0 #70001e, inset 0 2px 0 0 #e97970;
+}
+
+.theme-idle .stat.hp {
+  background: #4e8d2b;
+  box-shadow: inset 0 -3px 0 0 #215c1f, inset 0 2px 0 0 #8bbd52;
+}
+
+.theme-idle .card.mini {
+  padding: 4px;
+}
+
+.theme-idle .card.mini .stat {
+  width: 20px;
+  height: 20px;
+}
+
+.theme-idle .card.selected {
+  box-shadow:
+    inset 0 0 0 2px #fff,
+    inset 0 0 0 3px var(--a-gold),
+    var(--round),
+    0 0 0 3px var(--a-gold);
+}
+
+/* --- Tab-Leiste ------------------------------------------------------------ */
+
+.theme-idle .tabbar {
+  gap: 5px;
+  align-items: stretch;
+  padding: 3px 4px;
+  margin: 0 -8px -6px;
+  background: color-mix(in srgb, var(--ink) 80%, transparent);
+  box-shadow: inset 0 1px 0 0 var(--c2);
+}
+
+.theme-idle .tab {
+  --f: #302355;
+  --h: #413670;
+  --d: #0f0420;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.theme-idle .tab .ico {
+  --is: 1px;
+}
+
+.theme-idle .tab.active {
+  --f: #2d5bb8;
+  --h: #5da9ff;
+  --d: #151c53;
+  transform: translateY(-3px);
+}
+
+/* --- Seiten ---------------------------------------------------------------- */
+
+.theme-idle .page-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  text-shadow:
+    2px 0 var(--ink), -2px 0 var(--ink), 0 2px var(--ink), 0 -2px var(--ink),
+    0 4px var(--ink);
+}
+
+.theme-idle .page-title em {
+  font-family: 'Silkscreen', monospace;
+  font-size: 8px;
+  color: var(--a-lime);
+}
+
+.theme-idle .page-title .ico {
+  color: var(--a-gold);
+}
+
+.theme-idle.s-deck .deck-panel,
+.theme-idle.s-shop .offers,
+.theme-idle.s-shop .upgrades {
+  padding: 0 8px 8px;
+}
+
+.theme-idle.s-deck .deck-panel {
+  padding-top: 8px;
+}
+
+.theme-idle .scroll {
+  background: var(--ink);
+}
+
+.theme-idle .scroll i {
+  background: var(--a-gold);
+}
+
+.theme-idle .price {
+  margin-left: 6px;
+}
+
+.theme-idle .price .ico {
+  color: #f6e742;
+}
+
+.theme-idle .detail-actions .btn,
+.theme-idle .shop-actions .btn {
+  height: 22px;
+}
+
+.theme-idle .ribbon {
+  display: block;
+  position: absolute;
+  z-index: 2;
+  top: -7px;
+  padding: 2px 8px 3px;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: #ff2d2d;
+  box-shadow: 0 0 0 1px var(--ink), inset 0 -2px 0 0 #8e0024;
+  animation: idle-bounce 0.8s steps(2) infinite;
+}
+
+.theme-idle .offer {
+  position: relative;
+}
+
+.theme-idle .up-row {
+  padding: 2px 4px;
+  background: color-mix(in srgb, var(--ink) 55%, transparent);
+  box-shadow: 0 0 0 1px var(--ink);
+}
+
+.theme-idle .up-btn {
+  height: 17px;
+  padding: 0 5px 3px;
+}
+
+.theme-idle .up-btn:not(:disabled) {
+  --f: #4e8d2b;
+  --h: #8bbd52;
+  --d: #215c1f;
+}
+
+/* --- Kampf ------------------------------------------------------------------ */
+
+.theme-idle .hud .army {
+  padding: 4px 7px 6px;
+  background: color-mix(in srgb, var(--ink) 75%, transparent);
+  box-shadow: var(--round);
+}
+
+.theme-idle .army-head b {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+}
+
+.theme-idle .bar {
+  height: 9px;
+  background: var(--ink);
+  box-shadow: 0 0 0 1px #fff;
+}
+
+.theme-idle .bar i {
+  background: repeating-linear-gradient(135deg, #8bbd52 0 4px, #4e8d2b 4px 8px);
+  background-size: 11px 11px;
+  animation: idle-stripes 0.6s steps(4) infinite;
+}
+
+.theme-idle .army.foe .bar i {
+  background: repeating-linear-gradient(135deg, #e97970 0 4px, #d64642 4px 8px);
+  background-size: 11px 11px;
+}
+
+@keyframes idle-stripes {
+  to {
+    background-position: 11px 0;
+  }
+}
+
+.theme-idle .timer {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 16px;
+  text-shadow:
+    2px 0 var(--ink), -2px 0 var(--ink), 0 2px var(--ink), 0 -2px var(--ink),
+    0 4px var(--ink);
+}
+
+.theme-idle .dps {
+  display: block;
+  margin-top: 3px;
+  color: #f6e742;
+  animation: idle-bounce 0.7s steps(2) infinite;
+}
+
+.theme-idle .hud-sub .ico {
+  color: #f6e742;
+}
+
+.theme-idle .bonus-badge {
+  font-weight: 700;
+  background: linear-gradient(#a15eca 0 50%, var(--a-purple) 50%);
+  box-shadow: var(--round), inset 0 -2px 0 0 var(--a-dpurple);
+}
+
+.theme-idle .bonus-badge .ico {
+  color: #f6e742;
+}
+
+.theme-idle .slot-label {
+  padding: 1px 6px 2px;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: #2d5bb8;
+  box-shadow: 0 0 0 1px var(--ink), inset 0 -2px 0 0 #151c53;
+}
+
+.theme-idle .slots.foe .slot-label {
+  background: #d64642;
+  box-shadow: 0 0 0 1px var(--ink), inset 0 -2px 0 0 #70001e;
+}
+
+.theme-idle .controls {
+  padding: 8px 10px 9px;
+}
+
+.theme-idle .controls .fight {
+  height: 30px;
+  width: 160px;
+  font-size: 16px;
+  font-family: 'Press Start 2P', monospace;
+  font-weight: normal;
+}
+
+.theme-idle .btn.small {
+  height: 18px;
+  padding: 0 7px 3px;
+}
+
+.theme-idle.fighting .fight {
+  --f: #d64642;
+  --h: #e97970;
+  --d: #70001e;
+}
+
+/* Kartenbild: Wolke und kleine Insel statt halbem Kristall */
+.theme-idle {
+  --art-pos: -30px -170px;
+  --art-pos-mini: -52px -196px;
+}
+
+.theme-idle .page-title em {
+  opacity: 1;
+}
+
+.theme-idle .card-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chromatic 2 – UI-Lab</title>
+  </head>
+  <body>
+    <div id="lab">
+      <header id="lab-bar">
+        <div id="lab-title">UI-Lab</div>
+        <button id="lab-fav" class="lab-btn">★ Favoriten</button>
+        <nav id="lab-tabs"></nav>
+        <button id="lab-grid" class="lab-btn">Alle vergleichen</button>
+      </header>
+      <div id="lab-info">
+        <nav id="lab-screens"></nav>
+        <b id="lab-name"></b>
+        <span id="lab-desc"></span>
+        <span id="lab-swatches"></span>
+        <span id="lab-keys">← → Design · ↑ ↓ Bildschirm · F Favoriten · G Vergleich</span>
+      </div>
+      <main id="lab-view"></main>
+    </div>
+    <script type="module" src="/src/lab/main.ts"></script>
+  </body>
+</html>
