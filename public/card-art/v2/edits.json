@@ -1,0 +1,13 @@
+{
+  "generator": "built-in image_gen",
+  "edits": [
+    {
+      "file": "dawn-invoker.png",
+      "prompt": "Edit this pixel artwork. Keep the little white-robed sun mage, pose, disc, ground placement and chunky pixel design exactly. REPLACE ALL black background and smooth golden light haze with one uniform flat mustard-gold background #b8820e across the entire sky, edge to edge including upper corners. The ground is a uniform dark brown #6e4606 bottom quarter. Retain only a small hard-edged two-tone checkerboard pixel halo directly behind the figure using #f6cc3a and #b8820e. The short sunbeam should be a thin solid yellow pixel line, no soft glow. No vignette. No smooth lighting or gradients whatsoever. No text, numbers, frame or UI. Match a simple bright GOLD faction inventory illustration."
+    },
+    {
+      "file": "field-chaplain.png",
+      "prompt": "Edit this chunky low-resolution pixel artwork. Preserve the priest tending a bandaged forearm, lantern, backpack, beige background, overall pose, simple large pixels and layout. Change ONLY the seated wounded soldier's equipment to medieval fantasy: simple beige linen tunic with brown leather vest, plain brown trousers, leather boots and a conical iron nasal helmet. Remove the modern green military uniform, camouflage and modern army helmet. Keep him clearly a medieval peasant fighter. No weapons needed, no text, no numbers, no frame."
+    }
+  ]
+}

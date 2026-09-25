@@ -1,0 +1,498 @@
+/* =====================================================================
+   26–29 · RÖHRENMONITOR (Inferno, Jungle, Nightfall, Circuit)
+   Gemeinsamer Stil der Familie „crt“: abgerundeter Leuchtrahmen wie ein
+   alter Monitor, Scanlines, schwarze Flächen mit dünnen hellen Linien,
+   Balken mit abgerundeten Kanten. Farben nur über --c0…--c4 und die
+   Akzente --a-good / --a-bad / --a-gold / --a-gem.
+   ===================================================================== */
+
+.fam-crt {
+  --art-pos: -420px -170px;
+  --line: var(--c4);
+  --glass: color-mix(in srgb, var(--c0) 84%, transparent);
+  font-family: 'Silkscreen', monospace;
+  font-size: 8px;
+  color: var(--c4);
+  padding: 20px 26px 18px !important;
+}
+
+/* --- Monitor-Rahmen + Scanlines ------------------------------------------------ */
+
+.screen > .crt-frame {
+  position: absolute;
+  inset: 5px;
+  z-index: 20;
+  pointer-events: none;
+  border: 3px solid var(--c3);
+  border-radius: 16px;
+  box-shadow:
+    0 0 0 1px var(--c1),
+    0 0 0 12px #000,
+    inset 0 0 0 1px var(--c1),
+    0 0 8px 1px color-mix(in srgb, var(--c3) 55%, transparent),
+    inset 0 0 8px 1px color-mix(in srgb, var(--c3) 45%, transparent),
+    inset 0 0 40px 6px rgba(0, 0, 0, 0.55);
+  background: repeating-linear-gradient(180deg, transparent 0 2px, rgba(0, 0, 0, 0.16) 2px 3px);
+}
+
+/* --- Flächen ---------------------------------------------------------------------- */
+
+.fam-crt .panel,
+.fam-crt .card,
+.fam-crt .toast,
+.fam-crt .segmented,
+.fam-crt .dialog {
+  background: var(--glass);
+  border-radius: 3px;
+  box-shadow:
+    inset 0 0 0 1px var(--c2),
+    0 0 0 1px #000;
+}
+
+.fam-crt .panel {
+  padding: 7px 8px 8px;
+}
+
+.fam-crt .panel-title {
+  margin-bottom: 7px;
+  color: var(--c3);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* --- Obere Leiste: Werte wie „× 6 505“ ------------------------------------------ */
+
+.fam-crt .stat-chip {
+  height: 14px;
+  padding: 0 2px;
+  gap: 4px;
+  text-shadow: 1px 1px 0 #000;
+}
+
+.fam-crt .stat-chip .ico {
+  filter: drop-shadow(1px 1px 0 #000);
+}
+
+.fam-crt .lives .ico {
+  color: var(--a-bad);
+}
+
+.fam-crt .gold .ico {
+  color: var(--a-gold);
+}
+
+.fam-crt .gems .ico {
+  color: var(--a-gem);
+}
+
+.fam-crt .world .ico {
+  color: var(--a-gold);
+}
+
+.fam-crt .gold > span:first-of-type::before,
+.fam-crt .gems > span::before {
+  content: '× ';
+  color: var(--c3);
+}
+
+.fam-crt .segmented {
+  padding: 2px;
+}
+
+.fam-crt .seg {
+  color: var(--c2);
+  border-radius: 2px;
+}
+
+.fam-crt .seg:hover {
+  color: var(--c4);
+}
+
+.fam-crt .seg.active {
+  color: #000;
+  background: var(--c3);
+}
+
+/* --- Logo --------------------------------------------------------------------------- */
+
+.fam-crt .logo-main {
+  font-family: 'Tiny5', monospace;
+  font-size: 44px;
+  letter-spacing: 3px;
+  color: var(--c4);
+  text-shadow:
+    2px 2px 0 var(--c2),
+    4px 4px 0 var(--c1),
+    0 0 6px color-mix(in srgb, var(--c3) 70%, transparent);
+}
+
+.fam-crt .logo-num {
+  font-family: 'Tiny5', monospace;
+  font-size: 20px;
+  padding: 1px 5px 2px;
+  margin-bottom: 8px;
+  color: #000;
+  background: var(--c3);
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px var(--c4);
+}
+
+.fam-crt .logo-sub {
+  margin-top: 8px;
+  color: var(--c3);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+/* --- Knöpfe ----------------------------------------------------------------------------- */
+
+.fam-crt .btn {
+  height: 20px;
+  padding: 0 8px;
+  color: var(--c4);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background: var(--glass);
+  border-radius: 3px;
+  box-shadow:
+    inset 0 0 0 1px var(--c3),
+    0 0 0 1px #000;
+}
+
+.fam-crt .btn .ico {
+  color: var(--c3);
+}
+
+.fam-crt .btn:hover {
+  background: var(--c1);
+  box-shadow:
+    inset 0 0 0 1px var(--c4),
+    0 0 0 1px #000,
+    0 0 6px color-mix(in srgb, var(--c3) 60%, transparent);
+}
+
+.fam-crt .btn:active,
+.fam-crt .btn.clicked {
+  background: var(--c3);
+  color: #000;
+}
+
+.fam-crt .btn:active .ico,
+.fam-crt .btn.clicked .ico {
+  color: #000;
+}
+
+.fam-crt .btn.primary {
+  color: #000;
+  background: var(--c3);
+  box-shadow:
+    inset 0 0 0 1px var(--c4),
+    inset 0 -2px 0 0 var(--c2),
+    0 0 0 1px #000,
+    0 0 6px color-mix(in srgb, var(--c3) 60%, transparent);
+}
+
+.fam-crt .btn.primary .ico {
+  color: #000;
+}
+
+.fam-crt .btn.primary:hover {
+  background: var(--c4);
+}
+
+.fam-crt .btn.danger {
+  box-shadow:
+    inset 0 0 0 1px var(--a-bad),
+    0 0 0 1px #000;
+}
+
+.fam-crt .btn.danger .ico {
+  color: var(--a-bad);
+}
+
+.fam-crt .btn:disabled {
+  color: var(--c2);
+  background: var(--glass);
+  box-shadow:
+    inset 0 0 0 1px var(--c1),
+    0 0 0 1px #000;
+}
+
+.fam-crt .btn:disabled .ico {
+  color: var(--c1);
+}
+
+.fam-crt .badge {
+  font-style: normal;
+  margin-left: auto;
+  padding: 1px 3px;
+  color: #000;
+  background: var(--a-gold);
+  border-radius: 2px;
+}
+
+/* --- Türen ------------------------------------------------------------------------------- */
+
+.fam-crt .door {
+  color: var(--c3);
+  text-transform: uppercase;
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1px var(--c1);
+}
+
+.fam-crt .door > .ico {
+  --is: 2px;
+}
+
+.fam-crt .door:hover {
+  box-shadow: inset 0 0 0 1px var(--c3);
+}
+
+.fam-crt .door.selected {
+  color: var(--c4);
+  background: var(--c1);
+  box-shadow:
+    inset 0 0 0 1px var(--c4),
+    0 0 6px color-mix(in srgb, var(--c3) 60%, transparent);
+}
+
+.fam-crt .door-stars {
+  color: var(--a-gold);
+}
+
+/* --- Karten --------------------------------------------------------------------------------- */
+
+.fam-crt .card {
+  padding: 6px;
+}
+
+.fam-crt .card-top {
+  text-transform: uppercase;
+}
+
+.fam-crt .card-class {
+  color: var(--c3);
+}
+
+.fam-crt .card-troops {
+  color: var(--a-gold);
+}
+
+.fam-crt .card-art {
+  margin-top: 5px;
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 1px var(--c2);
+}
+
+.fam-crt .card-type {
+  margin-top: 5px;
+  color: var(--c3);
+  text-transform: uppercase;
+}
+
+.fam-crt .card-text {
+  margin-top: 4px;
+  line-height: 1.2;
+  color: var(--c4);
+}
+
+.fam-crt .card-stats {
+  margin-top: 5px;
+}
+
+.fam-crt .stat {
+  padding: 2px 4px;
+  border-radius: 2px;
+}
+
+.fam-crt .stat.dmg {
+  box-shadow: inset 0 0 0 1px var(--c3);
+}
+
+.fam-crt .stat.dmg .ico {
+  color: var(--c3);
+}
+
+.fam-crt .stat.hp {
+  color: #000;
+  background: var(--a-bad);
+}
+
+.fam-crt .stat.hp .ico {
+  color: #000;
+}
+
+.fam-crt .card-stars {
+  color: var(--a-gold);
+}
+
+.fam-crt .card.selected {
+  box-shadow:
+    inset 0 0 0 1px var(--c4),
+    0 0 0 1px #000,
+    0 0 6px color-mix(in srgb, var(--c3) 70%, transparent);
+}
+
+/* --- Fußzeile als „Fury“-Balken ---------------------------------------------------------- */
+
+.fam-crt .foot {
+  color: var(--c3);
+  text-transform: uppercase;
+  text-shadow: 1px 1px 0 #000;
+}
+
+.fam-crt .foot .ver {
+  color: var(--c2);
+}
+
+/* --- Seitenkopf (Deck, Shop) ------------------------------------------------------------- */
+
+.fam-crt .page-title {
+  font-family: 'Tiny5', monospace;
+  font-size: 18px;
+  color: var(--c4);
+  text-shadow: 2px 2px 0 var(--c1);
+}
+
+.fam-crt .page-title .ico {
+  color: var(--c3);
+}
+
+.fam-crt .page-title em {
+  font-family: 'Silkscreen', monospace;
+  font-size: 8px;
+  font-style: normal;
+  color: var(--c3);
+}
+
+.fam-crt .scroll {
+  background: var(--c1);
+  border-radius: 2px;
+}
+
+.fam-crt .scroll i {
+  background: var(--c3);
+  border-radius: 2px;
+}
+
+.fam-crt .price {
+  color: var(--a-gold);
+}
+
+.fam-crt .btn.primary .price {
+  color: #000;
+}
+
+.fam-crt .up-name {
+  color: var(--c4);
+}
+
+.fam-crt .offer.sold .card {
+  opacity: 0.5;
+}
+
+/* --- Kampf: HUD mit Balken wie „HEALTH / XP“ ------------------------------------------ */
+
+.fam-crt.s-battle {
+  padding: 18px 24px 16px !important;
+}
+
+.fam-crt .hud .army-head {
+  text-transform: uppercase;
+  text-shadow: 1px 1px 0 #000;
+}
+
+.fam-crt .hud .army-head b {
+  font-family: 'Tiny5', monospace;
+  font-size: 12px;
+  font-weight: normal;
+}
+
+.fam-crt .bar {
+  height: 8px;
+  padding: 1px;
+  background: #000;
+  border-radius: 3px;
+  box-shadow:
+    inset 0 0 0 1px var(--c4),
+    0 0 0 1px #000;
+}
+
+.fam-crt .bar i {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(color-mix(in srgb, var(--a-good) 60%, #fff) 0 1px, var(--a-good) 1px);
+}
+
+.fam-crt .army.foe .bar i {
+  margin-left: auto;
+  background: linear-gradient(color-mix(in srgb, var(--a-bad) 60%, #fff) 0 1px, var(--a-bad) 1px);
+}
+
+.fam-crt .timer {
+  font-family: 'Tiny5', monospace;
+  font-size: 22px;
+  color: var(--c4);
+  text-shadow:
+    2px 2px 0 #000,
+    0 0 6px color-mix(in srgb, var(--c3) 70%, transparent);
+}
+
+.fam-crt .hud-sub {
+  color: var(--c3);
+  text-transform: uppercase;
+  text-shadow: 1px 1px 0 #000;
+}
+
+.fam-crt .hud-sub .ico {
+  color: var(--a-gold);
+}
+
+.fam-crt .bonus-badge {
+  color: var(--c4);
+  text-transform: uppercase;
+  padding: 3px 7px;
+  background: var(--glass);
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1px var(--c2);
+}
+
+.fam-crt .bonus-badge .ico {
+  color: var(--a-gold);
+}
+
+.fam-crt .slot-label {
+  color: var(--c3);
+  text-transform: uppercase;
+  text-shadow: 1px 1px 0 #000;
+}
+
+.fam-crt .controls .fight {
+  height: 24px;
+  font-size: 10px;
+}
+
+.fam-crt .btn.small {
+  height: 16px;
+  padding: 0 6px;
+}
+
+.fam-crt.fighting .fight {
+  color: var(--c4);
+  background: var(--glass);
+  box-shadow:
+    inset 0 0 0 1px var(--a-bad),
+    0 0 0 1px #000;
+}
+
+/* Klick-Funken in den Designfarben */
+.fam-crt .cfx b {
+  background: var(--c4);
+  box-shadow: 0 0 2px var(--c3);
+}
+
+.fam-crt .cfx em {
+  color: var(--a-gold);
+  text-shadow: 1px 1px 0 #000;
+}

@@ -39,5 +39,8 @@ export default defineConfig(async ({ command }) => ({
     command === 'serve'
       ? { port: await findFreePort(PREFERRED_PORT), strictPort: true }
       : undefined,
-  build: { target: 'es2022' },
+  build: {
+    target: 'es2022',
+    rollupOptions: { input: { main: 'index.html', lab: 'ui-lab.html', sandbox: 'sandbox.html' } },
+  },
 }));

@@ -14,6 +14,10 @@ export interface PaletteTheme {
   accents?: Readonly<Record<string, string>>;
   /** Kartenbild: über Helligkeit auf die UI-Farben (Standard), nächste Palettenfarbe, oder unverändert */
   sprite?: 'ramp' | 'nearest' | 'normal';
+  /** Design-Familie mit gemeinsamem Stil (CSS-Klasse fam-<name>) */
+  family?: string;
+  /** Farb-Welt: Rasse, deren Karten dieses Design zeigt (siehe races.ts) */
+  race?: string;
   scene: (s: Scene) => void;
   /** Animierte Ebene über der Szene: `frames` Bilder, transparent, im Wechsel abgespielt */
   fx?: { frames: number; duration: number; draw: (s: Scene, frame: number) => void };

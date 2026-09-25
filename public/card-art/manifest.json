@@ -1,0 +1,222 @@
+{
+  "source": "docs/design.md",
+  "generator": "built-in image_gen",
+  "cards": [
+    {
+      "name": "Ash Brute",
+      "race": "ashclan",
+      "file": "ash-brute.png",
+      "url": "/card-art/ash-brute.png"
+    },
+    {
+      "name": "Boar Riders",
+      "race": "ashclan",
+      "file": "boar-riders.png",
+      "url": "/card-art/boar-riders.png"
+    },
+    {
+      "name": "Fire Catapult",
+      "race": "ashclan",
+      "file": "fire-catapult.png",
+      "url": "/card-art/fire-catapult.png"
+    },
+    {
+      "name": "Skullcrusher",
+      "race": "ashclan",
+      "file": "skullcrusher.png",
+      "url": "/card-art/skullcrusher.png"
+    },
+    {
+      "name": "Thorn Archers",
+      "race": "wildwood",
+      "file": "thorn-archers.png",
+      "url": "/card-art/thorn-archers.png"
+    },
+    {
+      "name": "Stag Knights",
+      "race": "wildwood",
+      "file": "stag-knights.png",
+      "url": "/card-art/stag-knights.png"
+    },
+    {
+      "name": "Storm Caller",
+      "race": "wildwood",
+      "file": "storm-caller.png",
+      "url": "/card-art/storm-caller.png"
+    },
+    {
+      "name": "Moon Singer",
+      "race": "wildwood",
+      "file": "moon-singer.png",
+      "url": "/card-art/moon-singer.png"
+    },
+    {
+      "name": "Wolf Pack",
+      "race": "wildwood",
+      "file": "wolf-pack.png",
+      "url": "/card-art/wolf-pack.png"
+    },
+    {
+      "name": "Sporelings",
+      "race": "wildwood",
+      "file": "sporelings.png",
+      "url": "/card-art/sporelings.png"
+    },
+    {
+      "name": "Elder Treant",
+      "race": "wildwood",
+      "file": "elder-treant.png",
+      "url": "/card-art/elder-treant.png"
+    },
+    {
+      "name": "Coral Guard",
+      "race": "tidebound",
+      "file": "coral-guard.png",
+      "url": "/card-art/coral-guard.png"
+    },
+    {
+      "name": "Frost Sister",
+      "race": "tidebound",
+      "file": "frost-sister.png",
+      "url": "/card-art/frost-sister.png"
+    },
+    {
+      "name": "Snapjaw Crabs",
+      "race": "tidebound",
+      "file": "snapjaw-crabs.png",
+      "url": "/card-art/snapjaw-crabs.png"
+    },
+    {
+      "name": "Abyssal Kraken",
+      "race": "tidebound",
+      "file": "abyssal-kraken.png",
+      "url": "/card-art/abyssal-kraken.png"
+    },
+    {
+      "name": "Legionnaires",
+      "race": "sunlegion",
+      "file": "legionnaires.png",
+      "url": "/card-art/legionnaires.png"
+    },
+    {
+      "name": "Dawn Invoker",
+      "race": "sunlegion",
+      "file": "dawn-invoker.png",
+      "url": "/card-art/dawn-invoker.png"
+    },
+    {
+      "name": "Sun Priestess",
+      "race": "sunlegion",
+      "file": "sun-priestess.png",
+      "url": "/card-art/sun-priestess.png"
+    },
+    {
+      "name": "Trebuchet",
+      "race": "sunlegion",
+      "file": "trebuchet.png",
+      "url": "/card-art/trebuchet.png"
+    },
+    {
+      "name": "Lord Commander",
+      "race": "sunlegion",
+      "file": "lord-commander.png",
+      "url": "/card-art/lord-commander.png"
+    },
+    {
+      "name": "Bloaters",
+      "race": "plague",
+      "file": "bloaters.png",
+      "url": "/card-art/bloaters.png"
+    },
+    {
+      "name": "Bone Archers",
+      "race": "plague",
+      "file": "bone-archers.png",
+      "url": "/card-art/bone-archers.png"
+    },
+    {
+      "name": "Blight Witch",
+      "race": "plague",
+      "file": "blight-witch.png",
+      "url": "/card-art/blight-witch.png"
+    },
+    {
+      "name": "Corpse Cart",
+      "race": "plague",
+      "file": "corpse-cart.png",
+      "url": "/card-art/corpse-cart.png"
+    },
+    {
+      "name": "Carrion Crows",
+      "race": "plague",
+      "file": "carrion-crows.png",
+      "url": "/card-art/carrion-crows.png"
+    },
+    {
+      "name": "Zombie Horde",
+      "race": "plague",
+      "file": "zombie-horde.png",
+      "url": "/card-art/zombie-horde.png"
+    },
+    {
+      "name": "The Lich",
+      "race": "plague",
+      "file": "the-lich.png",
+      "url": "/card-art/the-lich.png"
+    },
+    {
+      "name": "Ironbeards",
+      "race": "deepforge",
+      "file": "ironbeards.png",
+      "url": "/card-art/ironbeards.png"
+    },
+    {
+      "name": "Bear Riders",
+      "race": "deepforge",
+      "file": "bear-riders.png",
+      "url": "/card-art/bear-riders.png"
+    },
+    {
+      "name": "Mountain Cannon",
+      "race": "deepforge",
+      "file": "mountain-cannon.png",
+      "url": "/card-art/mountain-cannon.png"
+    },
+    {
+      "name": "Steam Colossus",
+      "race": "deepforge",
+      "file": "steam-colossus.png",
+      "url": "/card-art/steam-colossus.png"
+    },
+    {
+      "name": "Mercenary Company",
+      "race": "drifters",
+      "file": "mercenary-company.png",
+      "url": "/card-art/mercenary-company.png"
+    },
+    {
+      "name": "Militia Bowmen",
+      "race": "drifters",
+      "file": "militia-bowmen.png",
+      "url": "/card-art/militia-bowmen.png"
+    },
+    {
+      "name": "Wandering Magus",
+      "race": "drifters",
+      "file": "wandering-magus.png",
+      "url": "/card-art/wandering-magus.png"
+    },
+    {
+      "name": "Field Chaplain",
+      "race": "drifters",
+      "file": "field-chaplain.png",
+      "url": "/card-art/field-chaplain.png"
+    },
+    {
+      "name": "Hired Giant",
+      "race": "drifters",
+      "file": "hired-giant.png",
+      "url": "/card-art/hired-giant.png"
+    }
+  ]
+}

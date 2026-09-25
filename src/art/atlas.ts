@@ -38,7 +38,7 @@ export interface Atlas {
 
 const ALL_CARDS: readonly CardDef[] = [...CARDS, SKELETON, GHOUL];
 
-function fxGrids(): Record<keyof FxTex, PixelGrid> {
+export function fxGrids(): Record<keyof FxTex, PixelGrid> {
   const W = '#ffffff';
   const px1 = new PixelGrid(1, 1).set(0, 0, W);
   const px2 = new PixelGrid(2, 2).rect(0, 0, 2, 2, W);

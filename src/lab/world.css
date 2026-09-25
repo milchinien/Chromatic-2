@@ -1,0 +1,582 @@
+/* =====================================================================
+   Farb-Welten (Ashclan … Drifters) + neues Kartendesign (.pc).
+   Karten: neutraler Pixel-Rahmen als 9-Slice-Bild, nur das Bildfeld trägt
+   die Rassenfarbe. Kampf: Wiese oben, breiter Wald unten mit 4 Karten.
+   ===================================================================== */
+
+/* --- Karte ------------------------------------------------------------------------ */
+
+.pc {
+  position: relative;
+  box-sizing: border-box;
+  width: 86px;
+  height: 119px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border: 6px solid transparent;
+  border-image: var(--frame) 6 fill / 6px;
+  image-rendering: pixelated;
+  font-family: 'Silkscreen', monospace;
+  font-size: 8px;
+  line-height: 1;
+  color: #f4ecd9;
+  text-shadow: 1px 1px 0 #000;
+  transition: transform 0.08s steps(2);
+}
+
+.pc-top {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 9px;
+  padding: 0 1px;
+}
+
+.pc-top .ico {
+  flex: none;
+  color: #c9c2b4;
+}
+
+.pc-name {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.pc-art {
+  position: relative;
+  height: 48px;
+  flex: none;
+  overflow: hidden;
+  background-size: 100% 100%;
+  image-rendering: pixelated;
+  box-shadow: inset 0 0 0 1px #141018;
+}
+
+.pc-illustration {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  image-rendering: pixelated;
+}
+
+.pc-troops {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  padding: 1px 2px 0;
+  color: #ffe23a;
+  background: rgba(10, 8, 14, 0.7);
+}
+
+.pc-troops small {
+  color: #b8ad9a;
+}
+
+.pc-troops.rolled {
+  animation: roll-in 0.45s steps(4);
+}
+
+@keyframes roll-in {
+  from {
+    transform: scale(1.8);
+    color: #fff;
+  }
+}
+
+.pc-type {
+  color: #b8ad9a;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.pc-text {
+  flex: 1;
+  margin: 0;
+  padding: 0 1px;
+  line-height: 1.2;
+  color: #e8e0d0;
+}
+
+.pc-stars {
+  display: flex;
+  justify-content: center;
+  gap: 1px;
+  color: #ffd23a;
+  --is: 1px;
+}
+
+.pc-stars .ico {
+  filter: drop-shadow(1px 1px 0 #000);
+}
+
+.pc-stats {
+  display: flex;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+.crest {
+  width: 34px;
+  height: 12px;
+  padding-left: 13px;
+  box-sizing: border-box;
+  line-height: 12px;
+  background-size: 34px 12px;
+  image-rendering: pixelated;
+  color: #fff;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.55);
+}
+
+.pc.big {
+  width: 124px;
+  height: 180px;
+  gap: 3px;
+}
+
+.pc.big .pc-art {
+  height: 66px;
+}
+
+.pc.big .pc-name {
+  font-size: 8px;
+}
+
+/* Auswahl & Hover */
+.pc-grid .pc {
+  cursor: pointer;
+}
+
+.pc-grid .pc:hover {
+  transform: translateY(-2px);
+}
+
+.pc.selected {
+  outline: 1px solid var(--c4, #fff);
+  outline-offset: 1px;
+  box-shadow: 0 0 6px 1px color-mix(in srgb, var(--c3, #fff) 70%, transparent);
+}
+
+/* --- Menü ------------------------------------------------------------------------- */
+
+.world .feature {
+  grid-area: card;
+  align-self: center;
+  justify-self: center;
+}
+
+/* --- Deck --------------------------------------------------------------------------- */
+
+.world.s-deck {
+  grid-template-columns: 1fr 128px;
+  grid-template-rows: 16px 20px 1fr 10px;
+  gap: 6px 12px;
+  padding: 16px 22px 12px !important;
+}
+
+.world .pc-grid {
+  grid-template-columns: repeat(4, 86px);
+  gap: 8px 10px;
+}
+
+.world .deck-panel {
+  padding: 6px;
+}
+
+.world .detail {
+  gap: 6px;
+}
+
+.world .detail-actions {
+  width: 124px;
+}
+
+/* --- Shop ----------------------------------------------------------------------------- */
+
+.world.s-shop {
+  grid-template-columns: 1fr 150px;
+  grid-template-rows: 16px 20px 1fr 10px;
+  gap: 6px 12px;
+  padding: 16px 22px 12px !important;
+}
+
+.world .offers {
+  padding: 6px 8px;
+}
+
+.world .offers .panel-title {
+  margin-bottom: 5px;
+}
+
+.world .offer-row {
+  gap: 8px;
+}
+
+.world .offer {
+  gap: 5px;
+}
+
+.world .offer .buy {
+  width: 124px;
+}
+
+.world .offer.sold .pc {
+  opacity: 0.45;
+}
+
+/* --- Arena (Kampf) -------------------------------------------------------------------
+   In JEDER Arena gleich: feste Positionen und Breiten, neutrale Metallrahmen,
+   feste Farben (du grün, Gegner rot). Nur Hintergrund und Wiese tragen die
+   Welt-Farbe. Längere Namen werden abgeschnitten, nichts verschiebt sich.   */
+
+.world.s-battle {
+  --metal-l: #c9c2b4;
+  --metal: #948c7e;
+  --metal-d: #5d574e;
+  --ink: #141018;
+  --plate: #211c26;
+  --text: #f4ecd9;
+  --muted: #b8ad9a;
+  --you: #4fd86a;
+  --you-l: #b6ff9a;
+  --you-d: #1f7a36;
+  --foe: #e8373f;
+  --foe-l: #ff9a86;
+  --foe-d: #861624;
+  --gold: #ffd23a;
+  display: block;
+  font-family: 'Silkscreen', monospace;
+  font-size: 8px;
+}
+
+/* HUD: 238 | 84 | 238 px, oben fest verankert */
+.world .whud {
+  position: absolute;
+  top: 17px;
+  left: 24px;
+  width: 592px;
+  height: 34px;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: 238px 84px 238px;
+  gap: 16px;
+  align-items: start;
+  color: var(--text);
+  text-shadow: 1px 1px 0 #000;
+}
+
+.world .wbar {
+  width: 238px;
+  min-width: 0;
+}
+
+.world .wbar-head {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 11px;
+  padding: 0 2px 0 3px;
+  margin-bottom: 1px;
+  background: rgba(12, 10, 16, 0.72);
+  box-shadow: 0 0 0 1px var(--ink);
+}
+
+.world .wbar.foe .wbar-head {
+  flex-direction: row-reverse;
+  padding: 0 3px 0 2px;
+}
+
+.world .wbar-chip {
+  flex: none;
+  width: 5px;
+  height: 5px;
+  box-shadow: 0 0 0 1px var(--ink);
+}
+
+.world .wbar.you .wbar-chip {
+  background: #3ec5ff;
+}
+
+.world .wbar.foe .wbar-chip {
+  background: #ffcc33;
+}
+
+.world .wbar-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.world .wbar.foe .wbar-name {
+  text-align: right;
+}
+
+.world .wbar-count {
+  flex: none;
+  width: 52px;
+  font-family: 'Tiny5', monospace;
+  font-size: 9px;
+  font-weight: normal;
+  text-align: right;
+}
+
+.world .wbar.foe .wbar-count {
+  text-align: left;
+}
+
+.world .wbar-count small {
+  font-size: 8px;
+  color: var(--muted);
+}
+
+/* Balken: 9-Slice-Metallrahmen, 3-stufige Füllung, Zehntel-Kerben, Schadensspur */
+.world .wbar-track {
+  position: relative;
+  box-sizing: border-box;
+  height: 16px;
+  border: 3px solid transparent;
+  border-image: var(--bar-frame) 3 fill / 3px;
+  image-rendering: pixelated;
+}
+
+.world .wbar-track > i {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.world .wbar.foe .wbar-track > i {
+  left: auto;
+  right: 0;
+}
+
+.world .wbar-track .trail {
+  width: var(--trail);
+  background: repeating-linear-gradient(90deg, #fff4e0 0 2px, #d8cfbd 2px 4px);
+  opacity: 0.55;
+}
+
+.world .wbar-track .fill {
+  width: var(--hp);
+  --l: var(--you-l);
+  --m: var(--you);
+  --d: var(--you-d);
+  background:
+    repeating-linear-gradient(90deg, transparent 0 calc(10% - 1px), rgba(0, 0, 0, 0.35) calc(10% - 1px) 10%) 0 0 / 100% 100%,
+    linear-gradient(var(--l) 0 2px, var(--m) 2px 7px, var(--d) 7px);
+  box-shadow: 1px 0 0 0 var(--ink);
+}
+
+.world .wbar.foe .wbar-track .fill {
+  --l: var(--foe-l);
+  --m: var(--foe);
+  --d: var(--foe-d);
+  box-shadow: -1px 0 0 0 var(--ink);
+}
+
+/* Glanzpunkt an der Balkenspitze */
+.world .wbar-track .fill::after {
+  content: '';
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  width: 2px;
+  height: 2px;
+  background: #fff;
+}
+
+.world .wbar.foe .wbar-track .fill::after {
+  right: auto;
+  left: 1px;
+}
+
+/* Timer: feste Box 84×30 */
+.world .wtimer {
+  box-sizing: border-box;
+  width: 84px;
+  height: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  border: 6px solid transparent;
+  border-image: var(--frame) 6 fill / 6px;
+  image-rendering: pixelated;
+}
+
+.world .wtimer b {
+  font-family: 'Tiny5', monospace;
+  font-size: 12px;
+  font-weight: normal;
+  line-height: 1;
+  color: var(--text);
+}
+
+.world .wtimer-stars {
+  display: flex;
+  gap: 1px;
+  color: var(--gold);
+  --is: 1px;
+}
+
+/* Kartenplätze: feste Position, Beschriftung mit fester Breite */
+.world .wslot {
+  position: absolute;
+  top: 225px;
+  z-index: 2;
+}
+
+.world .wslot .slot-label {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  width: 40px;
+  margin-left: -20px;
+  height: 9px;
+  padding-top: 1px;
+  box-sizing: border-box;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--text);
+  background: var(--plate);
+  box-shadow:
+    0 0 0 1px var(--metal-d),
+    0 0 0 2px var(--ink);
+  text-shadow: 1px 1px 0 #000;
+}
+
+/* Steuerung: feste Box 192×84, neutraler Metallrahmen */
+.world .wcontrols {
+  position: absolute;
+  left: 224px;
+  top: 258px;
+  width: 192px;
+  height: 86px;
+  box-sizing: border-box;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 5px;
+  border: 6px solid transparent;
+  border-image: var(--frame) 6 fill / 6px;
+  image-rendering: pixelated;
+  padding: 1px 2px;
+}
+
+.world .bonus-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 9px;
+  overflow: hidden;
+  white-space: nowrap;
+  color: var(--muted);
+  text-transform: uppercase;
+  text-shadow: 1px 1px 0 #000;
+}
+
+.world .bonus-line .ico {
+  color: var(--gold);
+}
+
+/* Pixel-Knöpfe: gleiche Farben in jeder Arena */
+.world .wbtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  height: 18px;
+  font-family: 'Silkscreen', monospace;
+  font-size: 8px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text);
+  background: #3a3342;
+  text-shadow: 1px 1px 0 #000;
+  box-shadow:
+    inset 0 1px 0 0 #5a5166,
+    inset 0 -2px 0 0 #231e29,
+    0 0 0 1px var(--ink);
+}
+
+.world .wbtn:hover {
+  background: #4a4254;
+}
+
+.world .wbtn:active,
+.world .wbtn.clicked {
+  transform: translateY(1px);
+  box-shadow:
+    inset 0 1px 0 0 #231e29,
+    0 0 0 1px var(--ink);
+}
+
+.world .wbtn.fight {
+  height: 24px;
+  font-size: 10px;
+  background: #c8323c;
+  box-shadow:
+    inset 0 2px 0 0 #f2735a,
+    inset 0 -3px 0 0 #7d1e2c,
+    0 0 0 1px var(--ink);
+}
+
+.world .wbtn.fight:hover {
+  background: #d8434c;
+}
+
+.world .wbtn.fight .ico {
+  color: #fff4e0;
+}
+
+.world.fighting .wbtn.fight {
+  background: #3a3342;
+  box-shadow:
+    inset 0 1px 0 0 #5a5166,
+    inset 0 -2px 0 0 #231e29,
+    0 0 0 1px var(--ink);
+}
+
+.world .wcontrols .control-row {
+  display: flex;
+  gap: 4px;
+}
+
+.world .wbtn.small {
+  width: 52px;
+  flex: none;
+}
+
+.world .wseg {
+  flex: 1;
+  display: flex;
+  gap: 1px;
+  padding: 1px;
+  background: var(--ink);
+}
+
+.world .wseg .seg {
+  flex: 1;
+  height: 16px;
+  padding: 0 !important;
+  color: var(--muted);
+  background: #2a2432;
+}
+
+.world .wseg .seg.active {
+  color: var(--ink);
+  background: var(--gold);
+  box-shadow: inset 0 -2px 0 0 #b0700f;
+}

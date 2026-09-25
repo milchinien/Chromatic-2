@@ -1,0 +1,366 @@
+{
+  "generator": "built-in image_gen",
+  "source": "docs/design.md",
+  "cards": [
+    {
+      "race": "ashclan",
+      "faction": "Ashclan",
+      "color": "RED",
+      "palette": "#2a0508 #6e1018 #b8242c #f0603f",
+      "name": "Ash Brute",
+      "slug": "ash-brute",
+      "description": "Breitschultriger grüngrauer Ork mit Hauern, gezacktem Hackbeil mit glühender Schneide, Fell-Lendenschurz. Brennende Zelte und Funken im Hintergrund.",
+      "prompt": "Use case: stylized-concept. Generate ONE standalone landscape 3:2 card illustration for the pixel-art fantasy game Chromatic 2, card Ash Brute, faction Ashclan / red. ONLY artwork filling the entire image, not a card layout. Subject: broad-shouldered gray-green tusked orc with a jagged cleaver with a glowing burning edge, fur loincloth; faint silhouettes of burning tents and a few sparks. Simple readable central full-body figure, occupies 65% height. Fine crisp hand-placed-looking pixel art, approximately 192x128 logical pixels enlarged with nearest-neighbor, square pixel clusters, clean dark outlines, limited palette and stepped shading, no smooth gradients or blur, no painterly rendering. Background MUST stay predominantly faction RED using #2a0508 #6e1018 #b8242c #f0603f: simple dithered glow behind the subject, dark pixel ground along bottom, sparse scenery, keep upper right quiet. Modest detail, charming dark fantasy retro strategy game. No text, no numbers, no troop count, no badges, no UI, no border, no frame, no labels, no watermark. Name is metadata only and must not appear."
+    },
+    {
+      "race": "ashclan",
+      "faction": "Ashclan",
+      "color": "RED",
+      "palette": "#2a0508 #6e1018 #b8242c #f0603f",
+      "name": "Boar Riders",
+      "slug": "boar-riders",
+      "description": "Ork mit Knochenhelm auf riesigem Wildschwein mit eisenbeschlagenen Hauern, voller Galopp, Staub und Asche wirbeln auf.",
+      "prompt": "Use case: stylized-concept. Asset type: standalone card artwork for Chromatic 2. Generate ONE landscape 3:2 image, ideally 1536x1024, artwork only filling the image. Card name metadata: Boar Riders. Faction: Ashclan. Subject description from game design: Ork mit Knochenhelm auf riesigem Wildschwein mit eisenbeschlagenen Hauern, voller Galopp, Staub und Asche wirbeln auf.\nStyle: fine crisp retro fantasy pixel art, square pixel clusters on an approximately 192x128 logical grid enlarged with nearest-neighbor, dark outlines, limited colors, stepped shading. Simple readable silhouettes, modest detail, no photorealism, no painterly texture, no blur or smooth gradient. One clear main subject or small readable group; keep secondary scenery minimal. Centered full figure with breathing room, occupies approximately 65-75% height, fits small card art.\nBackground MUST be predominantly RED in these existing game background colors: #2a0508 #6e1018 #b8242c #f0603f. Simple pixel-dithered glow behind subject, darker corners, dark pixel ground in bottom quarter, understated silhouettes suggested by description, retain a large visible colored background. Upper right mostly quiet colored background. Subject may use natural material colors with faction-colored accents. For crowds use a few clear foreground figures and minimal silhouettes. Stylized non-graphic fantasy.\nHARD CONSTRAINTS: NO text, letters, numerals, number in upper right, troop counts, symbols from UI, badges, labels, frame, card border, interface, watermark. Draw ONLY the illustration that goes inside a card, never a whole card."
+    },
+    {
+      "race": "ashclan",
+      "faction": "Ashclan",
+      "color": "RED",
+      "palette": "#2a0508 #6e1018 #b8242c #f0603f",
+      "name": "Fire Catapult",
+      "slug": "fire-catapult",
+      "description": "Grob genageltes Holzkatapult mit Schädel-Deko, brennender Tontopf in der Schaufel, zwei Goblins ziehen am Seil.",
+      "prompt": "Use case: stylized-concept. Asset type: standalone card artwork for Chromatic 2. Generate ONE landscape 3:2 image, ideally 1536x1024, artwork only filling the image. Card name metadata: Fire Catapult. Faction: Ashclan. Subject description from game design: Grob genageltes Holzkatapult mit Schädel-Deko, brennender Tontopf in der Schaufel, zwei Goblins ziehen am Seil.\nStyle: fine crisp retro fantasy pixel art, square pixel clusters on an approximately 192x128 logical grid enlarged with nearest-neighbor, dark outlines, limited colors, stepped shading. Simple readable silhouettes, modest detail, no photorealism, no painterly texture, no blur or smooth gradient. One clear main subject or small readable group; keep secondary scenery minimal. Centered full figure with breathing room, occupies approximately 65-75% height, fits small card art.\nBackground MUST be predominantly RED in these existing game background colors: #2a0508 #6e1018 #b8242c #f0603f. Simple pixel-dithered glow behind subject, darker corners, dark pixel ground in bottom quarter, understated silhouettes suggested by description, retain a large visible colored background. Upper right mostly quiet colored background. Subject may use natural material colors with faction-colored accents. For crowds use a few clear foreground figures and minimal silhouettes. Stylized non-graphic fantasy.\nHARD CONSTRAINTS: NO text, letters, numerals, number in upper right, troop counts, symbols from UI, badges, labels, frame, card border, interface, watermark. Draw ONLY the illustration that goes inside a card, never a whole card."
+    },
+    {
+      "race": "ashclan",
+      "faction": "Ashclan",
+      "color": "RED",
+      "palette": "#2a0508 #6e1018 #b8242c #f0603f",
+      "name": "Skullcrusher",
+      "slug": "skullcrusher",
+      "description": "Riesiger Orkhäuptling mit Schädeltrophäen und menschengroßer Zweihandaxt, Gegner fliegen durch die Luft.",
+      "prompt": "Use case: stylized-concept. Asset type: standalone card artwork for Chromatic 2. Generate ONE landscape 3:2 image, ideally 1536x1024, artwork only filling the image. Card name metadata: Skullcrusher. Faction: Ashclan. Subject description from game design: Riesiger Orkhäuptling mit Schädeltrophäen und menschengroßer Zweihandaxt, Gegner fliegen durch die Luft.\nStyle: fine crisp retro fantasy pixel art, square pixel clusters on an approximately 192x128 logical grid enlarged with nearest-neighbor, dark outlines, limited colors, stepped shading. Simple readable silhouettes, modest detail, no photorealism, no painterly texture, no blur or smooth gradient. One clear main subject or small readable group; keep secondary scenery minimal. Centered full figure with breathing room, occupies approximately 65-75% height, fits small card art.\nBackground MUST be predominantly RED in these existing game background colors: #2a0508 #6e1018 #b8242c #f0603f. Simple pixel-dithered glow behind subject, darker corners, dark pixel ground in bottom quarter, understated silhouettes suggested by description, retain a large visible colored background. Upper right mostly quiet colored background. Subject may use natural material colors with faction-colored accents. For crowds use a few clear foreground figures and minimal silhouettes. Stylized non-graphic fantasy.\nHARD CONSTRAINTS: NO text, letters, numerals, number in upper right, troop counts, symbols from UI, badges, labels, frame, card border, interface, watermark. Draw ONLY the illustration that goes inside a card, never a whole card."
+    },
+    {
+      "race": "wildwood",
+      "faction": "Wildwood",
+      "color": "GREEN",
+      "palette": "#06200c #12501e #2a8a2c #7cd24a",
+      "name": "Thorn Archers",
+      "slug": "thorn-archers",
+      "description": "Schlanke Elfe im Moosumhang, Bogen aus gebogenem Ast, Dorn als Pfeilspitze, kniet in hohem Farn.",
+      "prompt": "Use case: stylized-concept. Asset type: standalone card artwork for Chromatic 2. Generate ONE landscape 3:2 image, ideally 1536x1024, artwork only filling the image. Card name metadata: Thorn Archers. Faction: Wildwood. Subject description from game design: Schlanke Elfe im Moosumhang, Bogen aus gebogenem Ast, Dorn als Pfeilspitze, kniet in hohem Farn.\nStyle: fine crisp retro fantasy pixel art, square pixel clusters on an approximately 192x128 logical grid enlarged with nearest-neighbor, dark outlines, limited colors, stepped shading. Simple readable silhouettes, modest detail, no photorealism, no painterly texture, no blur or smooth gradient. One clear main subject or small readable group; keep secondary scenery minimal. Centered full figure with breathing room, occupies approximately 65-75% height, fits small card art.\nBackground MUST be predominantly GREEN in these existing game background colors: #06200c #12501e #2a8a2c #7cd24a. Simple pixel-dithered glow behind subject, darker corners, dark pixel ground in bottom quarter, understated silhouettes suggested by description, retain a large visible colored background. Upper right mostly quiet colored background. Subject may use natural material colors with faction-colored accents. For crowds use a few clear foreground figures and minimal silhouettes. Stylized non-graphic fantasy.\nHARD CONSTRAINTS: NO text, letters, numerals, number in upper right, troop counts, symbols from UI, badges, labels, frame, card border, interface, watermark. Draw ONLY the illustration that goes inside a card, never a whole card."
+    },
+    {
+      "race": "wildwood",
+      "faction": "Wildwood",
+      "color": "GREEN",
+      "palette": "#06200c #12501e #2a8a2c #7cd24a",
+      "name": "Stag Knights",
+      "slug": "stag-knights",
+      "description": "Elfenritter mit Speer auf weißem Hirsch mit rankenumwickeltem Geweih, mitten im Sprung über ein Gebüsch.",
+      "prompt": "Use case: stylized-concept. Asset type: standalone card artwork for Chromatic 2. Generate ONE landscape 3:2 image, ideally 1536x1024, artwork only filling the image. Card name metadata: Stag Knights. Faction: Wildwood. Subject description from game design: Elfenritter mit Speer auf weißem Hirsch mit rankenumwickeltem Geweih, mitten im Sprung über ein Gebüsch.\nStyle: fine crisp retro fantasy pixel art, square pixel clusters on an approximately 192x128 logical grid enlarged with nearest-neighbor, dark outlines, limited colors, stepped shading. Simple readable silhouettes, modest detail, no photorealism, no painterly texture, no blur or smooth gradient. One clear main subject or small readable group; keep secondary scenery minimal. Centered full figure with breathing room, occupies approximately 65-75% height, fits small card art.\nBackground MUST be predominantly GREEN in these existing game background colors: #06200c #12501e #2a8a2c #7cd24a. Simple pixel-dithered glow behind subject, darker corners, dark pixel ground in bottom quarter, understated silhouettes suggested by description, retain a large visible colored background. Upper right mostly quiet colored background. Subject may use natural material colors with faction-colored accents. For crowds use a few clear foreground figures and minimal silhouettes. Stylized non-graphic fantasy.\nHARD CONSTRAINTS: NO text, letters, numerals, number in upper right, troop counts, symbols from UI, badges, labels, frame, card border, interface, watermark. Draw ONLY the illustration that goes inside a card, never a whole card."
+    },
+    {
+      "race": "wildwood",
+      "faction": "Wildwood",
+      "color": "GREEN",
+      "palette": "#06200c #12501e #2a8a2c #7cd24a",
+      "name": "Storm Caller",
+      "slug": "storm-caller",
+      "description": "Alter Druide mit Geweihkrone, Arme gen Himmel, dunkle Wolken, grüner Blitz aus der Hand.",
+      "prompt": "Use case: stylized-concept. Asset type: standalone card artwork for Chromatic 2. Generate ONE landscape 3:2 image, ideally 1536x1024, artwork only filling the image. Card name metadata: Storm Caller. Faction: Wildwood. Subject description from game design: Alter Druide mit Geweihkrone, Arme gen Himmel, dunkle Wolken, grüner Blitz aus der Hand.\nStyle: fine crisp retro fantasy pixel art, square pixel clusters on an approximately 192x128 logical grid enlarged with nearest-neighbor, dark outlines, limited colors, stepped shading. Simple readable silhouettes, modest detail, no photorealism, no painterly texture, no blur or smooth gradient. One clear main subject or small readable group; keep secondary scenery minimal. Centered full figure with breathing room, occupies approximately 65-75% height, fits small card art.\nBackground MUST be predominantly GREEN in these existing game background colors: #06200c #12501e #2a8a2c #7cd24a. Simple pixel-dithered glow behind subject, darker corners, dark pixel ground in bottom quarter, understated silhouettes suggested by description, retain a large visible colored background. Upper right mostly quiet colored background. Subject may use natural material colors with faction-colored accents. For crowds use a few clear foreground figures and minimal silhouettes. Stylized non-graphic fantasy.\nHARD CONSTRAINTS: NO text, letters, numerals, number in upper right, troop counts, symbols from UI, badges, labels, frame, card border, interface, watermark. Draw ONLY the illustration that goes inside a card, never a whole card."
+    },
+    {
+      "race": "wildwood",
+      "faction": "Wildwood",
+      "color": "GREEN",
+      "palette": "#06200c #12501e #2a8a2c #7cd24a",
+      "name": "Moon Singer",
+      "slug": "moon-singer",
+      "description": "Elfenpriesterin mit Silberhaar singt mit geschlossenen Augen vor großem Vollmond, blasse Lichtwellen.",
+      "prompt": "Use case: stylized-concept. Asset type: standalone card artwork for Chromatic 2. Generate ONE landscape 3:2 image, ideally 1536x1024, artwork only filling the image. Card name metadata: Moon Singer. Faction: Wildwood. Subject description from game design: Elfenpriesterin mit Silberhaar singt mit geschlossenen Augen vor großem Vollmond, blasse Lichtwellen.\nStyle: fine crisp retro fantasy pixel art, square pixel clusters on an approximately 192x128 logical grid enlarged with nearest-neighbor, dark outlines, limited colors, stepped shading. Simple readable silhouettes, modest detail, no photorealism, no painterly texture, no blur or smooth gradient. One clear main subject or small readable group; keep secondary scenery minimal. Centered full figure with breathing room, occupies approximately 65-75% height, fits small card art.\nBackground MUST be predominantly GREEN in these existing game background colors: #06200c #12501e #2a8a2c #7cd24a. Simple pixel-dithered glow behind subject, darker corners, dark pixel ground in bottom quarter, understated silhouettes suggested by description, retain a large visible colored background. Upper right mostly quiet colored background. Subject may use natural material colors with faction-colored accents. For crowds use a few clear foreground figures and minimal silhouettes. Stylized non-graphic fantasy.\nHARD CONSTRAINTS: NO text, letters, numerals, number in upper right, troop counts, symbols from UI, badges, labels, frame, card border, interface, watermark. Draw ONLY the illustration that goes inside a card, never a whole card."
+    },
+    {
+      "race": "wildwood",
+      "faction": "Wildwood",
+      "color": "GREEN",
+      "palette": "#06200c #12501e #2a8a2c #7cd24a",
+      "name": "Wolf Pack",
+      "slug": "wolf-pack",
+      "description": "Drei graue Wölfe mit Moos im Fell heulen auf einem Felsen, grün leuchtende Augen.",
+      "prompt": "Use case: stylized-concept. Asset type: standalone card artwork for Chromatic 2. Generate ONE landscape 3:2 image, ideally 1536x1024, artwork only filling the image. Card name metadata: Wolf Pack. Faction: Wildwood. Subject description from game design: Drei graue Wölfe mit Moos im Fell heulen auf einem Felsen, grün leuchtende Augen.\nStyle: fine crisp retro fantasy pixel art, square pixel clusters on an approximately 192x128 logical grid enlarged with nearest-neighbor, dark outlines, limited colors, stepped shading. Simple readable silhouettes, modest detail, no photorealism, no painterly texture, no blur or smooth gradient. One clear main subject or small readable group; keep secondary scenery minimal. Centered full figure with breathing room, occupies approximately 65-75% height, fits small card art.\nBackground MUST be predominantly GREEN in these existing game background colors: #06200c #12501e #2a8a2c #7cd24a. Simple pixel-dithered glow behind subject, darker corners, dark pixel ground in bottom quarter, understated silhouettes suggested by description, retain a large visible colored background. Upper right mostly quiet colored background. Subject may use natural material colors with faction-colored accents. For crowds use a few clear foreground figures and minimal silhouettes. Stylized non-graphic fantasy.\nHARD CONSTRAINTS: NO text, letters, numerals, number in upper right, troop counts, symbols from UI, badges, labels, frame, card border, interface, watermark. Draw ONLY the illustration that goes inside a card, never a whole card."
+    },
+    {
+      "race": "wildwood",
+      "faction": "Wildwood",
+      "color": "GREEN",
+      "palette": "#06200c #12501e #2a8a2c #7cd24a",
+      "name": "Sporelings",
+      "slug": "sporelings",
+      "description": "Dutzende Pilzwesen mit rot-weiß getupften Hüten auf dem Waldboden, einer platzt in gelber Sporenwolke.",
+      "prompt": "Use case: stylized-concept. Asset type: standalone card artwork for Chromatic 2. Generate ONE landscape 3:2 image, ideally 1536x1024, artwork only filling the image. Card name metadata: Sporelings. Faction: Wildwood. Subject description from game design: Dutzende Pilzwesen mit rot-weiß getupften Hüten auf dem Waldboden, einer platzt in gelber Sporenwolke.\nStyle: fine crisp retro fantasy pixel art, square pixel clusters on an approximately 192x128 logical grid enlarged with nearest-neighbor, dark outlines, limited colors, stepped shading. Simple readable silhouettes, modest detail, no photorealism, no painterly texture, no blur or smooth gradient. One clear main subject or small readable group; keep secondary scenery minimal. Centered full figure with breathing room, occupies approximately 65-75% height, fits small card art.\nBackground MUST be predominantly GREEN in these existing game background colors: #06200c #12501e #2a8a2c #7cd24a. Simple pixel-dithered glow behind subject, darker corners, dark pixel ground in bottom quarter, understated silhouettes suggested by description, retain a large visible colored background. Upper right mostly quiet colored background. Subject may use natural material colors with faction-colored accents. For crowds use a few clear foreground figures and minimal silhouettes. Stylized non-graphic fantasy.\nHARD CONSTRAINTS: NO text, letters, numerals, number in upper right, troop counts, symbols from UI, badges, labels, frame, card border, interface, watermark. Draw ONLY the illustration that goes inside a card, never a whole card."
+    },
+    {
+      "race": "wildwood",
+      "faction": "Wildwood",
+      "color": "GREEN",
+      "palette": "#06200c #12501e #2a8a2c #7cd24a",
+      "name": "Elder Treant",
+      "slug": "elder-treant",
+      "description": "Uralter Baumriese mit moosbedecktem Rindengesicht und Vögeln in der Krone, Wurzeln umschlingen Soldaten.",
+      "prompt": "Use case: stylized-concept. Asset type: standalone card artwork for Chromatic 2. Generate ONE landscape 3:2 image, ideally 1536x1024, artwork only filling the image. Card name metadata: Elder Treant. Faction: Wildwood. Subject description from game design: Uralter Baumriese mit moosbedecktem Rindengesicht und Vögeln in der Krone, Wurzeln umschlingen Soldaten.\nStyle: fine crisp retro fantasy pixel art, square pixel clusters on an approximately 192x128 logical grid enlarged with nearest-neighbor, dark outlines, limited colors, stepped shading. Simple readable silhouettes, modest detail, no photorealism, no painterly texture, no blur or smooth gradient. One clear main subject or small readable group; keep secondary scenery minimal. Centered full figure with breathing room, occupies approximately 65-75% height, fits small card art.\nBackground MUST be predominantly GREEN in these existing game background colors: #06200c #12501e #2a8a2c #7cd24a. Simple pixel-dithered glow behind subject, darker corners, dark pixel ground in bottom quarter, understated silhouettes suggested by description, retain a large visible colored background. Upper right mostly quiet colored background. Subject may use natural material colors with faction-colored accents. For crowds use a few clear foreground figures and minimal silhouettes. Stylized non-graphic fantasy.\nHARD CONSTRAINTS: NO text, letters, numerals, number in upper right, troop counts, symbols from UI, badges, labels, frame, card border, interface, watermark. Draw ONLY the illustration that goes inside a card, never a whole card."
+    },
+    {
+      "race": "tidebound",
+      "faction": "Tidebound",
+      "color": "BLUE",
+      "palette": "#04142e #0b3a78 #1a6fc0 #5cc4f0",
+      "name": "Coral Guard",
+      "slug": "coral-guard",
+      "description": "Schuppiger Krieger mit Flossenohren, Korallenrüstung, Schild aus Riesenmuschel, knietief in der Brandung.",
+      "prompt": "Use case: stylized-concept. Asset type: standalone card artwork for Chromatic 2. Generate ONE landscape 3:2 image, ideally 1536x1024, artwork only filling the image. Card name metadata: Coral Guard. Faction: Tidebound. Subject description from game design: Schuppiger Krieger mit Flossenohren, Korallenrüstung, Schild aus Riesenmuschel, knietief in der Brandung.\nStyle: fine crisp retro fantasy pixel art, square pixel clusters on an approximately 192x128 logical grid enlarged with nearest-neighbor, dark outlines, limited colors, stepped shading. Simple readable silhouettes, modest detail, no photorealism, no painterly texture, no blur or smooth gradient. One clear main subject or small readable group; keep secondary scenery minimal. Centered full figure with breathing room, occupies approximately 65-75% height, fits small card art.\nBackground MUST be predominantly BLUE in these existing game background colors: #04142e #0b3a78 #1a6fc0 #5cc4f0. Simple pixel-dithered glow behind subject, darker corners, dark pixel ground in bottom quarter, understated silhouettes suggested by description, retain a large visible colored background. Upper right mostly quiet colored background. Subject may use natural material colors with faction-colored accents. For crowds use a few clear foreground figures and minimal silhouettes. Stylized non-graphic fantasy.\nHARD CONSTRAINTS: NO text, letters, numerals, number in upper right, troop counts, symbols from UI, badges, labels, frame, card border, interface, watermark. Draw ONLY the illustration that goes inside a card, never a whole card."
+    },
+    {
+      "race": "tidebound",
+      "faction": "Tidebound",
+      "color": "BLUE",
+      "palette": "#04142e #0b3a78 #1a6fc0 #5cc4f0",
+      "name": "Frost Sister",
+      "slug": "frost-sister",
+      "description": "Blasse Meerhexe mit Eiszapfen im Haar und Stab aus gefrorenem Wasser, das Meer friert in Ringen zu.",
+      "prompt": "Use case: stylized-concept. Asset type: standalone card artwork for Chromatic 2. Generate ONE landscape 3:2 image, ideally 1536x1024, artwork only filling the image. Card name metadata: Frost Sister. Faction: Tidebound. Subject description from game design: Blasse Meerhexe mit Eiszapfen im Haar und Stab aus gefrorenem Wasser, das Meer friert in Ringen zu.\nStyle: fine crisp retro fantasy pixel art, square pixel clusters on an approximately 192x128 logical grid enlarged with nearest-neighbor, dark outlines, limited colors, stepped shading. Simple readable silhouettes, modest detail, no photorealism, no painterly texture, no blur or smooth gradient. One clear main subject or small readable group; keep secondary scenery minimal. Centered full figure with breathing room, occupies approximately 65-75% height, fits small card art.\nBackground MUST be predominantly BLUE in these existing game background colors: #04142e #0b3a78 #1a6fc0 #5cc4f0. Simple pixel-dithered glow behind subject, darker corners, dark pixel ground in bottom quarter, understated silhouettes suggested by description, retain a large visible colored background. Upper right mostly quiet colored background. Subject may use natural material colors with faction-colored accents. For crowds use a few clear foreground figures and minimal silhouettes. Stylized non-graphic fantasy.\nHARD CONSTRAINTS: NO text, letters, numerals, number in upper right, troop counts, symbols from UI, badges, labels, frame, card border, interface, watermark. Draw ONLY the illustration that goes inside a card, never a whole card."
+    },
+    {
+      "race": "tidebound",
+      "faction": "Tidebound",
+      "color": "BLUE",
+      "palette": "#04142e #0b3a78 #1a6fc0 #5cc4f0",
+      "name": "Snapjaw Crabs",
+      "slug": "snapjaw-crabs",
+      "description": "Hundegroße blaue Krabbe mit übergroßer Schere, die einen Speer zerbricht, Seepocken auf dem Panzer.",
+      "prompt": "Use case: stylized-concept. Asset type: standalone card artwork for Chromatic 2. Generate ONE landscape 3:2 image, ideally 1536x1024, artwork only filling the image. Card name metadata: Snapjaw Crabs. Faction: Tidebound. Subject description from game design: Hundegroße blaue Krabbe mit übergroßer Schere, die einen Speer zerbricht, Seepocken auf dem Panzer.\nStyle: fine crisp retro fantasy pixel art, square pixel clusters on an approximately 192x128 logical grid enlarged with nearest-neighbor, dark outlines, limited colors, stepped shading. Simple readable silhouettes, modest detail, no photorealism, no painterly texture, no blur or smooth gradient. One clear main subject or small readable group; keep secondary scenery minimal. Centered full figure with breathing room, occupies approximately 65-75% height, fits small card art.\nBackground MUST be predominantly BLUE in these existing game background colors: #04142e #0b3a78 #1a6fc0 #5cc4f0. Simple pixel-dithered glow behind subject, darker corners, dark pixel ground in bottom quarter, understated silhouettes suggested by description, retain a large visible colored background. Upper right mostly quiet colored background. Subject may use natural material colors with faction-colored accents. For crowds use a few clear foreground figures and minimal silhouettes. Stylized non-graphic fantasy.\nHARD CONSTRAINTS: NO text, letters, numerals, number in upper right, troop counts, symbols from UI, badges, labels, frame, card border, interface, watermark. Draw ONLY the illustration that goes inside a card, never a whole card."
+    },
+    {
+      "race": "tidebound",
+      "faction": "Tidebound",
+      "color": "BLUE",
+      "palette": "#04142e #0b3a78 #1a6fc0 #5cc4f0",
+      "name": "Abyssal Kraken",
+      "slug": "abyssal-kraken",
+      "description": "Violett-blauer Riesenkrake mit großem gelbem Auge steigt aus einer Pfütze, Tentakel peitschen in alle Richtungen.",
+      "prompt": "Use case: stylized-concept. Asset type: standalone card artwork for Chromatic 2. Generate ONE landscape 3:2 image, ideally 1536x1024, artwork only filling the image. Card name metadata: Abyssal Kraken. Faction: Tidebound. Subject description from game design: Violett-blauer Riesenkrake mit großem gelbem Auge steigt aus einer Pfütze, Tentakel peitschen in alle Richtungen.\nStyle: fine crisp retro fantasy pixel art, square pixel clusters on an approximately 192x128 logical grid enlarged with nearest-neighbor, dark outlines, limited colors, stepped shading. Simple readable silhouettes, modest detail, no photorealism, no painterly texture, no blur or smooth gradient. One clear main subject or small readable group; keep secondary scenery minimal. Centered full figure with breathing room, occupies approximately 65-75% height, fits small card art.\nBackground MUST be predominantly BLUE in these existing game background colors: #04142e #0b3a78 #1a6fc0 #5cc4f0. Simple pixel-dithered glow behind subject, darker corners, dark pixel ground in bottom quarter, understated silhouettes suggested by description, retain a large visible colored background. Upper right mostly quiet colored background. Subject may use natural material colors with faction-colored accents. For crowds use a few clear foreground figures and minimal silhouettes. Stylized non-graphic fantasy.\nHARD CONSTRAINTS: NO text, letters, numerals, number in upper right, troop counts, symbols from UI, badges, labels, frame, card border, interface, watermark. Draw ONLY the illustration that goes inside a card, never a whole card."
+    },
+    {
+      "race": "sunlegion",
+      "faction": "Sun Legion",
+      "color": "GOLD",
+      "palette": "#2e1c02 #6e4606 #b8820e #f6cc3a",
+      "name": "Legionnaires",
+      "slug": "legionnaires",
+      "description": "Reihe Soldaten in goldener Rüstung und rotem Umhang hinter Rechteckschilden mit Sonnensymbol, Speere über der Schildkante.",
+      "prompt": "Use case: stylized-concept. Asset type: standalone card artwork for Chromatic 2. Generate ONE landscape 3:2 image, ideally 1536x1024, artwork only filling the image. Card name metadata: Legionnaires. Faction: Sun Legion. Subject description from game design: Reihe Soldaten in goldener Rüstung und rotem Umhang hinter Rechteckschilden mit Sonnensymbol, Speere über der Schildkante.\nStyle: fine crisp retro fantasy pixel art, square pixel clusters on an approximately 192x128 logical grid enlarged with nearest-neighbor, dark outlines, limited colors, stepped shading. Simple readable silhouettes, modest detail, no photorealism, no painterly texture, no blur or smooth gradient. One clear main subject or small readable group; keep secondary scenery minimal. Centered full figure with breathing room, occupies approximately 65-75% height, fits small card art.\nBackground MUST be predominantly GOLD in these existing game background colors: #2e1c02 #6e4606 #b8820e #f6cc3a. Simple pixel-dithered glow behind subject, darker corners, dark pixel ground in bottom quarter, understated silhouettes suggested by description, retain a large visible colored background. Upper right mostly quiet colored background. Subject may use natural material colors with faction-colored accents. For crowds use a few clear foreground figures and minimal silhouettes. Stylized non-graphic fantasy.\nHARD CONSTRAINTS: NO text, letters, numerals, number in upper right, troop counts, symbols from UI, badges, labels, frame, card border, interface, watermark. Draw ONLY the illustration that goes inside a card, never a whole card."
+    },
+    {
+      "race": "sunlegion",
+      "faction": "Sun Legion",
+      "color": "GOLD",
+      "palette": "#2e1c02 #6e4606 #b8820e #f6cc3a",
+      "name": "Dawn Invoker",
+      "slug": "dawn-invoker",
+      "description": "Magier in weiß-goldener Robe hält eine Sonnenscheibe hoch, gleißender Lichtstrahl quer durchs Bild.",
+      "prompt": "Use case: stylized-concept. Asset type: standalone card artwork for Chromatic 2. Generate ONE landscape 3:2 image, ideally 1536x1024, artwork only filling the image. Card name metadata: Dawn Invoker. Faction: Sun Legion. Subject description from game design: Magier in weiß-goldener Robe hält eine Sonnenscheibe hoch, gleißender Lichtstrahl quer durchs Bild.\nStyle: fine crisp retro fantasy pixel art, square pixel clusters on an approximately 192x128 logical grid enlarged with nearest-neighbor, dark outlines, limited colors, stepped shading. Simple readable silhouettes, modest detail, no photorealism, no painterly texture, no blur or smooth gradient. One clear main subject or small readable group; keep secondary scenery minimal. Centered full figure with breathing room, occupies approximately 65-75% height, fits small card art.\nBackground MUST be predominantly GOLD in these existing game background colors: #2e1c02 #6e4606 #b8820e #f6cc3a. Simple pixel-dithered glow behind subject, darker corners, dark pixel ground in bottom quarter, understated silhouettes suggested by description, retain a large visible colored background. Upper right mostly quiet colored background. Subject may use natural material colors with faction-colored accents. For crowds use a few clear foreground figures and minimal silhouettes. Stylized non-graphic fantasy.\nHARD CONSTRAINTS: NO text, letters, numerals, number in upper right, troop counts, symbols from UI, badges, labels, frame, card border, interface, watermark. Draw ONLY the illustration that goes inside a card, never a whole card."
+    },
+    {
+      "race": "sunlegion",
+      "faction": "Sun Legion",
+      "color": "GOLD",
+      "palette": "#2e1c02 #6e4606 #b8820e #f6cc3a",
+      "name": "Sun Priestess",
+      "slug": "sun-priestess",
+      "description": "Priesterin mit goldener Strahlenkrone segnet kniende Soldaten, goldene Schildkuppeln entstehen.",
+      "prompt": "Use case: stylized-concept. Asset type: standalone card artwork for Chromatic 2. Generate ONE landscape 3:2 image, ideally 1536x1024, artwork only filling the image. Card name metadata: Sun Priestess. Faction: Sun Legion. Subject description from game design: Priesterin mit goldener Strahlenkrone segnet kniende Soldaten, goldene Schildkuppeln entstehen.\nStyle: fine crisp retro fantasy pixel art, square pixel clusters on an approximately 192x128 logical grid enlarged with nearest-neighbor, dark outlines, limited colors, stepped shading. Simple readable silhouettes, modest detail, no photorealism, no painterly texture, no blur or smooth gradient. One clear main subject or small readable group; keep secondary scenery minimal. Centered full figure with breathing room, occupies approximately 65-75% height, fits small card art.\nBackground MUST be predominantly GOLD in these existing game background colors: #2e1c02 #6e4606 #b8820e #f6cc3a. Simple pixel-dithered glow behind subject, darker corners, dark pixel ground in bottom quarter, understated silhouettes suggested by description, retain a large visible colored background. Upper right mostly quiet colored background. Subject may use natural material colors with faction-colored accents. For crowds use a few clear foreground figures and minimal silhouettes. Stylized non-graphic fantasy.\nHARD CONSTRAINTS: NO text, letters, numerals, number in upper right, troop counts, symbols from UI, badges, labels, frame, card border, interface, watermark. Draw ONLY the illustration that goes inside a card, never a whole card."
+    },
+    {
+      "race": "sunlegion",
+      "faction": "Sun Legion",
+      "color": "GOLD",
+      "palette": "#2e1c02 #6e4606 #b8820e #f6cc3a",
+      "name": "Trebuchet",
+      "slug": "trebuchet",
+      "description": "Riesiges Holz-Trebuchet mit goldenen Wimpeln und Sonnenbanner, der Wurfarm schnellt hoch.",
+      "prompt": "Use case: stylized-concept. Asset type: standalone card artwork for Chromatic 2. Generate ONE landscape 3:2 image, ideally 1536x1024, artwork only filling the image. Card name metadata: Trebuchet. Faction: Sun Legion. Subject description from game design: Riesiges Holz-Trebuchet mit goldenen Wimpeln und Sonnenbanner, der Wurfarm schnellt hoch.\nStyle: fine crisp retro fantasy pixel art, square pixel clusters on an approximately 192x128 logical grid enlarged with nearest-neighbor, dark outlines, limited colors, stepped shading. Simple readable silhouettes, modest detail, no photorealism, no painterly texture, no blur or smooth gradient. One clear main subject or small readable group; keep secondary scenery minimal. Centered full figure with breathing room, occupies approximately 65-75% height, fits small card art.\nBackground MUST be predominantly GOLD in these existing game background colors: #2e1c02 #6e4606 #b8820e #f6cc3a. Simple pixel-dithered glow behind subject, darker corners, dark pixel ground in bottom quarter, understated silhouettes suggested by description, retain a large visible colored background. Upper right mostly quiet colored background. Subject may use natural material colors with faction-colored accents. For crowds use a few clear foreground figures and minimal silhouettes. Stylized non-graphic fantasy.\nHARD CONSTRAINTS: NO text, letters, numerals, number in upper right, troop counts, symbols from UI, badges, labels, frame, card border, interface, watermark. Draw ONLY the illustration that goes inside a card, never a whole card."
+    },
+    {
+      "race": "sunlegion",
+      "faction": "Sun Legion",
+      "color": "GOLD",
+      "palette": "#2e1c02 #6e4606 #b8820e #f6cc3a",
+      "name": "Lord Commander",
+      "slug": "lord-commander",
+      "description": "Feldherr in goldener Prunkrüstung auf weißem Schlachtross mit riesigem Sonnenbanner, Armee im Morgenlicht.",
+      "prompt": "Use case: stylized-concept. Asset type: standalone card artwork for Chromatic 2. Generate ONE landscape 3:2 image, ideally 1536x1024, artwork only filling the image. Card name metadata: Lord Commander. Faction: Sun Legion. Subject description from game design: Feldherr in goldener Prunkrüstung auf weißem Schlachtross mit riesigem Sonnenbanner, Armee im Morgenlicht.\nStyle: fine crisp retro fantasy pixel art, square pixel clusters on an approximately 192x128 logical grid enlarged with nearest-neighbor, dark outlines, limited colors, stepped shading. Simple readable silhouettes, modest detail, no photorealism, no painterly texture, no blur or smooth gradient. One clear main subject or small readable group; keep secondary scenery minimal. Centered full figure with breathing room, occupies approximately 65-75% height, fits small card art.\nBackground MUST be predominantly GOLD in these existing game background colors: #2e1c02 #6e4606 #b8820e #f6cc3a. Simple pixel-dithered glow behind subject, darker corners, dark pixel ground in bottom quarter, understated silhouettes suggested by description, retain a large visible colored background. Upper right mostly quiet colored background. Subject may use natural material colors with faction-colored accents. For crowds use a few clear foreground figures and minimal silhouettes. Stylized non-graphic fantasy.\nHARD CONSTRAINTS: NO text, letters, numerals, number in upper right, troop counts, symbols from UI, badges, labels, frame, card border, interface, watermark. Draw ONLY the illustration that goes inside a card, never a whole card."
+    },
+    {
+      "race": "plague",
+      "faction": "Plague Court",
+      "color": "VIOLET",
+      "palette": "#160522 #3c0f5e #6e2aa0 #b070e0",
+      "name": "Bloaters",
+      "slug": "bloaters",
+      "description": "Aufgedunsene Leichen mit grüngrauer Haut und genähten Bäuchen, violettes Gas quillt heraus, schlurfen mit ausgestreckten Armen.",
+      "prompt": "Use case: stylized-concept. Asset type: standalone card artwork for Chromatic 2. Generate ONE landscape 3:2 image, ideally 1536x1024, artwork only filling the image. Card name metadata: Bloaters. Faction: Plague Court. Subject description from game design: Aufgedunsene Leichen mit grüngrauer Haut und genähten Bäuchen, violettes Gas quillt heraus, schlurfen mit ausgestreckten Armen.\nStyle: fine crisp retro fantasy pixel art, square pixel clusters on an approximately 192x128 logical grid enlarged with nearest-neighbor, dark outlines, limited colors, stepped shading. Simple readable silhouettes, modest detail, no photorealism, no painterly texture, no blur or smooth gradient. One clear main subject or small readable group; keep secondary scenery minimal. Centered full figure with breathing room, occupies approximately 65-75% height, fits small card art.\nBackground MUST be predominantly VIOLET in these existing game background colors: #160522 #3c0f5e #6e2aa0 #b070e0. Simple pixel-dithered glow behind subject, darker corners, dark pixel ground in bottom quarter, understated silhouettes suggested by description, retain a large visible colored background. Upper right mostly quiet colored background. Subject may use natural material colors with faction-colored accents. For crowds use a few clear foreground figures and minimal silhouettes. Stylized non-graphic fantasy.\nHARD CONSTRAINTS: NO text, letters, numerals, number in upper right, troop counts, symbols from UI, badges, labels, frame, card border, interface, watermark. Draw ONLY the illustration that goes inside a card, never a whole card."
+    },
+    {
+      "race": "plague",
+      "faction": "Plague Court",
+      "color": "VIOLET",
+      "palette": "#160522 #3c0f5e #6e2aa0 #b070e0",
+      "name": "Bone Archers",
+      "slug": "bone-archers",
+      "description": "Skelette in zerfetzten Kapuzen mit Bögen aus Rippenknochen, violett tropfende Pfeile, schiefe Grabsteine.",
+      "prompt": "Use case: stylized-concept. Asset type: standalone card artwork for Chromatic 2. Generate ONE landscape 3:2 image, ideally 1536x1024, artwork only filling the image. Card name metadata: Bone Archers. Faction: Plague Court. Subject description from game design: Skelette in zerfetzten Kapuzen mit Bögen aus Rippenknochen, violett tropfende Pfeile, schiefe Grabsteine.\nStyle: fine crisp retro fantasy pixel art, square pixel clusters on an approximately 192x128 logical grid enlarged with nearest-neighbor, dark outlines, limited colors, stepped shading. Simple readable silhouettes, modest detail, no photorealism, no painterly texture, no blur or smooth gradient. One clear main subject or small readable group; keep secondary scenery minimal. Centered full figure with breathing room, occupies approximately 65-75% height, fits small card art.\nBackground MUST be predominantly VIOLET in these existing game background colors: #160522 #3c0f5e #6e2aa0 #b070e0. Simple pixel-dithered glow behind subject, darker corners, dark pixel ground in bottom quarter, understated silhouettes suggested by description, retain a large visible colored background. Upper right mostly quiet colored background. Subject may use natural material colors with faction-colored accents. For crowds use a few clear foreground figures and minimal silhouettes. Stylized non-graphic fantasy.\nHARD CONSTRAINTS: NO text, letters, numerals, number in upper right, troop counts, symbols from UI, badges, labels, frame, card border, interface, watermark. Draw ONLY the illustration that goes inside a card, never a whole card."
+    },
+    {
+      "race": "plague",
+      "faction": "Plague Court",
+      "color": "VIOLET",
+      "palette": "#160522 #3c0f5e #6e2aa0 #b070e0",
+      "name": "Blight Witch",
+      "slug": "blight-witch",
+      "description": "Buckelige Hexe mit Vogel-Pestmaske rührt im Kessel, violette Totenkopf-Wolke steigt auf.",
+      "prompt": "Use case: stylized-concept. Asset type: standalone card artwork for Chromatic 2. Generate ONE landscape 3:2 image, ideally 1536x1024, artwork only filling the image. Card name metadata: Blight Witch. Faction: Plague Court. Subject description from game design: Buckelige Hexe mit Vogel-Pestmaske rührt im Kessel, violette Totenkopf-Wolke steigt auf.\nStyle: fine crisp retro fantasy pixel art, square pixel clusters on an approximately 192x128 logical grid enlarged with nearest-neighbor, dark outlines, limited colors, stepped shading. Simple readable silhouettes, modest detail, no photorealism, no painterly texture, no blur or smooth gradient. One clear main subject or small readable group; keep secondary scenery minimal. Centered full figure with breathing room, occupies approximately 65-75% height, fits small card art.\nBackground MUST be predominantly VIOLET in these existing game background colors: #160522 #3c0f5e #6e2aa0 #b070e0. Simple pixel-dithered glow behind subject, darker corners, dark pixel ground in bottom quarter, understated silhouettes suggested by description, retain a large visible colored background. Upper right mostly quiet colored background. Subject may use natural material colors with faction-colored accents. For crowds use a few clear foreground figures and minimal silhouettes. Stylized non-graphic fantasy.\nHARD CONSTRAINTS: NO text, letters, numerals, number in upper right, troop counts, symbols from UI, badges, labels, frame, card border, interface, watermark. Draw ONLY the illustration that goes inside a card, never a whole card."
+    },
+    {
+      "race": "plague",
+      "faction": "Plague Court",
+      "color": "VIOLET",
+      "palette": "#160522 #3c0f5e #6e2aa0 #b070e0",
+      "name": "Corpse Cart",
+      "slug": "corpse-cart",
+      "description": "Leichenkarren mit Schleuderarm, gezogen von skelettiertem Pferd, ein Körper fliegt durch die Luft.",
+      "prompt": "Use case: stylized-concept. Asset type: standalone card artwork for Chromatic 2. Generate ONE landscape 3:2 image, ideally 1536x1024, artwork only filling the image. Card name metadata: Corpse Cart. Faction: Plague Court. Subject description from game design: Leichenkarren mit Schleuderarm, gezogen von skelettiertem Pferd, ein Körper fliegt durch die Luft.\nStyle: fine crisp retro fantasy pixel art, square pixel clusters on an approximately 192x128 logical grid enlarged with nearest-neighbor, dark outlines, limited colors, stepped shading. Simple readable silhouettes, modest detail, no photorealism, no painterly texture, no blur or smooth gradient. One clear main subject or small readable group; keep secondary scenery minimal. Centered full figure with breathing room, occupies approximately 65-75% height, fits small card art.\nBackground MUST be predominantly VIOLET in these existing game background colors: #160522 #3c0f5e #6e2aa0 #b070e0. Simple pixel-dithered glow behind subject, darker corners, dark pixel ground in bottom quarter, understated silhouettes suggested by description, retain a large visible colored background. Upper right mostly quiet colored background. Subject may use natural material colors with faction-colored accents. For crowds use a few clear foreground figures and minimal silhouettes. Stylized non-graphic fantasy.\nHARD CONSTRAINTS: NO text, letters, numerals, number in upper right, troop counts, symbols from UI, badges, labels, frame, card border, interface, watermark. Draw ONLY the illustration that goes inside a card, never a whole card."
+    },
+    {
+      "race": "plague",
+      "faction": "Plague Court",
+      "color": "VIOLET",
+      "palette": "#160522 #3c0f5e #6e2aa0 #b070e0",
+      "name": "Carrion Crows",
+      "slug": "carrion-crows",
+      "description": "Schwarm schwarzer Krähen mit violett glühenden Augen, Knochen unter fehlenden Federn.",
+      "prompt": "Use case: stylized-concept. Asset type: standalone card artwork for Chromatic 2. Generate ONE landscape 3:2 image, ideally 1536x1024, artwork only filling the image. Card name metadata: Carrion Crows. Faction: Plague Court. Subject description from game design: Schwarm schwarzer Krähen mit violett glühenden Augen, Knochen unter fehlenden Federn.\nStyle: fine crisp retro fantasy pixel art, square pixel clusters on an approximately 192x128 logical grid enlarged with nearest-neighbor, dark outlines, limited colors, stepped shading. Simple readable silhouettes, modest detail, no photorealism, no painterly texture, no blur or smooth gradient. One clear main subject or small readable group; keep secondary scenery minimal. Centered full figure with breathing room, occupies approximately 65-75% height, fits small card art.\nBackground MUST be predominantly VIOLET in these existing game background colors: #160522 #3c0f5e #6e2aa0 #b070e0. Simple pixel-dithered glow behind subject, darker corners, dark pixel ground in bottom quarter, understated silhouettes suggested by description, retain a large visible colored background. Upper right mostly quiet colored background. Subject may use natural material colors with faction-colored accents. For crowds use a few clear foreground figures and minimal silhouettes. Stylized non-graphic fantasy.\nHARD CONSTRAINTS: NO text, letters, numerals, number in upper right, troop counts, symbols from UI, badges, labels, frame, card border, interface, watermark. Draw ONLY the illustration that goes inside a card, never a whole card."
+    },
+    {
+      "race": "plague",
+      "faction": "Plague Court",
+      "color": "VIOLET",
+      "palette": "#160522 #3c0f5e #6e2aa0 #b070e0",
+      "name": "Zombie Horde",
+      "slug": "zombie-horde",
+      "description": "Endlose Zombiemasse in Bauernkleidung drängt über einen Hügel, vorne greift eine Hand aus der Erde.",
+      "prompt": "Use case: stylized-concept. Asset type: standalone card artwork for Chromatic 2. Generate ONE landscape 3:2 image, ideally 1536x1024, artwork only filling the image. Card name metadata: Zombie Horde. Faction: Plague Court. Subject description from game design: Endlose Zombiemasse in Bauernkleidung drängt über einen Hügel, vorne greift eine Hand aus der Erde.\nStyle: fine crisp retro fantasy pixel art, square pixel clusters on an approximately 192x128 logical grid enlarged with nearest-neighbor, dark outlines, limited colors, stepped shading. Simple readable silhouettes, modest detail, no photorealism, no painterly texture, no blur or smooth gradient. One clear main subject or small readable group; keep secondary scenery minimal. Centered full figure with breathing room, occupies approximately 65-75% height, fits small card art.\nBackground MUST be predominantly VIOLET in these existing game background colors: #160522 #3c0f5e #6e2aa0 #b070e0. Simple pixel-dithered glow behind subject, darker corners, dark pixel ground in bottom quarter, understated silhouettes suggested by description, retain a large visible colored background. Upper right mostly quiet colored background. Subject may use natural material colors with faction-colored accents. For crowds use a few clear foreground figures and minimal silhouettes. Stylized non-graphic fantasy.\nHARD CONSTRAINTS: NO text, letters, numerals, number in upper right, troop counts, symbols from UI, badges, labels, frame, card border, interface, watermark. Draw ONLY the illustration that goes inside a card, never a whole card."
+    },
+    {
+      "race": "plague",
+      "faction": "Plague Court",
+      "color": "VIOLET",
+      "palette": "#160522 #3c0f5e #6e2aa0 #b070e0",
+      "name": "The Lich",
+      "slug": "the-lich",
+      "description": "Schwebendes Skelett in zerfetzter violetter Robe mit schwarzer Eisenkrone, grüne Seelenfäden fließen in seine Hand.",
+      "prompt": "Use case: stylized-concept. Asset type: standalone card artwork for Chromatic 2. Generate ONE landscape 3:2 image, ideally 1536x1024, artwork only filling the image. Card name metadata: The Lich. Faction: Plague Court. Subject description from game design: Schwebendes Skelett in zerfetzter violetter Robe mit schwarzer Eisenkrone, grüne Seelenfäden fließen in seine Hand.\nStyle: fine crisp retro fantasy pixel art, square pixel clusters on an approximately 192x128 logical grid enlarged with nearest-neighbor, dark outlines, limited colors, stepped shading. Simple readable silhouettes, modest detail, no photorealism, no painterly texture, no blur or smooth gradient. One clear main subject or small readable group; keep secondary scenery minimal. Centered full figure with breathing room, occupies approximately 65-75% height, fits small card art.\nBackground MUST be predominantly VIOLET in these existing game background colors: #160522 #3c0f5e #6e2aa0 #b070e0. Simple pixel-dithered glow behind subject, darker corners, dark pixel ground in bottom quarter, understated silhouettes suggested by description, retain a large visible colored background. Upper right mostly quiet colored background. Subject may use natural material colors with faction-colored accents. For crowds use a few clear foreground figures and minimal silhouettes. Stylized non-graphic fantasy.\nHARD CONSTRAINTS: NO text, letters, numerals, number in upper right, troop counts, symbols from UI, badges, labels, frame, card border, interface, watermark. Draw ONLY the illustration that goes inside a card, never a whole card."
+    },
+    {
+      "race": "deepforge",
+      "faction": "Deepforge",
+      "color": "GREY",
+      "palette": "#111317 #2c3038 #555b66 #9aa1ad",
+      "name": "Ironbeards",
+      "slug": "ironbeards",
+      "description": "Gedrungener Zwerg in schwerer Plattenrüstung, Bart in Eisenringen, Streithammer und Turmschild, glühende Schmiede dahinter.",
+      "prompt": "Use case: stylized-concept. Asset type: standalone card artwork for Chromatic 2. Generate ONE landscape 3:2 image, ideally 1536x1024, artwork only filling the image. Card name metadata: Ironbeards. Faction: Deepforge. Subject description from game design: Gedrungener Zwerg in schwerer Plattenrüstung, Bart in Eisenringen, Streithammer und Turmschild, glühende Schmiede dahinter.\nStyle: fine crisp retro fantasy pixel art, square pixel clusters on an approximately 192x128 logical grid enlarged with nearest-neighbor, dark outlines, limited colors, stepped shading. Simple readable silhouettes, modest detail, no photorealism, no painterly texture, no blur or smooth gradient. One clear main subject or small readable group; keep secondary scenery minimal. Centered full figure with breathing room, occupies approximately 65-75% height, fits small card art.\nBackground MUST be predominantly GREY in these existing game background colors: #111317 #2c3038 #555b66 #9aa1ad. Simple pixel-dithered glow behind subject, darker corners, dark pixel ground in bottom quarter, understated silhouettes suggested by description, retain a large visible colored background. Upper right mostly quiet colored background. Subject may use natural material colors with faction-colored accents. For crowds use a few clear foreground figures and minimal silhouettes. Stylized non-graphic fantasy.\nHARD CONSTRAINTS: NO text, letters, numerals, number in upper right, troop counts, symbols from UI, badges, labels, frame, card border, interface, watermark. Draw ONLY the illustration that goes inside a card, never a whole card."
+    },
+    {
+      "race": "deepforge",
+      "faction": "Deepforge",
+      "color": "GREY",
+      "palette": "#111317 #2c3038 #555b66 #9aa1ad",
+      "name": "Bear Riders",
+      "slug": "bear-riders",
+      "description": "Zwerg mit Axt auf gepanzertem Höhlenbären mit Runen-Rüstung, beide brüllen.",
+      "prompt": "Use case: stylized-concept. Asset type: standalone card artwork for Chromatic 2. Generate ONE landscape 3:2 image, ideally 1536x1024, artwork only filling the image. Card name metadata: Bear Riders. Faction: Deepforge. Subject description from game design: Zwerg mit Axt auf gepanzertem Höhlenbären mit Runen-Rüstung, beide brüllen.\nStyle: fine crisp retro fantasy pixel art, square pixel clusters on an approximately 192x128 logical grid enlarged with nearest-neighbor, dark outlines, limited colors, stepped shading. Simple readable silhouettes, modest detail, no photorealism, no painterly texture, no blur or smooth gradient. One clear main subject or small readable group; keep secondary scenery minimal. Centered full figure with breathing room, occupies approximately 65-75% height, fits small card art.\nBackground MUST be predominantly GREY in these existing game background colors: #111317 #2c3038 #555b66 #9aa1ad. Simple pixel-dithered glow behind subject, darker corners, dark pixel ground in bottom quarter, understated silhouettes suggested by description, retain a large visible colored background. Upper right mostly quiet colored background. Subject may use natural material colors with faction-colored accents. For crowds use a few clear foreground figures and minimal silhouettes. Stylized non-graphic fantasy.\nHARD CONSTRAINTS: NO text, letters, numerals, number in upper right, troop counts, symbols from UI, badges, labels, frame, card border, interface, watermark. Draw ONLY the illustration that goes inside a card, never a whole card."
+    },
+    {
+      "race": "deepforge",
+      "faction": "Deepforge",
+      "color": "GREY",
+      "palette": "#111317 #2c3038 #555b66 #9aa1ad",
+      "name": "Mountain Cannon",
+      "slug": "mountain-cannon",
+      "description": "Schwere Bronzekanone mit Drachenkopf-Mündung auf Eisengestell, Zwerg mit Rußgesicht hält die Lunte an.",
+      "prompt": "Use case: stylized-concept. Asset type: standalone card artwork for Chromatic 2. Generate ONE landscape 3:2 image, ideally 1536x1024, artwork only filling the image. Card name metadata: Mountain Cannon. Faction: Deepforge. Subject description from game design: Schwere Bronzekanone mit Drachenkopf-Mündung auf Eisengestell, Zwerg mit Rußgesicht hält die Lunte an.\nStyle: fine crisp retro fantasy pixel art, square pixel clusters on an approximately 192x128 logical grid enlarged with nearest-neighbor, dark outlines, limited colors, stepped shading. Simple readable silhouettes, modest detail, no photorealism, no painterly texture, no blur or smooth gradient. One clear main subject or small readable group; keep secondary scenery minimal. Centered full figure with breathing room, occupies approximately 65-75% height, fits small card art.\nBackground MUST be predominantly GREY in these existing game background colors: #111317 #2c3038 #555b66 #9aa1ad. Simple pixel-dithered glow behind subject, darker corners, dark pixel ground in bottom quarter, understated silhouettes suggested by description, retain a large visible colored background. Upper right mostly quiet colored background. Subject may use natural material colors with faction-colored accents. For crowds use a few clear foreground figures and minimal silhouettes. Stylized non-graphic fantasy.\nHARD CONSTRAINTS: NO text, letters, numerals, number in upper right, troop counts, symbols from UI, badges, labels, frame, card border, interface, watermark. Draw ONLY the illustration that goes inside a card, never a whole card."
+    },
+    {
+      "race": "deepforge",
+      "faction": "Deepforge",
+      "color": "GREY",
+      "palette": "#111317 #2c3038 #555b66 #9aa1ad",
+      "name": "Steam Colossus",
+      "slug": "steam-colossus",
+      "description": "Dampfende Kriegsmaschine auf Walzen mit Kessel im Rücken, Zwerg im Cockpit, Rammbock in Bärenkopf-Form.",
+      "prompt": "Use case: stylized-concept. Asset type: standalone card artwork for Chromatic 2. Generate ONE landscape 3:2 image, ideally 1536x1024, artwork only filling the image. Card name metadata: Steam Colossus. Faction: Deepforge. Subject description from game design: Dampfende Kriegsmaschine auf Walzen mit Kessel im Rücken, Zwerg im Cockpit, Rammbock in Bärenkopf-Form.\nStyle: fine crisp retro fantasy pixel art, square pixel clusters on an approximately 192x128 logical grid enlarged with nearest-neighbor, dark outlines, limited colors, stepped shading. Simple readable silhouettes, modest detail, no photorealism, no painterly texture, no blur or smooth gradient. One clear main subject or small readable group; keep secondary scenery minimal. Centered full figure with breathing room, occupies approximately 65-75% height, fits small card art.\nBackground MUST be predominantly GREY in these existing game background colors: #111317 #2c3038 #555b66 #9aa1ad. Simple pixel-dithered glow behind subject, darker corners, dark pixel ground in bottom quarter, understated silhouettes suggested by description, retain a large visible colored background. Upper right mostly quiet colored background. Subject may use natural material colors with faction-colored accents. For crowds use a few clear foreground figures and minimal silhouettes. Stylized non-graphic fantasy.\nHARD CONSTRAINTS: NO text, letters, numerals, number in upper right, troop counts, symbols from UI, badges, labels, frame, card border, interface, watermark. Draw ONLY the illustration that goes inside a card, never a whole card."
+    },
+    {
+      "race": "drifters",
+      "faction": "Drifters",
+      "color": "NEUTRAL PARCHMENT / TAUPE",
+      "palette": "#1f1a14 #4a3f32 #857260 #cdbb9c",
+      "name": "Mercenary Company",
+      "slug": "mercenary-company",
+      "description": "Bunt zusammengewürfelte Söldner mit gemischten Rüstungsteilen, einer zählt grinsend Münzen, Zelte dahinter.",
+      "prompt": "Use case: stylized-concept. Asset type: standalone card artwork for Chromatic 2. Generate ONE landscape 3:2 image, ideally 1536x1024, artwork only filling the image. Card name metadata: Mercenary Company. Faction: Drifters. Subject description from game design: Bunt zusammengewürfelte Söldner mit gemischten Rüstungsteilen, einer zählt grinsend Münzen, Zelte dahinter.\nStyle: fine crisp retro fantasy pixel art, square pixel clusters on an approximately 192x128 logical grid enlarged with nearest-neighbor, dark outlines, limited colors, stepped shading. Simple readable silhouettes, modest detail, no photorealism, no painterly texture, no blur or smooth gradient. One clear main subject or small readable group; keep secondary scenery minimal. Centered full figure with breathing room, occupies approximately 65-75% height, fits small card art.\nBackground MUST be predominantly NEUTRAL PARCHMENT / TAUPE in these existing game background colors: #1f1a14 #4a3f32 #857260 #cdbb9c. Simple pixel-dithered glow behind subject, darker corners, dark pixel ground in bottom quarter, understated silhouettes suggested by description, retain a large visible colored background. Upper right mostly quiet colored background. Subject may use natural material colors with faction-colored accents. For crowds use a few clear foreground figures and minimal silhouettes. Stylized non-graphic fantasy.\nHARD CONSTRAINTS: NO text, letters, numerals, number in upper right, troop counts, symbols from UI, badges, labels, frame, card border, interface, watermark. Draw ONLY the illustration that goes inside a card, never a whole card."
+    },
+    {
+      "race": "drifters",
+      "faction": "Drifters",
+      "color": "NEUTRAL PARCHMENT / TAUPE",
+      "palette": "#1f1a14 #4a3f32 #857260 #cdbb9c",
+      "name": "Militia Bowmen",
+      "slug": "militia-bowmen",
+      "description": "Bauern mit einfachen Bögen und Strohhüten in einer Reihe auf dem Feld, Pfeilwolke verdunkelt den Himmel.",
+      "prompt": "Use case: stylized-concept. Asset type: standalone card artwork for Chromatic 2. Generate ONE landscape 3:2 image, ideally 1536x1024, artwork only filling the image. Card name metadata: Militia Bowmen. Faction: Drifters. Subject description from game design: Bauern mit einfachen Bögen und Strohhüten in einer Reihe auf dem Feld, Pfeilwolke verdunkelt den Himmel.\nStyle: fine crisp retro fantasy pixel art, square pixel clusters on an approximately 192x128 logical grid enlarged with nearest-neighbor, dark outlines, limited colors, stepped shading. Simple readable silhouettes, modest detail, no photorealism, no painterly texture, no blur or smooth gradient. One clear main subject or small readable group; keep secondary scenery minimal. Centered full figure with breathing room, occupies approximately 65-75% height, fits small card art.\nBackground MUST be predominantly NEUTRAL PARCHMENT / TAUPE in these existing game background colors: #1f1a14 #4a3f32 #857260 #cdbb9c. Simple pixel-dithered glow behind subject, darker corners, dark pixel ground in bottom quarter, understated silhouettes suggested by description, retain a large visible colored background. Upper right mostly quiet colored background. Subject may use natural material colors with faction-colored accents. For crowds use a few clear foreground figures and minimal silhouettes. Stylized non-graphic fantasy.\nHARD CONSTRAINTS: NO text, letters, numerals, number in upper right, troop counts, symbols from UI, badges, labels, frame, card border, interface, watermark. Draw ONLY the illustration that goes inside a card, never a whole card."
+    },
+    {
+      "race": "drifters",
+      "faction": "Drifters",
+      "color": "NEUTRAL PARCHMENT / TAUPE",
+      "palette": "#1f1a14 #4a3f32 #857260 #cdbb9c",
+      "name": "Wandering Magus",
+      "slug": "wandering-magus",
+      "description": "Reisender mit geflicktem Spitzhut und Wanderstab voller bunter Kristalle in allen Rassenfarben.",
+      "prompt": "Use case: stylized-concept. Asset type: standalone card artwork for Chromatic 2. Generate ONE landscape 3:2 image, ideally 1536x1024, artwork only filling the image. Card name metadata: Wandering Magus. Faction: Drifters. Subject description from game design: Reisender mit geflicktem Spitzhut und Wanderstab voller bunter Kristalle in allen Rassenfarben.\nStyle: fine crisp retro fantasy pixel art, square pixel clusters on an approximately 192x128 logical grid enlarged with nearest-neighbor, dark outlines, limited colors, stepped shading. Simple readable silhouettes, modest detail, no photorealism, no painterly texture, no blur or smooth gradient. One clear main subject or small readable group; keep secondary scenery minimal. Centered full figure with breathing room, occupies approximately 65-75% height, fits small card art.\nBackground MUST be predominantly NEUTRAL PARCHMENT / TAUPE in these existing game background colors: #1f1a14 #4a3f32 #857260 #cdbb9c. Simple pixel-dithered glow behind subject, darker corners, dark pixel ground in bottom quarter, understated silhouettes suggested by description, retain a large visible colored background. Upper right mostly quiet colored background. Subject may use natural material colors with faction-colored accents. For crowds use a few clear foreground figures and minimal silhouettes. Stylized non-graphic fantasy.\nHARD CONSTRAINTS: NO text, letters, numerals, number in upper right, troop counts, symbols from UI, badges, labels, frame, card border, interface, watermark. Draw ONLY the illustration that goes inside a card, never a whole card."
+    },
+    {
+      "race": "drifters",
+      "faction": "Drifters",
+      "color": "NEUTRAL PARCHMENT / TAUPE",
+      "palette": "#1f1a14 #4a3f32 #857260 #cdbb9c",
+      "name": "Field Chaplain",
+      "slug": "field-chaplain",
+      "description": "Wanderpriester mit Rucksack, Kräuterbündeln und Laterne verbindet einen Verwundeten, warmes Licht.",
+      "prompt": "Use case: stylized-concept. Asset type: standalone card artwork for Chromatic 2. Generate ONE landscape 3:2 image, ideally 1536x1024, artwork only filling the image. Card name metadata: Field Chaplain. Faction: Drifters. Subject description from game design: Wanderpriester mit Rucksack, Kräuterbündeln und Laterne verbindet einen Verwundeten, warmes Licht.\nStyle: fine crisp retro fantasy pixel art, square pixel clusters on an approximately 192x128 logical grid enlarged with nearest-neighbor, dark outlines, limited colors, stepped shading. Simple readable silhouettes, modest detail, no photorealism, no painterly texture, no blur or smooth gradient. One clear main subject or small readable group; keep secondary scenery minimal. Centered full figure with breathing room, occupies approximately 65-75% height, fits small card art.\nBackground MUST be predominantly NEUTRAL PARCHMENT / TAUPE in these existing game background colors: #1f1a14 #4a3f32 #857260 #cdbb9c. Simple pixel-dithered glow behind subject, darker corners, dark pixel ground in bottom quarter, understated silhouettes suggested by description, retain a large visible colored background. Upper right mostly quiet colored background. Subject may use natural material colors with faction-colored accents. For crowds use a few clear foreground figures and minimal silhouettes. Stylized non-graphic fantasy.\nHARD CONSTRAINTS: NO text, letters, numerals, number in upper right, troop counts, symbols from UI, badges, labels, frame, card border, interface, watermark. Draw ONLY the illustration that goes inside a card, never a whole card."
+    },
+    {
+      "race": "drifters",
+      "faction": "Drifters",
+      "color": "NEUTRAL PARCHMENT / TAUPE",
+      "palette": "#1f1a14 #4a3f32 #857260 #cdbb9c",
+      "name": "Hired Giant",
+      "slug": "hired-giant",
+      "description": "Gutmütiger Hügelriese in Flickenkleidung mit Baumstamm-Keule, Geldbeutel am Gürtel, Vertrag hinter dem Ohr.",
+      "prompt": "Use case: stylized-concept. Asset type: standalone card artwork for Chromatic 2. Generate ONE landscape 3:2 image, ideally 1536x1024, artwork only filling the image. Card name metadata: Hired Giant. Faction: Drifters. Subject description from game design: Gutmütiger Hügelriese in Flickenkleidung mit Baumstamm-Keule, Geldbeutel am Gürtel, Vertrag hinter dem Ohr.\nStyle: fine crisp retro fantasy pixel art, square pixel clusters on an approximately 192x128 logical grid enlarged with nearest-neighbor, dark outlines, limited colors, stepped shading. Simple readable silhouettes, modest detail, no photorealism, no painterly texture, no blur or smooth gradient. One clear main subject or small readable group; keep secondary scenery minimal. Centered full figure with breathing room, occupies approximately 65-75% height, fits small card art.\nBackground MUST be predominantly NEUTRAL PARCHMENT / TAUPE in these existing game background colors: #1f1a14 #4a3f32 #857260 #cdbb9c. Simple pixel-dithered glow behind subject, darker corners, dark pixel ground in bottom quarter, understated silhouettes suggested by description, retain a large visible colored background. Upper right mostly quiet colored background. Subject may use natural material colors with faction-colored accents. For crowds use a few clear foreground figures and minimal silhouettes. Stylized non-graphic fantasy.\nHARD CONSTRAINTS: NO text, letters, numerals, number in upper right, troop counts, symbols from UI, badges, labels, frame, card border, interface, watermark. Draw ONLY the illustration that goes inside a card, never a whole card."
+    }
+  ]
+}

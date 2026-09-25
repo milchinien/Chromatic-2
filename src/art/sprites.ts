@@ -396,8 +396,8 @@ export interface UnitFrames {
   corpse: PixelGrid;
 }
 
-export function buildUnitFrames(kind: VisualKind, color: ColorId, team: 0 | 1): UnitFrames {
-  const p = PALETTES[color];
+export function buildUnitFrames(kind: VisualKind, color: ColorId | Palette, team: 0 | 1): UnitFrames {
+  const p = typeof color === 'string' ? PALETTES[color] : color;
   const t = TEAM_COLORS[team];
   const make = (f: Frame) => drawBody(kind, { p, T: t.T, TD: t.TD, f }).pad(1).outline(INK);
   const building = isBuilding(kind);

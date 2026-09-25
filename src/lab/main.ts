@@ -14,9 +14,15 @@ import './screens.css';
 import './favorites.css';
 import './idle.css';
 import './buttons.css';
+import './crt.css';
+import './world.css';
 
 import { fxUrl, PALETTE_THEMES, sceneUrl, uiRamp, type PaletteTheme } from './palettes';
 import { MORE_PALETTE_THEMES } from './palettes-more';
+import { battlefieldUrl, LAYOUT_WORLD } from './battlefield';
+import { CRT_PALETTE_THEMES, WORLD_THEMES } from './palettes-crt';
+import { barFrameUrl, frameUrl, pcardHtml } from './pcard';
+import { cardsOf, RACE_ORDER, RACES, unitSprite, type Card2, type RaceId } from './races';
 import { blockText, buildSprites, icon, installTextures, spriteInPalette, spriteSize, type IconName, type Sprites } from './pixels';
 
 interface Theme {
@@ -38,11 +44,11 @@ const THEMES: Theme[] = [
   { id: 'glass', name: 'Chromatic Glass', desc: 'Buntglas in den Rassenfarben, Knöpfe als geschliffene Edelsteine.', sprite: 'normal' },
   { id: 'cozy', name: 'Cozy', desc: 'Hell und verspielt: dicke 3D-Knöpfe, Himmel und Wolken.', sprite: 'normal' },
   { id: 'terminal', name: 'Terminal', desc: 'Bernstein-Monitor mit Scanlines: alles als Text.', sprite: 'amber' },
-  ...[...PALETTE_THEMES, ...MORE_PALETTE_THEMES].map((p): Theme => ({ id: p.id, name: p.name, desc: p.desc, sprite: 'normal', palette: p })),
+  ...[...PALETTE_THEMES, ...MORE_PALETTE_THEMES, ...CRT_PALETTE_THEMES, ...WORLD_THEMES].map((p): Theme => ({ id: p.id, name: p.name, desc: p.desc, sprite: 'normal', palette: p })),
 ];
 
 /** Die ausgebauten Lieblings-Designs: nur sie haben Deck-, Shop- und Kampfbildschirm. */
-const FAVORITES = ['ridge', 'lantern', 'orbit', 'candle', 'idle'];
+const FAVORITES = ['ridge', 'lantern', 'orbit', 'candle', 'idle', ...WORLD_THEMES.map((w) => w.id)];
 
 type ScreenKind = 'menu' | 'deck' | 'shop' | 'battle';
 const SCREENS: { id: ScreenKind; name: string }[] = [
@@ -157,7 +163,7 @@ const topbar = () => `
 
 // --- Bildschirme ------------------------------------------------------------------------
 
-function menuBody(t: Theme): string {
+function menuBody(t: Theme, featured = cardHtml(t, DECK[0]!)): string {
   return `
     ${topbar()}
     <div class="logo">
@@ -183,7 +189,7 @@ function menuBody(t: Theme): string {
       </div>
     </section>
 
-    ${cardHtml(t, DECK[0]!)}
+    ${featured}
 
     <footer class="foot"><span class="blink">Press Enter</span><span class="ver">v0.0.1</span></footer>
     ${tabbar('menu')}`;
@@ -272,21 +278,61 @@ function shopBody(t: Theme): string {
 }
 
 function battleBody(t: Theme): string {
-  // Kleine Armeen aufs Feld stellen
-  let field = '';
+  // Top-Down-Schlacht: zwei Formationen, Getümmel in der Mitte, Gefallene,
+  // Pfeile und Zauber. Koordinaten = Bildschirmpixel über dem Schlachtfeld.
   let seed = 3;
   const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-  const army = (team: 0 | 1, ids: string[], x0: number, x1: number) => {
-    for (let i = 0; i < 34; i++) {
-      const id = ids[i % ids.length]!;
-      const x = x0 + rnd() * (x1 - x0);
-      const y = 132 + rnd() * 128;
-      const [w, h] = spriteSize(id);
-      field += `<img class="f-unit" src="${spriteFor(t, id, team)}" style="left:${Math.round(x)}px;top:${Math.round(y)}px;width:${w}px;height:${h}px;z-index:${Math.round(y)}" alt="">`;
-    }
+  const items: { y: number; html: string }[] = [];
+  const unit = (id: string, team: 0 | 1, x: number, y: number, cls = '') => {
+    const [w, h] = spriteSize(id);
+    const left = Math.round(x - w / 2);
+    const top = Math.round(y - h);
+    items.push({ y, html: `<img class="f-unit${cls}" src="${spriteFor(t, id, team)}" style="left:${left}px;top:${top}px;width:${w}px;height:${h}px;z-index:${Math.round(y)}" alt="">` });
   };
-  army(0, ['warhorse', 'forest-sage', 'warhorse'], 150, 290);
-  army(1, ['gravewarden', 'necromancer', 'gravewarden'], 350, 490);
+  /** Block in Reihen, vorne = nahe der Mitte */
+  const block = (id: string, team: 0 | 1, front: number, depth: number, y0: number, y1: number, gapX: number, gapY: number) => {
+    const dir = team === 0 ? -1 : 1;
+    for (let col = 0; col < depth; col++)
+      for (let y = y0; y <= y1; y += gapY) {
+        if (rnd() < 0.12) continue;
+        unit(id, team, front + dir * col * gapX + (rnd() - 0.5) * 3 + (col % 2) * dir * 2, y + (col % 2) * (gapY / 2) + (rnd() - 0.5) * 2);
+      }
+  };
+  // Linke Armee: Reiter vorne, Magier dahinter
+  block('warhorse', 0, 262, 4, 92, 236, 17, 15);
+  block('forest-sage', 0, 176, 3, 104, 226, 11, 13);
+  // Rechte Armee: Knochenschützen vorne, Hexen dahinter
+  block('gravewarden', 1, 384, 4, 88, 238, 11, 12);
+  block('necromancer', 1, 452, 3, 100, 228, 11, 13);
+  // Getümmel in der Mitte
+  for (let i = 0; i < 26; i++) {
+    const y = 96 + rnd() * 140;
+    unit(i % 2 ? 'warhorse' : 'gravewarden', (i % 2) as 0 | 1, 300 + rnd() * 50, y);
+  }
+  // Gefallene (liegend) und Spuren am Boden
+  let marks = '';
+  for (let i = 0; i < 18; i++) {
+    const x = 284 + rnd() * 90;
+    const y = 96 + rnd() * 144;
+    const id = rnd() < 0.5 ? 'warhorse' : 'gravewarden';
+    const [w, h] = spriteSize(id);
+    marks += `<img class="f-dead" src="${spriteFor(t, id, (i % 2) as 0 | 1)}" style="left:${Math.round(x - w / 2)}px;top:${Math.round(y - h / 2)}px;width:${w}px;height:${h}px" alt="">`;
+    for (let k = 0; k < 4; k++) marks += `<i class="f-mark" style="left:${Math.round(x + (rnd() - 0.5) * 14)}px;top:${Math.round(y + (rnd() - 0.2) * 8)}px"></i>`;
+  }
+  // Pfeile (von rechts) und Zauber (von links) in der Luft
+  let shots = '';
+  for (let i = 0; i < 14; i++) {
+    const x = 250 + rnd() * 110;
+    const y = 90 + rnd() * 130;
+    shots += `<i class="f-arrow" style="left:${Math.round(x)}px;top:${Math.round(y)}px;--r:${Math.round(-12 + rnd() * 24)}deg;--d:${(rnd() * 0.6).toFixed(2)}s"></i>`;
+  }
+  for (let i = 0; i < 7; i++) {
+    const x = 220 + rnd() * 120;
+    const y = 100 + rnd() * 120;
+    shots += `<i class="f-orb" style="left:${Math.round(x)}px;top:${Math.round(y)}px;--d:${(rnd() * 0.6).toFixed(2)}s"></i>`;
+  }
+  items.sort((a, b) => a.y - b.y);
+  const field = marks + items.map((i) => i.html).join('') + shots;
   return `
     <div class="field">${field}</div>
     <header class="hud">
@@ -324,6 +370,213 @@ function battleBody(t: Theme): string {
     </footer>`;
 }
 
+// --- Farb-Welten -------------------------------------------------------------------------
+// Pro Farbe ein Design: Hintergrund & Oberfläche in der Boss-Farbe, die Karten
+// dieser Farbe im Deck. Einheiten bleiben immer in der Farbe ihrer Rasse.
+
+const BOSS: Record<RaceId, string> = {
+  ashclan: 'Gorrak Ashmaw',
+  wildwood: 'Sylvara',
+  tidebound: 'Queen Nerissa',
+  sunlegion: 'Emperor Aurelian',
+  plague: 'Morvath',
+  deepforge: 'Thane Borin',
+  drifters: 'Rusk',
+};
+
+const raceOf = (t: Theme) => t.palette!.race as RaceId;
+
+/** Karten des Spielers in dieser Welt: zwei Karten aus anderen Farben. */
+function playerPair(race: RaceId): [Card2, Card2] {
+  const i = RACE_ORDER.indexOf(race);
+  const a = cardsOf(RACE_ORDER[(i + 1) % RACE_ORDER.length]!);
+  const b = cardsOf(RACE_ORDER[(i + 3) % RACE_ORDER.length]!);
+  const front = a.find((k) => k.cls === 'Cavalry' || k.cls === 'Infantry') ?? a[0]!;
+  const back = b.find((k) => k.cls === 'Mage' || k.cls === 'Archers') ?? b[0]!;
+  return [front, back];
+}
+
+/** Gegnerkarten: Boss-Farbe, vorne Nahkampf, hinten Fernkampf. */
+function enemyPair(race: RaceId): [Card2, Card2] {
+  const r = cardsOf(race);
+  const front = r.find((k) => ['Infantry', 'Cavalry', 'Beast', 'Swarm'].includes(k.cls)) ?? r[0]!;
+  const back = r.find((k) => ['Archers', 'Mage', 'Priest'].includes(k.cls)) ?? r[1] ?? r[0]!;
+  return [front, back];
+}
+
+function worldMenu(t: Theme): string {
+  const race = raceOf(t);
+  return menuBody(t, `<div class="feature">${pcardHtml(cardsOf(race)[0]!, { big: true })}</div>`);
+}
+
+function worldDeck(t: Theme): string {
+  const race = raceOf(t);
+  const cards = cardsOf(race);
+  return `
+    ${topbar()}
+    <header class="page-head">
+      <h2 class="page-title">${icon('cards')}<span>${RACES[race].name}</span><em>${cards.length} cards · ${RACES[race].color}</em></h2>
+      <div class="segmented filter" role="group">
+        ${RACE_ORDER.filter((r) => r === race || r === 'drifters')
+          .map((r, i) => `<button class="seg${i === 0 ? ' active' : ''}">${RACES[r].name}</button>`)
+          .join('')}
+      </div>
+    </header>
+    <section class="deck-panel panel">
+      <div class="deck-grid pc-grid">
+        ${cards.map((k, i) => pcardHtml(k, { index: i, selected: i === 0 })).join('')}
+      </div>
+    </section>
+    <aside class="detail">
+      <div class="detail-card">${pcardHtml(cards[0]!, { big: true })}</div>
+      <div class="detail-actions">
+        <button class="btn primary" data-act="toast" data-msg="Upgraded!">${icon('star')}<span>Upgrade</span><span class="price">${icon('coin')}80</span></button>
+        <button class="btn" data-act="goto" data-to="menu">${icon('door')}<span>Back</span></button>
+      </div>
+    </aside>
+    <footer class="foot"><span>Pair two cards of the same color or class for a bonus.</span><span class="ver">v0.0.1</span></footer>`;
+}
+
+function worldShop(t: Theme): string {
+  const race = raceOf(t);
+  const pool = [...cardsOf(race), ...cardsOf('drifters')];
+  const offers = [pool[1], pool[2], pool[pool.length - 1]].map((k, i) => {
+    const sold = i === 1;
+    return `
+      <div class="offer${sold ? ' sold' : ''}">
+        ${pcardHtml(k!, { big: true })}
+        <button class="btn ${sold ? '' : 'primary'} buy" ${sold ? 'disabled' : 'data-act="buy"'}>${sold ? `${icon('lock')}<span>Sold</span>` : `${icon('coin')}<span>${[95, 140, 70][i]}</span>`}</button>
+      </div>`;
+  }).join('');
+  const ups = cardsOf(race)
+    .slice(0, 4)
+    .map((k) => {
+      const sp = unitSprite(k);
+      return `
+      <div class="up-row">
+        <img class="up-icon" src="${sp.url}" style="width:${sp.w}px;height:${sp.h}px" alt="">
+        <span class="up-name">${k.name}</span>
+        ${starsHtml(k.stars)}
+        <button class="btn up-btn" ${k.stars >= 3 ? 'disabled' : 'data-act="toast" data-msg="Upgraded!"'}>${k.stars >= 3 ? 'MAX' : `+${icon('star')}${k.stars * 40}`}</button>
+      </div>`;
+    })
+    .join('');
+  return `
+    ${topbar()}
+    <header class="page-head">
+      <h2 class="page-title">${icon('bag')}<span>Wandering Merchant</span><em>${RACES[race].name} · Room 5</em></h2>
+    </header>
+    <section class="offers panel">
+      <div class="panel-title">For Sale</div>
+      <div class="offer-row">${offers}</div>
+    </section>
+    <aside class="upgrades panel">
+      <div class="panel-title">Upgrade Cards</div>
+      <div class="up-list">${ups}</div>
+      <div class="shop-actions">
+        <button class="btn" data-act="toast" data-msg="New offers!">${icon('refresh')}<span>Reroll</span><span class="price">${icon('coin')}20</span></button>
+        <button class="btn danger" data-act="goto" data-to="menu">${icon('door')}<span>Leave</span></button>
+      </div>
+    </aside>
+    <footer class="foot"><span>Buy new cards or upgrade the ones you have.</span><span class="ver">v0.0.1</span></footer>`;
+}
+
+/** Kampf nach Skizze: Wiese oben, breiter Wald unten mit den 4 Karten. */
+function worldBattle(t: Theme): string {
+  const race = raceOf(t);
+  const [pf, pb] = playerPair(race);
+  const [ef, eb] = enemyPair(race);
+  let seed = 5;
+  const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const items: { y: number; html: string }[] = [];
+  const unit = (card: Card2, team: 0 | 1, x: number, y: number) => {
+    const sp = unitSprite(card, team);
+    items.push({ y, html: `<img class="f-unit" src="${sp.url}" style="left:${Math.round(x - sp.w / 2)}px;top:${Math.round(y - sp.h)}px;width:${sp.w}px;height:${sp.h}px;z-index:${Math.round(y)}" alt="">` });
+  };
+  const block = (card: Card2, team: 0 | 1, front: number, depth: number, y0: number, y1: number) => {
+    const sp = unitSprite(card, team);
+    const gx = sp.w + 1;
+    const gy = Math.max(10, sp.h - 3);
+    const dir = team === 0 ? -1 : 1;
+    const big = sp.h > 20;
+    for (let col = 0; col < (big ? 1 : depth); col++)
+      for (let y = y0; y <= y1; y += big ? 44 : gy) {
+        if (!big && rnd() < 0.12) continue;
+        unit(card, team, front + dir * col * gx + (rnd() - 0.5) * 3, y + (col % 2) * (gy / 2) + (rnd() - 0.5) * 2);
+      }
+  };
+  block(pf, 0, 250, 4, 84, 204);
+  block(pb, 0, 168, 3, 90, 200);
+  block(ef, 1, 392, 4, 84, 204);
+  block(eb, 1, 470, 3, 90, 200);
+  for (let i = 0; i < 20; i++) {
+    const team = (i % 2) as 0 | 1;
+    unit(team === 0 ? pf : ef, team, 298 + rnd() * 46, 88 + rnd() * 116);
+  }
+  let marks = '';
+  for (let i = 0; i < 12; i++) {
+    const card = i % 2 ? pf : ef;
+    const sp = unitSprite(card, (i % 2) as 0 | 1);
+    const x = 290 + rnd() * 70;
+    const y = 90 + rnd() * 110;
+    marks += `<img class="f-dead" src="${sp.url}" style="left:${Math.round(x - sp.w / 2)}px;top:${Math.round(y - sp.h / 2)}px;width:${sp.w}px;height:${sp.h}px" alt="">`;
+    for (let k = 0; k < 3; k++) marks += `<i class="f-mark" style="left:${Math.round(x + (rnd() - 0.5) * 12)}px;top:${Math.round(y + (rnd() - 0.2) * 8)}px"></i>`;
+  }
+  let shots = '';
+  for (let i = 0; i < 12; i++) shots += `<i class="f-arrow" style="left:${Math.round(250 + rnd() * 110)}px;top:${Math.round(86 + rnd() * 110)}px;--r:${Math.round(-12 + rnd() * 24)}deg;--d:${(rnd() * 0.6).toFixed(2)}s"></i>`;
+  for (let i = 0; i < 6; i++) shots += `<i class="f-orb" style="left:${Math.round(220 + rnd() * 120)}px;top:${Math.round(96 + rnd() * 100)}px;--d:${(rnd() * 0.6).toFixed(2)}s"></i>`;
+  items.sort((a, b) => a.y - b.y);
+  const slot = (card: Card2, team: 0 | 1, label: string, x: number) =>
+    `<div class="wslot" style="left:${x}px"><span class="slot-label">${label}</span>${pcardHtml(card, { team })}</div>`;
+  return `
+    <div class="field">${marks}${items.map((i) => i.html).join('')}${shots}</div>
+    ${arenaHud({ name: 'Your Army', units: 342, max: 450, trail: 82 }, { name: BOSS[race], units: 268, max: 460, trail: 66 }, 2)}
+    ${slot(pf, 0, 'Front', 19)}${slot(pb, 0, 'Back', 110)}
+    ${slot(ef, 1, 'Front', 443)}${slot(eb, 1, 'Back', 535)}
+    <div class="wcontrols" style="--frame:url(${frameUrl()})">
+      <div class="bonus-line">${icon('star')}<span>No bonus</span></div>
+      <button class="wbtn fight" data-act="fight">${icon('swords')}<span>Fight!</span></button>
+      <div class="control-row">
+        <button class="wbtn small">Pause</button>
+        <div class="wseg" role="group"><button class="seg active">1×</button><button class="seg">2×</button><button class="seg">4×</button></div>
+      </div>
+    </div>`;
+}
+
+interface ArmyBar {
+  name: string;
+  units: number;
+  max: number;
+  /** Schadensspur in % (zuletzt verlorene Einheiten, heller) */
+  trail: number;
+}
+
+/**
+ * Kampf-HUD, in jeder Arena gleich: feste Breiten, neutrale Rahmen, feste Farben
+ * (du grün, Gegner rot). Namen werden abgeschnitten statt das Layout zu verschieben.
+ */
+function arenaHud(you: ArmyBar, foe: ArmyBar, stars: number): string {
+  const bar = (a: ArmyBar, side: 'you' | 'foe') => `
+      <div class="wbar ${side}">
+        <div class="wbar-head">
+          <i class="wbar-chip"></i>
+          <span class="wbar-name">${a.name}</span>
+          <b class="wbar-count">${a.units}<small>/${a.max}</small></b>
+        </div>
+        <div class="wbar-track" style="--hp:${Math.round((a.units / a.max) * 100)}%;--trail:${a.trail}%">
+          <i class="trail"></i><i class="fill"></i>
+        </div>
+      </div>`;
+  let st = '';
+  for (let i = 0; i < 3; i++) st += icon('star', i < stars ? '' : 'empty');
+  return `
+    <header class="whud" style="--frame:url(${frameUrl()});--bar-frame:url(${barFrameUrl()})">
+      ${bar(you, 'you')}
+      <div class="wtimer"><b>1:24</b><span class="wtimer-stars">${st}</span></div>
+      ${bar(foe, 'foe')}
+    </header>`;
+}
+
 function screenHtml(t: Theme, kind: ScreenKind): string {
   const p = t.palette;
   let vars = '';
@@ -334,17 +587,21 @@ function screenHtml(t: Theme, kind: ScreenKind): string {
       ...Object.entries(p.accents ?? {}).map(([k, c]) => `--a-${k}:${c}`),
       `--scene:url(${sceneUrl(p)})`,
     ].join(';');
+    if (kind === 'battle') vars += `;--battle-scene:url(${battlefieldUrl(p, p.race ? LAYOUT_WORLD : undefined)})`;
     const fxu = fxUrl(p);
-    if (fxu && p.fx) {
+    if (fxu && p.fx && kind !== 'battle') {
       vars += `;--fx:url(${fxu});--fx-n:${p.fx.frames};--fx-dur:${p.fx.duration}s`;
       fx = '<div class="fx"></div>';
     }
   }
-  const body = kind === 'deck' ? deckBody(t) : kind === 'shop' ? shopBody(t) : kind === 'battle' ? battleBody(t) : menuBody(t);
+  const body = p?.race
+    ? kind === 'deck' ? worldDeck(t) : kind === 'shop' ? worldShop(t) : kind === 'battle' ? worldBattle(t) : worldMenu(t)
+    : kind === 'deck' ? deckBody(t) : kind === 'shop' ? shopBody(t) : kind === 'battle' ? battleBody(t) : menuBody(t);
   return `
-  <div class="screen theme-${t.id}${p ? ' pal' : ''} s-${kind}" data-theme="${t.id}" style="${vars}">
+  <div class="screen theme-${t.id}${p ? ' pal' : ''}${p?.family ? ` fam-${p.family}` : ''}${p?.race ? ' world' : ''} s-${kind}" data-theme="${t.id}" style="${vars}">
     <div class="bg"></div>
     ${fx}
+    ${p?.family === 'crt' ? '<div class="crt-frame"></div>' : ''}
     ${body}
     <div class="toast"></div>
     <div class="dialog-wrap">
@@ -522,6 +779,12 @@ view.addEventListener('click', (e) => {
     seg.parentElement!.querySelectorAll('.seg').forEach((s) => s.classList.toggle('active', s === seg));
     return;
   }
+  const pc = el.closest<HTMLElement>('.pc-grid .pc');
+  if (pc && theme.palette?.race) {
+    screen.querySelectorAll('.pc-grid .pc').forEach((c) => c.classList.toggle('selected', c === pc));
+    screen.querySelector('.detail-card')!.innerHTML = pcardHtml(cardsOf(theme.palette.race as RaceId)[Number(pc.dataset.card)]!, { big: true });
+    return;
+  }
   const mini = el.closest<HTMLElement>('.deck-grid .card');
   if (mini) {
     screen.querySelectorAll('.deck-grid .card').forEach((c) => c.classList.toggle('selected', c === mini));
@@ -533,7 +796,7 @@ view.addEventListener('click', (e) => {
   if (act === 'run') {
     if (isFav(theme)) {
       toast(screen, 'Starting new run…');
-      window.setTimeout(() => (location.href = `index.html?theme=${theme.id}`), 450);
+      window.setTimeout(() => (location.href = `sandbox.html?theme=${theme.id}`), 450);
     } else toast(screen, 'Starting new run…');
   }
   if (act === 'toast') toast(screen, actEl!.dataset.msg ?? '');
@@ -553,7 +816,7 @@ view.addEventListener('click', (e) => {
 // Jeder Klick auf ein Bedienelement spielt eine Drück-Animation (.clicked) und
 // erzeugt an der Klickstelle Partikel (.cfx). Aussehen legt jedes Design in CSS fest.
 
-const CLICKABLE = '.btn, .seg, .door, .tab, .deck-grid .card';
+const CLICKABLE = '.btn, .wbtn, .seg, .door, .tab, .deck-grid .card, .pc-grid .pc';
 
 view.addEventListener('pointerdown', (e) => {
   if (gridMode) return;

@@ -1,11 +1,24 @@
-# Chromatic 2 – Prototyp
+# Chromatic 2
 
-Nachfolger von *Chromatic*: Roguelite-Deckbuilder mit Echtzeit-Massenschlachten,
-jetzt in **2D Top-Down** mit kleinen Pixel-Art-Figuren (8–14 px, Stil à la WorldBox).
+Nachfolger von *Chromatic*: Roguelite-Deckbuilder mit Echtzeit-Massenschlachten
+in **2D Top-Down** mit kleinen Pixel-Art-Figuren.
 
-Dieser erste Prototyp zeigt **ein Schlachtfeld**: Du wählst eine Karte für deine
-Armee und eine für den Gegner, stellst Truppenzahl (bis 3000 pro Seite) und
-Kartenstufe ein und lässt beide gegeneinander kämpfen.
+| Seite | Inhalt |
+|---|---|
+| `index.html` | **Das Spiel** (`src/c2/`): Hauptmenü → 3 Farben wählen → 4 Welten mit Kämpfen, Shop, Schatz, Enchanter, Pyre und Bossen |
+| `ui-lab.html` | UI-Lab: Design-Varianten, Welt-Designs, Kartendesign (`src/lab/`) |
+| `sandbox.html` | Erster Prototyp: zwei Karten frei gegeneinander kämpfen lassen (`src/main.ts`) |
+
+### Das Spiel in Kürze
+
+- **Run:** 3 Farben wählen → Startdeck aus 10 Karten. Welt 1 ist die Drifters-Welt von Rusk,
+  danach vor jeder Welt Wahl zwischen 2 Farb-Bossen. 5 Räume pro Welt, dann der Boss. 3 Leben.
+- **Kampf:** 3 Karten ziehen, 2 wählen (Front/Back), FIGHT → Einheiten erscheinen, Kartenschau
+  mit Boni (Linksklick überspringt) → Massenschlacht → Überlebende laufen zur Burg (1 Schaden je
+  Einheit) → nächste Runde, bis eine Burg fällt.
+- **Räume:** Kampf, Schatz (Gold oder Upgrade), Shop (Upgrade/Kaufen), Enchanter (1 von 2
+  Enchantments, 6 Seltenheiten inkl. *Greed*), Pyre (1 von 3 Karten entfernen), Boss.
+- Der Run wird an jeder Weggabelung gespeichert („Continue“ im Hauptmenü).
 
 ## Starten
 
