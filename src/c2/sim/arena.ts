@@ -356,7 +356,7 @@ export class Arena {
     this.lastStand[0] = this.lastStand[1] = 1;
     this.lastStandShown[0] = this.lastStandShown[1] = false;
     // Tidal Wave: Gegner zu Beginn zurückdrängen
-    for (const b of this.bonuses) if (b.race === 'tidebound') this.tidalWave(1 - b.team, 46, 3, 0.2 * (this.mods[b.team]?.bonusMul ?? 1));
+    for (const b of this.bonuses) if (b.race === 'tidebound') this.tidalWave(1 - b.team, 30, 1.5, 0.07 * (this.mods[b.team]?.bonusMul ?? 1));
     this.tideT[0] = this.tideT[1] = 0;
   }
 
@@ -1396,9 +1396,9 @@ export class Arena {
     for (const b of this.bonuses) {
       if (b.race !== 'tidebound') continue;
       this.tideT[b.team]! += DT;
-      if (this.tideT[b.team]! >= 8) {
+      if (this.tideT[b.team]! >= 12) {
         this.tideT[b.team] = 0;
-        this.tidalWave(1 - b.team, 30, 3, 0.2 * (this.mods[b.team]?.bonusMul ?? 1));
+        this.tidalWave(1 - b.team, 20, 1.5, 0.07 * (this.mods[b.team]?.bonusMul ?? 1));
       }
     }
   }

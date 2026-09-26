@@ -138,7 +138,7 @@ export const cardByName = (name: string): Card2 => {
 export const RACE_BONUS: Record<RaceId, { name: string; text: string }> = {
   ashclan: { name: 'Rage', text: '+20 % damage, below 50 % HP: damage ×2' },
   wildwood: { name: 'Regeneration', text: 'Heals 12 % HP per second' },
-  tidebound: { name: 'Tidal Wave', text: 'Every 8 s a wave hits all enemies, pushes them back and slows them' },
+  tidebound: { name: 'Tidal Wave', text: 'Every 12 s a wave hits all enemies, pushes them back and slows them briefly' },
   sunlegion: { name: 'Discipline', text: '−35 % damage taken' },
   plague: { name: 'Undeath', text: 'Half of the fallen rise again as zombies' },
   deepforge: { name: 'Iron Blood', text: 'HP +50 %' },
