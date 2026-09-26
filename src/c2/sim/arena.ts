@@ -33,9 +33,27 @@ export const DT = 1 / 60;
 export const MAX_UNITS = 30000;
 const MAX_PROJ = 6000;
 const CELL = 16;
-const DMG_SCALE = 0.2;
+const DMG_SCALE = 0.3;
 const MAX_PER_CARD = 1200;
-const ROUND_RUSH = 70; // danach laufen alle direkt zur Burg
+const ROUND_RUSH = 38; // danach laufen alle direkt zur Burg
+/** Burgschaden, wenn ein ganzes Heer (alle HP der Runde) die Burg erreicht */
+export const CASTLE_ARMY = 100;
+/** Burgschaden je Boss, der die Burg erreicht */
+const BOSS_CASTLE = 40;
+
+/** Anteil von HP/Schaden, mit dem Gefallene durch „Undeath“ wieder aufstehen. */
+const UNDEATH_KEEP = 0.6;
+
+/** Wandering Magus: Magie je nach Farbe der anderen Karte. */
+const ADAPT: Record<RaceId, Ability | null> = {
+  ashclan: 'firebolt',
+  wildwood: 'chain',
+  tidebound: 'frostnova',
+  sunlegion: 'sunbeam',
+  plague: 'poison',
+  deepforge: 'cannon',
+  drifters: null,
+};
 
 /** Art einer Explosion bzw. eines Flächeneffekts (nur für die Darstellung). */
 export type BoomFx = 'fire' | 'rock' | 'boulder' | 'frost' | 'whirl' | 'root' | 'bloat' | 'spore' | 'colossus' | 'meteor';
@@ -71,6 +89,8 @@ export interface SideSpec {
   baseHp: number;
   /** Truppen-Multiplikator (Gegner-Stärke nach Sternen) */
   power: number;
+  /** Nur Balance-Editor: Rassen-/Klassenbonus erzwingen (true) oder abschalten (false) */
+  bonus?: { race?: boolean; cls?: boolean };
 }
 
 export interface UType {
@@ -92,7 +112,8 @@ export interface UType {
   flying: boolean;
   armor: number;
   rangedArmor: number;
-  rage: boolean;
+  /** Rot (Ashclan): Stärke der Wut, 0 = keine */
+  rage: number;
   regen: number;
   undeath: number;
   charge: boolean;
@@ -103,6 +124,8 @@ export interface UType {
   wall?: boolean;
   glow: string;
   blood: string;
+  /** Kartenwerte inkl. Sterne (ohne Boni/Enchantments): Grundlage für Beschwörungen & Gift */
+  raw: { hp: number; dmg: number };
 }
 
 export interface BonusInfo {
@@ -177,6 +200,8 @@ export class Arena {
 
   readonly types: UType[] = [];
   readonly events: SimEvent[] = [];
+  /** Nur für den Ton: Nahkampfhiebe und abgeschossene Pfeile seit dem letzten Abholen */
+  readonly sfxTally = { melee: 0, arrows: 0, arrowX: 0 };
 
   state: ArenaState = 'over';
   time = 0;
@@ -194,6 +219,9 @@ export class Arena {
   boss: Boss | null = null;
   bossIdx = -1;
   bossHp = 0;
+  /** volle Boss-HP (für die Anzeige) */
+  bossMax = 0;
+  private bossPower = 1;
   bossFled = false;
   bossDead = false;
   private readonly summons = [0, 0];
@@ -206,9 +234,14 @@ export class Arena {
   readonly lastStandDmg = [1, 1];
   private readonly lastStandShown = [false, false];
   private readonly bannerAlive = [0, 0];
-  private readonly discipline = [false, false];
+  /** Field Chaplain lebt: die andere Karte macht +10 % Schaden */
+  private readonly chaplainAlive = [0, 0];
+  /** Gold-Bonus aktiv (Stärke, 0 = aus) */
+  private readonly discipline = [0, 0];
   private readonly mods: (Mods | undefined)[] = [undefined, undefined];
   private passiveT = 0;
+  private readonly armyHp = [1, 1];
+  private readonly tideT = [0, 0];
   private readonly grids = [new Grid(640, 240, CELL, MAX_UNITS), new Grid(640, 240, CELL, MAX_UNITS)];
   private readonly teamIds = [new Int32Array(MAX_UNITS), new Int32Array(MAX_UNITS)];
   private readonly teamN = [0, 0];
@@ -250,11 +283,14 @@ export class Arena {
   // -----------------------------------------------------------------------
 
   /** Neuer Kampf: Burgen auffüllen, optional Boss. */
-  startBattle(playerBase: number, enemyBase: number, boss: Boss | null, seed: number): void {
+  /** `bossPower` = Stärke des Bosses je nach Welt (HP und Schaden). */
+  startBattle(playerBase: number, enemyBase: number, boss: Boss | null, seed: number, bossPower = 1): void {
+    this.bossPower = bossPower;
     this.baseHp[0] = this.baseMax[0] = Math.max(50, playerBase);
     this.baseHp[1] = this.baseMax[1] = enemyBase;
     this.boss = boss;
-    this.bossHp = boss ? boss.hp : 0;
+    this.bossMax = boss ? boss.hp * bossPower : 0;
+    this.bossHp = this.bossMax;
     this.bossDead = false;
     this.bossFled = false;
     this.round = 0;
@@ -291,13 +327,14 @@ export class Arena {
     for (let tm = 0; tm < 2; tm++) {
       const s = sides[tm]!;
       this.mods[tm] = s.mods;
-      const sameRace = s.front.card.race === s.back.card.race;
-      const sameCls = s.front.card.cls === s.back.card.cls;
+      // Boni lassen sich (Balance-Editor) erzwingen oder abschalten
+      const sameRace = s.bonus?.race ?? s.front.card.race === s.back.card.race;
+      const sameCls = s.bonus?.cls ?? s.front.card.cls === s.back.card.cls;
       const info: BonusInfo = { team: tm, race: sameRace ? s.front.card.race : null, cls: sameCls ? s.front.card.cls : null };
       this.bonuses.push(info);
-      this.discipline[tm] = info.race === 'sunlegion';
-      this.deployCard(tm, s.front, info, 'front', s.power);
-      this.deployCard(tm, s.back, info, 'back', s.power);
+      this.discipline[tm] = info.race === 'sunlegion' ? (s.mods?.bonusMul ?? 1) : 0;
+      this.deployCard(tm, s.front, info, 'front', s.power, s.back.card.race);
+      this.deployCard(tm, s.back, info, 'back', s.power, s.front.card.race);
       this.applyClassBonusSpawns(tm, info, s);
     }
     if (this.boss) this.spawnBoss();
@@ -309,45 +346,57 @@ export class Arena {
   begin(): void {
     if (this.state !== 'deploy') return;
     this.state = 'fight';
+    // Gesamt-HP je Heer: Grundlage für den Burgschaden
+    this.armyHp[0] = this.armyHp[1] = 0;
+    for (let i = 0; i < this.hw; i++) if (this.alive[i] && !this.types[this.type[i]!]!.building && !this.types[this.type[i]!]!.boss) this.armyHp[this.team[i]!]! += this.maxHp[i]!;
     this.countMobile();
     this.roundMobile[0] = Math.max(1, this.mobileNow[0]!);
     this.roundMobile[1] = Math.max(1, this.mobileNow[1]!);
     this.lastStand[0] = this.lastStand[1] = 1;
     this.lastStandShown[0] = this.lastStandShown[1] = false;
     // Tidal Wave: Gegner zu Beginn zurückdrängen
-    for (const b of this.bonuses) if (b.race === 'tidebound') this.tidalWave(1 - b.team, 46);
+    for (const b of this.bonuses) if (b.race === 'tidebound') this.tidalWave(1 - b.team, 46, 3, 0.2 * (this.mods[b.team]?.bonusMul ?? 1));
+    this.tideT[0] = this.tideT[1] = 0;
   }
 
   private visKey(race: RaceId, kind: VisualKind, team: number): string {
     return `${race}|${kind}|${team}`;
   }
 
-  /** Einheitentyp aus Karte + Sternen + Boni + Mods. */
-  private makeType(tm: number, d: Deployed, info: BonusInfo): number {
+  /** Einheitentyp aus Karte + Sternen + Boni + Mods. `partner` = Rasse der anderen Karte. */
+  private makeType(tm: number, d: Deployed, info: BonusInfo, partner: RaceId | null = null): number {
     const c = d.card;
     const cs = CLASS_STATS[c.cls];
     const m = this.mods[tm];
     const bm = m?.bonusMul ?? 1;
-    const starMul = 1 + 0.15 * (d.stars - 1);
+    // Champions sind eine einzige Einheit: sie bekommen den Truppen-Anteil der
+    // Sterne (+30 % je Stern) zusätzlich auf HP und Schaden
+    const starMul = (1 + 0.15 * (d.stars - 1)) * (c.cls === 'Champion' ? 1 + 0.3 * (d.stars - 1) : 1);
     let hp = c.hp * starMul * (m?.hpMul ?? 1) * (m?.classHp[c.cls] ?? 1);
     let dmg = c.dmg * starMul * DMG_SCALE * (m?.dmgMul ?? 1) * (m?.raceDmg[c.race] ?? 1);
     let speed = cs.speed * (m?.speedMul ?? 1);
-    const interval = cs.interval / (m?.atkSpeedMul ?? 1);
+    // Bogenschützen-Paar: 30 % schneller (dazu doppelte erste Salve)
+    const interval = cs.interval / (m?.atkSpeedMul ?? 1) / (info.cls === 'Archers' && c.cls === 'Archers' ? 1 + 0.28 * bm : 1);
     // Rassenbonus
-    if (info.race === 'deepforge') hp *= 1 + 1 * bm;
+    if (info.race === 'deepforge') hp *= 1 + 0.5 * bm;
     if (info.race === 'drifters') {
-      hp *= 1 + 0.1 * bm;
-      dmg *= 1 + 0.1 * bm;
+      hp *= 1 + 0.2 * bm;
+      dmg *= 1 + 0.2 * bm;
     }
     // Klassenbonus
-    if (info.cls === 'Infantry' && c.cls === 'Infantry') hp *= 1 + 0.5 * bm;
+    if (info.cls === 'Infantry' && c.cls === 'Infantry') hp *= 1 + 0.17 * bm;
     if (info.cls === 'Beast' && c.cls === 'Beast') {
-      hp *= 1 + 0.5 * bm;
-      dmg *= 1 + 0.5 * bm;
-      speed *= 1 + 0.5 * bm;
+      hp *= 1 + 0.12 * bm;
+      dmg *= 1 + 0.12 * bm;
+      speed *= 1 + 0.12 * bm;
     }
-    if (info.cls === 'Cavalry' && c.cls === 'Cavalry') speed *= 1 + 1 * bm;
-    const ability = ABILITY[c.name] ?? null;
+    if (info.cls === 'Cavalry' && c.cls === 'Cavalry') {
+      speed *= 1 + 1 * bm;
+      hp *= 1 + 0.2 * bm;
+    }
+    let ability = ABILITY[c.name] ?? null;
+    // Wandering Magus: nutzt die Magie der anderen Karte
+    if (ability === 'adapt') ability = ADAPT[partner ?? 'drifters'];
     const t: UType = {
       visKey: this.visKey(c.race, c.kind, tm),
       card: c,
@@ -367,22 +416,18 @@ export class Arena {
       flying: ability === 'flying' || ability === 'leap',
       armor: ability === 'armor' ? 3 * DMG_SCALE : 0,
       rangedArmor: ability === 'shieldwall' ? 0.5 : 1,
-      rage: info.race === 'ashclan',
-      regen: (info.race === 'wildwood' ? 0.01 * bm : 0) + (m?.regenPct ?? 0),
-      undeath: info.race === 'plague' ? 0.2 * bm : 0,
+      rage: info.race === 'ashclan' ? bm : 0,
+      regen: (info.race === 'wildwood' ? 0.12 * bm : 0) + (m?.regenPct ?? 0),
+      undeath: info.race === 'plague' ? Math.min(1, 0.8 * bm) : 0,
       charge: ability === 'charge' || ability === 'stuncharge' || (info.cls === 'Cavalry' && c.cls === 'Cavalry'),
       doubleFirst: info.cls === 'Archers' && c.cls === 'Archers',
       champion: c.cls === 'Champion',
       boss: false,
       glow: GLOW[c.race],
       blood: RACES[c.race].unit.blood,
+      raw: { hp: c.hp * starMul, dmg: c.dmg * starMul },
     };
-    if (c.cls === 'Champion') {
-      t.radius = 6 * (m?.sizeMul ?? 1);
-      // Champions waren zu stark: weniger HP und Schaden
-      t.hp *= 0.55;
-      t.dmg *= 0.6;
-    }
+    if (c.cls === 'Champion') t.radius = 6 * (m?.sizeMul ?? 1);
     if (ability === 'colossus') t.speed = 16;
     this.types.push(t);
     return this.types.length - 1;
@@ -426,7 +471,7 @@ export class Arena {
       flying: false,
       armor: 0,
       rangedArmor: 1,
-      rage: false,
+      rage: 0,
       regen: m?.regenPct ?? 0,
       undeath: 0,
       charge: false,
@@ -435,21 +480,22 @@ export class Arena {
       boss: false,
       glow: GLOW[race],
       blood: RACES[race].unit.blood,
+      raw: { hp, dmg },
       ...opts,
     };
     this.types.push(t);
     return this.types.length - 1;
   }
 
-  private deployCard(tm: number, d: Deployed, info: BonusInfo, slot: 'front' | 'back', power: number): void {
-    const ti = this.makeType(tm, d, info);
+  private deployCard(tm: number, d: Deployed, info: BonusInfo, slot: 'front' | 'back', power: number, partner: RaceId): void {
+    const ti = this.makeType(tm, d, info, partner);
     const t = this.types[ti]!;
     const c = d.card;
     const m = this.mods[tm];
     const bm = m?.bonusMul ?? 1;
     let n = (d.count ?? c.troops) * (1 + 0.3 * (d.stars - 1)) * power * (m?.troopMul ?? 1) * (m?.raceTroops[c.race] ?? 1);
-    if (info.cls === 'Infantry' && c.cls === 'Infantry') n *= 1 + 0.5 * bm;
-    if (info.cls === 'Swarm' && c.cls === 'Swarm') n *= 1 + 2 * bm;
+    if (info.cls === 'Infantry' && c.cls === 'Infantry') n *= 1 + 0.17 * bm;
+    if (info.cls === 'Swarm' && c.cls === 'Swarm') n *= 1 + 0.2 * bm;
     n = Math.max(1, Math.min(MAX_PER_CARD, Math.round(n)));
     if (c.cls === 'Champion') n = Math.max(1, Math.round(power * (m?.troopMul ?? 1)));
     const dir = tm === 0 ? 1 : -1;
@@ -489,14 +535,14 @@ export class Arena {
       const pool = cardsOf(race).filter((k) => k.cls === 'Infantry' || k.cls === 'Swarm' || k.cls === 'Beast');
       const pick = pool[Math.floor(this.random() * pool.length)] ?? cardsOf('drifters')[0]!;
       const ti = this.summonType(tm, pick.race, pick.kind, pick.cls, pick.hp, pick.dmg);
-      const n = Math.round(24 * bm);
+      const n = Math.round(20 * bm);
       for (let k = 0; k < n; k++) this.spawn(ti, base + dir * (175 + this.random() * 20), FY0 + 10 + this.random() * (FY1 - FY0 - 20), true);
     }
     if (info.cls === 'Priest') {
-      const ti = this.summonType(tm, race, 'hammer', 'Summon', 260 * bm, 24, { scale: 2, radius: 6, speed: 18, interval: 1.2 });
+      const ti = this.summonType(tm, race, 'hammer', 'Summon', 170 * bm, 18, { scale: 2, radius: 6, speed: 18, interval: 1.2 });
       for (let k = 0; k < 2; k++) this.spawn(ti, base + dir * 170, FY0 + (FY1 - FY0) * (k === 0 ? 0.3 : 0.7), true);
     }
-    if (info.cls === 'Siege') this.buildWall(tm, bm);
+    if (info.cls === 'Siege') this.buildWall(tm, 0.3 * bm);
   }
 
   private buildWall(tm: number, strength: number): void {
@@ -510,7 +556,7 @@ export class Arena {
   private spawnBoss(): void {
     const b = this.boss!;
     if (this.bossHp <= 0) return;
-    const ti = this.summonType(1, b.race, b.kind, 'Summon', b.hp, b.dmg, {
+    const ti = this.summonType(1, b.race, b.kind, 'Summon', b.hp * this.bossPower, b.dmg * this.bossPower, {
       boss: true,
       scale: 3,
       radius: 10,
@@ -521,7 +567,7 @@ export class Arena {
     const i = this.spawn(ti, FX1 - 70, (FY0 + FY1) / 2, true);
     if (i >= 0) {
       this.hp[i] = this.bossHp;
-      this.maxHp[i] = b.hp * (1 + 0);
+      this.maxHp[i] = this.bossMax;
       this.bossIdx = i;
     }
   }
@@ -580,6 +626,7 @@ export class Arena {
     this.shake = Math.max(0, this.shake - DT * 6);
     this.buildGrids();
     this.bossPassive();
+    this.tideTick();
     this.tick++;
     if (this.tick % 2 === 0) {
       for (let i = 0; i < this.hw; i++) if (this.alive[i]) this.updateUnit(i);
@@ -599,6 +646,7 @@ export class Arena {
     this.buildN[0] = this.buildN[1] = 0;
     this.tauntN[0] = this.tauntN[1] = 0;
     this.bannerAlive[0] = this.bannerAlive[1] = 0;
+    this.chaplainAlive[0] = this.chaplainAlive[1] = 0;
     let sy0 = 0;
     let sy1 = 0;
     for (let i = 0; i < this.hw; i++) {
@@ -609,7 +657,9 @@ export class Arena {
       if (this.uFlags[i]! & U_TAUNT) this.tauntN[tm]!++;
       if (tm === 0) sy0 += this.y[i]!;
       else sy1 += this.y[i]!;
-      if (this.types[this.type[i]!]!.ability === 'banner') this.bannerAlive[tm] = 1;
+      const ab = this.types[this.type[i]!]!.ability;
+      if (ab === 'banner') this.bannerAlive[tm] = 1;
+      else if (ab === 'chaplain') this.chaplainAlive[tm] = 1;
     }
     for (let tm = 0; tm < 2; tm++) this.grids[tm]!.build(this.teamIds[tm]!, this.teamN[tm]!, this.x, this.yGrid());
     if (this.teamN[0]) this.centroidY[0] = sy0 / this.teamN[0]!;
@@ -653,8 +703,8 @@ export class Arena {
       const few = Math.max(0, Math.min(1, (0.35 - ratio[tm]!) / 0.35));
       const k = Math.max(behind, few * 0.7);
       const player = tm === 0;
-      this.lastStand[tm] = 1 - (player ? 0.82 : 0.5) * k;
-      this.lastStandDmg[tm] = 1 + (player ? 1.3 : 0.5) * k;
+      this.lastStand[tm] = 1 - (player ? 0.6 : 0.3) * k;
+      this.lastStandDmg[tm] = 1 + (player ? 0.9 : 0.3) * k;
       if (k > 0.35 && !this.lastStandShown[tm]) {
         this.lastStandShown[tm] = true;
         this.events.push({ t: 'text', x: player ? 150 : 490, y: 60, text: 'LAST STAND!', color: player ? '#ffe23a' : '#ff8a6a' });
@@ -691,6 +741,14 @@ export class Arena {
     if (this.bossIdx >= 0 && this.alive[this.bossIdx]) this.bossHp = this.hp[this.bossIdx]!;
     const m = this.mods[0];
     if (m?.castleHeal) this.baseHp[0] = Math.min(this.baseMax[0]!, this.baseHp[0]! + m.castleHeal);
+  }
+
+  /**
+   * Belagerung: ab Runde 4 trifft jede Einheit die Burg härter (+50 % je Runde),
+   * damit sich zwei gleich starke Heere nicht endlos gegenseitig auslöschen.
+   */
+  get siegeMul(): number {
+    return 1 + Math.max(0, this.round - 3) * 0.5;
   }
 
   /** Ergebnis des ganzen Kampfes (nach einer Runde abfragen). */
@@ -913,7 +971,9 @@ export class Arena {
     const tm = this.team[i]!;
     if ((tm === 0 && this.x[i]! >= FX1) || (tm === 1 && this.x[i]! <= FX0)) {
       const enemy = 1 - tm;
-      const dmg = t.boss ? 25 : t.champion ? 5 : 1;
+      // Jede Einheit trifft die Burg mit ihrem Anteil an den HP des eigenen Heeres:
+      // ein ganzes Heer macht CASTLE_ARMY Schaden, egal ob 12 Magier oder 240 Zombies
+      const dmg = (t.boss ? BOSS_CASTLE : Math.max(0.2, (CASTLE_ARMY * this.maxHp[i]!) / Math.max(1, this.armyHp[tm]!))) * this.siegeMul;
       this.baseHp[enemy] = Math.max(0, this.baseHp[enemy]! - dmg);
       this.survivorsAtBase[tm]!++;
       this.events.push({ t: 'base', team: enemy, y: this.y[i]! });
@@ -947,7 +1007,7 @@ export class Arena {
         break;
       case 'blessing':
         this.abilT[i] = 4;
-        this.forEachInRadius(tm, x + (tm === 0 ? 30 : -30), y, 30, (j) => (this.shield[j] = Math.max(this.shield[j]!, 10 * DMG_SCALE)));
+        this.forEachInRadius(tm, x + (tm === 0 ? 30 : -30), y, 30, (j) => (this.shield[j] = Math.max(this.shield[j]!, t.dmg * 2.5)));
         this.events.push({ t: 'aura', x: x + (tm === 0 ? 30 : -30), y, r: 30, fx: 'bless' });
         break;
       case 'chaplain':
@@ -959,7 +1019,7 @@ export class Arena {
         // Necromancer: alle 3 s ein Skelett vor sich aus dem Boden
         // stark: alle 2,5 s zwei zähe Skelette, ohne Obergrenze
         this.abilT[i] = 2.5;
-        const st = this.summonType(tm, 'plague', 'skeleton', 'Summon', 14, 10);
+        const st = this.summonType(tm, 'plague', 'skeleton', 'Summon', t.raw.hp * 1.15, t.raw.dmg * 1.6);
         const dir = tm === 0 ? 1 : -1;
         for (let n = 0; n < 2; n++) this.spawn(st, x + dir * (6 + this.random() * 8), y + (this.random() - 0.5) * 14, true);
         this.atkT[i] = 0.3;
@@ -991,7 +1051,8 @@ export class Arena {
 
   private attack(i: number, t: UType, tgt: number, lowHp: boolean): void {
     const tm = this.team[i]!;
-    let dmg = t.dmg * (t.rage && lowHp ? 1.5 : 1) * (this.bannerAlive[tm] ? 1.15 : 1);
+    // Wut: +20 %, unter 50 % HP doppelter Schaden
+    let dmg = t.dmg * (t.rage ? (lowHp ? 1 + 1 * t.rage : 1 + 0.2 * t.rage) : 1) * (this.bannerAlive[tm] ? 1.15 : 1) * (this.chaplainAlive[tm] && t.ability !== 'chaplain' ? 1.1 : 1);
     dmg *= this.lastStandDmg[tm]!;
     if (t.ability === 'pack') dmg *= 1.3;
     if (t.ability === 'harvest') dmg += this.deaths * 2 * DMG_SCALE * 0.1;
@@ -1004,12 +1065,20 @@ export class Arena {
     const ty = this.y[tgt]!;
     switch (t.attack) {
       case 'melee': {
+        this.sfxTally.melee++;
         if (t.ability === 'tentacles') {
           let n = 0;
           this.forEachInRadius(1 - tm, x, y, t.radius + 14, (j) => {
             if (n++ < 4) this.damage(j, dmg, i, true, false);
           });
         } else this.damage(tgt, dmg, i, true, false);
+        // Champions und Bosse spalten: jeder Hieb trifft bis zu 4 weitere Gegner ums Ziel
+        if (t.champion || t.boss) {
+          let n = 0;
+          this.forEachInRadius(1 - tm, tx, ty, t.radius + 7, (j) => {
+            if (j !== tgt && n++ < 4) this.damage(j, dmg * 0.5, i, true, false);
+          });
+        }
         if (t.ability === 'burn') this.ignite(tgt, t.dmg * 0.4, 2);
         if (t.ability === 'grip' || (t.ability === 'stuncharge' && this.firstHit[i])) {
           this.slowT[tgt] = 1.5;
@@ -1023,6 +1092,8 @@ export class Arena {
       }
       case 'arrow':
         this.fire(P_ARROW, i, x, y - 5, tx, ty, 190, dmg, tgt, 0);
+        this.sfxTally.arrows++;
+        this.sfxTally.arrowX += x;
         break;
       case 'bolt': {
         if (t.ability === 'chain') {
@@ -1048,9 +1119,11 @@ export class Arena {
             last = best;
           }
           this.events.push({ t: 'chain', pts, color: '#c8ffb0' });
-        } else if (t.ability === 'sunbeam') {
+        } else if (t.ability === 'sunbeam' || t.ability === 'cannon') {
+          // Sonnenstrahl (bzw. Magus neben Deepforge: durchschlagender Steinschuss)
+          const sun = t.ability === 'sunbeam';
           this.lineDamage(tm, x, ty, dmg * 0.6, i);
-          this.events.push({ t: 'beam', x0: x, y: ty, x1: tm === 0 ? FX1 : FX0, color: '#fff0a0', fx: 'sun' });
+          this.events.push({ t: 'beam', x0: x, y: ty, x1: tm === 0 ? FX1 : FX0, color: sun ? '#fff0a0' : '#ffd9a0', fx: sun ? 'sun' : 'cannon' });
         } else {
           this.fire(P_BOLT, i, x, y - 6, tx, ty, 140, dmg, tgt, 0);
           this.events.push({ t: 'cast', x, y: y - 6, tx, ty, color: t.glow, siege: false });
@@ -1148,7 +1221,7 @@ export class Arena {
             if (ab === 'firepots') this.ignite(j, st.dmg * 0.3, 5);
           });
           if (ab === 'corpsecart') {
-            const zt = this.summonType(tm, 'plague', 'ghoul', 'Summon', 8, 5);
+            const zt = this.summonType(tm, 'plague', 'ghoul', 'Summon', st.raw.hp * 0.16, st.raw.dmg * 0.17);
             for (let k = 0; k < 3; k++) this.spawn(zt, x + (this.random() - 0.5) * 10, y + (this.random() - 0.5) * 8, true);
           }
           this.events.push({ t: 'boom', x, y, r, color: ab === 'firepots' ? '#ff8a3a' : '#c8c0b0', fx: ab === 'firepots' ? 'fire' : ab === 'boulder' ? 'boulder' : 'rock' });
@@ -1185,9 +1258,10 @@ export class Arena {
               this.slowT[tgt] = 2;
               this.slowMul[tgt] = 0.75;
             }
+            if (ab === 'firebolt') this.ignite(tgt, st.dmg * 0.5, 3);
             if (ab === 'poison') {
               this.burnT[tgt] = 4;
-              this.burnDps[tgt] = this.burnDps[tgt]! + 2 * DMG_SCALE;
+              this.burnDps[tgt] = this.burnDps[tgt]! + st.dmg * 0.25;
             }
           }
           this.events.push({ t: 'hit', x: this.pTX[p]!, y: this.pTY[p]!, color: this.pColor[p] ?? '#fff' });
@@ -1204,14 +1278,15 @@ export class Arena {
   }
 
   /** Schaden. `src` = Angreifer (für Kill-Effekte) oder -1. */
-  damage(i: number, dmg: number, src: number, melee: boolean, ranged: boolean): void {
+  damage(i: number, dmg: number, src: number, melee: boolean, ranged: boolean, carry = 0): void {
     if (!this.alive[i]) return;
     const t = this.types[this.type[i]!]!;
     const tm = this.team[i]!;
     if (ranged) dmg *= t.rangedArmor;
     let armor = t.armor;
-    if (this.discipline[tm]) armor += Math.min(5, this.teamN[tm]! * 0.1) * DMG_SCALE * 0.5;
     dmg = Math.max(dmg * 0.25, dmg - armor);
+    // Disziplin (Gold): weniger Schaden
+    if (this.discipline[tm]) dmg *= 1 - Math.min(0.6, 0.35 * this.discipline[tm]!);
     dmg *= this.lastStand[tm]!;
     if (this.shield[i]! > 0) {
       const a = Math.min(this.shield[i]!, dmg);
@@ -1226,7 +1301,26 @@ export class Arena {
       if (++this.hitsTaken[i]! % 3 === 0) this.damage(src, t.dmg * 2, -1, false, false);
     }
     if (t.boss) this.bossHp = Math.max(0, this.hp[i]!);
-    if (this.hp[i]! <= 0) this.kill(i, src);
+    if (this.hp[i]! <= 0) {
+      const excess = -this.hp[i]!;
+      const x = this.x[i]!;
+      const y = this.y[i]!;
+      this.kill(i, src);
+      // Überschuss-Schaden springt auf einen Gegner direkt daneben über (bis zu 2-mal):
+      // starke Einzelkämpfer verpuffen ihre Kraft so nicht an schwachen Massen
+      if (carry < 2 && excess > 0.3 && (melee || ranged) && src >= 0) {
+        let best = -1;
+        let bd = 100;
+        this.forEachInRadius(tm, x, y, 9, (j) => {
+          const d = (this.x[j]! - x) ** 2 + (this.y[j]! - y) ** 2;
+          if (d < bd) {
+            bd = d;
+            best = j;
+          }
+        });
+        if (best >= 0) this.damage(best, excess / Math.max(0.25, this.lastStand[tm]!), src, melee, ranged, carry + 1);
+      }
+    }
   }
 
   private kill(i: number, src: number): void {
@@ -1262,13 +1356,17 @@ export class Arena {
     }
     // Untote stehen wieder auf
     const endless = this.boss?.passive.name === 'Endless Dead' && tm === 1;
-    const riseChance = endless ? 1 : t.undeath;
+    const riseChance = endless ? Math.max(0.6, t.undeath) : t.undeath;
     const killer = src >= 0 ? this.types[this.type[src]!] : undefined;
     const zombifiedBy = killer?.ability === 'zombify' && this.alive[src];
     if (!t.boss && !t.building && (zombifiedBy || (riseChance > 0 && this.random() < riseChance))) {
       const zt = zombifiedBy ? 1 - tm : tm;
       if (this.summons[zt]! < 1500) {
-        const ti = this.summonType(zt, 'plague', 'ghoul', 'Summon', 8, 5);
+        // Zombie Horde: neue Zombies haben die Werte der Horde. Untote Gefallene
+        // (Rassenbonus, Morvath) stehen mit einem Teil ihrer alten Kraft auf.
+        const keep = endless ? 0.3 : UNDEATH_KEEP;
+        const zr = zombifiedBy ? killer!.raw : { hp: Math.max(4, t.raw.hp * keep), dmg: Math.max(3, t.raw.dmg * keep) };
+        const ti = this.summonType(zt, 'plague', 'ghoul', 'Summon', Math.round(zr.hp), Math.round(zr.dmg));
         this.spawn(ti, x, y, true);
         this.summons[zt]!++;
       }
@@ -1280,13 +1378,31 @@ export class Arena {
     this.free.push(i);
   }
 
-  private tidalWave(team: number, dist: number): void {
+  /** Blau (Tidebound): alle 10 s eine weitere Flutwelle, die Gegner zurückwirft und bremst. */
+  private tideTick(): void {
+    if (this.state !== 'fight') return;
+    for (const b of this.bonuses) {
+      if (b.race !== 'tidebound') continue;
+      this.tideT[b.team]! += DT;
+      if (this.tideT[b.team]! >= 8) {
+        this.tideT[b.team] = 0;
+        this.tidalWave(1 - b.team, 30, 3, 0.2 * (this.mods[b.team]?.bonusMul ?? 1));
+      }
+    }
+  }
+
+  private tidalWave(team: number, dist: number, slow = 0, dmgPct = 0): void {
     const dir = team === 0 ? -1 : 1;
     for (let i = 0; i < this.hw; i++) {
       if (!this.alive[i] || this.team[i] !== team) continue;
       const t = this.types[this.type[i]!]!;
       if (t.building || t.boss) continue;
       this.x[i] = Math.max(FX0 + 2, Math.min(FX1 - 2, this.x[i]! + dir * dist));
+      if (slow > 0) {
+        this.slowT[i] = Math.max(this.slowT[i]!, slow);
+        this.slowMul[i] = Math.min(this.slowMul[i]!, 0.5);
+      }
+      if (dmgPct > 0) this.damage(i, this.maxHp[i]! * dmgPct, -1, false, false);
     }
     this.events.push({ t: 'wave', team });
   }
@@ -1320,7 +1436,7 @@ export class Arena {
       this.passiveT = 0;
       const leg = cardsOf('sunlegion').find((k) => k.name === 'Legionnaires')!;
       const ti = this.summonType(1, 'sunlegion', leg.kind, 'Infantry', leg.hp, leg.dmg);
-      for (let k = 0; k < 30; k++) this.spawn(ti, FX1 - 10 - this.random() * 20, FY0 + 10 + this.random() * (FY1 - FY0 - 20), true);
+      for (let k = 0; k < 15; k++) this.spawn(ti, FX1 - 10 - this.random() * 20, FY0 + 10 + this.random() * (FY1 - FY0 - 20), true);
     }
   }
 

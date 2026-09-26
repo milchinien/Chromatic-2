@@ -466,6 +466,17 @@ body {
   min-width: 200px;
 }
 
+.settings .vol {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.settings .vol b {
+  min-width: 34px;
+  text-align: center;
+}
+
 .center {
   text-align: center;
   line-height: 1.5;
@@ -1939,4 +1950,53 @@ body {
 .rw-card.taken .pc {
   outline: 1px solid var(--gold);
   outline-offset: 1px;
+}
+
+/* --- Startdeck nach der Farbwahl --------------------------------------------------------- */
+
+.deck-reveal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(8, 6, 12, 0.86);
+}
+
+.dr-title {
+  font-family: Silkscreen, monospace;
+  font-size: 16px;
+  color: var(--c4, #fff);
+  text-shadow: 0 1px 0 #000;
+}
+
+.dr-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 86px);
+  gap: 6px 8px;
+}
+
+.dr-card {
+  opacity: 0;
+  width: 86px;
+  height: 119px;
+}
+
+.dr-foot {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.dr-counts {
+  display: flex;
+  gap: 10px;
+  font-family: Silkscreen, monospace;
+  font-size: 8px;
+  color: #cfc8dc;
+}
+
+.dr-count b {
+  color: var(--rc);
+  font-size: 10px;
 }

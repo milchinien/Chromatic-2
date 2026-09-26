@@ -165,7 +165,9 @@ export function cardArtUrl(card: Pick<Card2, 'name'>): string {
   // The renamed mage uses the approved necromancer artwork from this asset set.
   const artName = card.name === 'Necromancer' ? 'Blight Witch' : card.name;
   const slug = artName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-  return `${import.meta.env.BASE_URL}card-art/v2/${slug}.png`;
+  // Die Offline-Version (pnpm package) liefert verkleinerte WebP-Bilder
+  const ext = import.meta.env.MODE === 'offline' ? 'webp' : 'png';
+  return `${import.meta.env.BASE_URL}card-art/v2/${slug}.${ext}`;
 }
 
 export interface PCardOpts {

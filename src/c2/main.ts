@@ -5,6 +5,7 @@ import '../lab/world.css';
 import './c2.css';
 
 import { frameUrl } from '../lab/pcard';
+import { audio } from './audio/audio';
 import { Game } from './game';
 
 async function boot(): Promise<void> {
@@ -14,7 +15,7 @@ async function boot(): Promise<void> {
   await game.init();
   game.root.style.setProperty('--frame-url', `url(${frameUrl()})`);
   game.root.style.setProperty('--frame', `url(${frameUrl()})`);
-  if (import.meta.env.DEV) Object.assign(window, { __game: game });
+  if (import.meta.env.DEV) Object.assign(window, { __game: game, __audio: audio });
   game.mainMenu();
 }
 

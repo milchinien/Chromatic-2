@@ -36,7 +36,7 @@ export function introScreen(g: Game, onGo: () => void): void {
           : `Cross ${n} rooms of your choice, then face <b>${r.boss.name}</b>, ${r.boss.title}.`
       }</p>
       <p class="intro-small">${first ? 'Scouts report enemies right ahead. Prepare for battle!' : 'Choose your path wisely: every fork offers two rooms.'}</p>
-      <button class="gbtn primary big" data-go>${icon('swords')}<span>${first ? 'To Battle!' : 'March On'}</span></button>
+      <button class="gbtn primary big" data-go data-sfx="confirm">${icon('swords')}<span>${first ? 'To Battle!' : 'March On'}</span></button>
     </div>`;
   g.ui.appendChild(el);
   g.bindHud();

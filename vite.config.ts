@@ -1,5 +1,5 @@
 import { createServer } from 'node:net';
-import { defineConfig } from 'vite';
+import { defineConfig, type Plugin } from 'vite';
 
 const PREFERRED_PORT = 3100;
 
@@ -33,14 +33,49 @@ async function findFreePort(start: number): Promise<number> {
   throw new Error(`Kein freier Port zwischen ${start} und ${start + 99}`);
 }
 
-export default defineConfig(async ({ command }) => ({
-  base: './',
-  server:
-    command === 'serve'
-      ? { port: await findFreePort(PREFERRED_PORT), strictPort: true }
-      : undefined,
-  build: {
-    target: 'es2022',
-    rollupOptions: { input: { main: 'index.html', lab: 'ui-lab.html', sandbox: 'sandbox.html' } },
-  },
-}));
+/**
+ * Offline-Version zum Weitergeben (`pnpm package`): läuft per Doppelklick
+ * direkt von der Festplatte (file://). Browser blockieren dort Module,
+ * Worker-Dateien und crossorigin-Anfragen, deshalb: ein klassisches Skript,
+ * Schriften eingebettet, keine crossorigin-Attribute.
+ */
+function offlineHtml(): Plugin {
+  return {
+    name: 'offline-html',
+    enforce: 'post',
+    transformIndexHtml(html) {
+      return html
+        .replace(/<script type="module" crossorigin/g, '<script defer')
+        .replace(/ crossorigin/g, '')
+        .replace(/<link rel="modulepreload"[^>]*>/g, '');
+    },
+  };
+}
+
+export default defineConfig(async ({ command, mode }) => {
+  const offline = mode === 'offline';
+  return {
+    base: './',
+    server:
+      command === 'serve'
+        ? { port: await findFreePort(PREFERRED_PORT), strictPort: true }
+        : undefined,
+    plugins: offline ? [offlineHtml()] : [],
+    build: offline
+      ? {
+          target: 'es2022',
+          outDir: 'dist-offline',
+          modulePreload: false,
+          // Schriften einbetten, Bilder bleiben Dateien
+          assetsInlineLimit: (file: string) => /\.woff2?$/.test(file),
+          rollupOptions: {
+            input: { main: 'index.html' },
+            output: { format: 'iife', inlineDynamicImports: true },
+          },
+        }
+      : {
+          target: 'es2022',
+          rollupOptions: { input: { main: 'index.html', lab: 'ui-lab.html', sandbox: 'sandbox.html', balance: 'balance.html' } },
+        },
+  };
+});

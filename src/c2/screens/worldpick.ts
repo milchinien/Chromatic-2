@@ -59,7 +59,7 @@ export function worldPickScreen(g: Game, choices: [RaceId, RaceId], onPick: (r: 
     ${choices
       .map(
         (r, i) => `
-      <button class="wp-choice" data-r="${r}" style="left:${i === 0 ? 96 : 396}px">
+      <button class="wp-choice" data-sfx="confirm" data-r="${r}" style="left:${i === 0 ? 96 : 396}px">
         ${bossCardHtml(r)}
         <span class="wp-name" style="--rc:${RACES[r].art[3]}">${worldName(r)}</span>
         <span class="wp-bonus">${RACE_BONUS[r].name} world</span>

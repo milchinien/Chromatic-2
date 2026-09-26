@@ -9,16 +9,22 @@
 //     Belohnungen werden nacheinander aufgelistet.
 // =====================================================================
 
+import { audio } from '../audio/audio';
+import { BattleAudio } from '../audio/battleAudio';
 import { barFrameUrl, cardBackHtml, flipCardHtml, frameUrl, pcardHtml } from '../../lab/pcard';
 import { icon } from '../../lab/pixels';
 import { CLASS_BONUS, RACE_BONUS, RACES, cardByName, type Card2 } from '../data';
 import { withStars, type Game } from '../game';
 import { Arena, DT, type Deployed, type SideSpec } from '../sim/arena';
+import { enemyPick as pickEnemy, rollTroops } from '../sim/balance';
 import { ArenaView } from '../render/arenaView';
 import type { DeckCard, Room } from '../run';
 import { Timeline, burst, flip, flyArc, html, localRect, sleep } from '../ui/anim';
 
 type Result = 'win' | 'lose';
+
+/** Abspielrate für einen Halbtonschritt. */
+const semiRate = (n: number) => Math.pow(2, n / 12);
 
 // Positionen (Spielpixel)
 const SLOT_Y = 225;
@@ -33,11 +39,12 @@ export function battleScreen(g: Game, room: Room, onDone: (res: Result) => void)
   const run = g.run!;
   const boss = room.kind === 'boss' ? run.boss : null;
   const arena = new Arena();
-  arena.startBattle(run.castleHp, run.enemyCastle(room.stars, !!boss), boss, Math.floor(run.rnd() * 1e6));
+  arena.startBattle(run.castleHp, run.enemyCastle(room.stars, !!boss), boss, Math.floor(run.rnd() * 1e6), run.bossPower());
   const viewA = new ArenaView(g.app, g.atlas, arena, g.theme);
   g.app.stage.addChild(viewA.root);
   if (import.meta.env.DEV) Object.assign(window, { __arena: arena, __view: viewA });
   g.app.canvas.style.display = 'block';
+  const sound = new BattleAudio(arena);
 
   const tutorial = !localStorage.getItem('c2-tutorial') && run.battlesWon === 0;
   const tl = new Timeline();
@@ -67,11 +74,11 @@ export function battleScreen(g: Game, room: Room, onDone: (res: Result) => void)
       </div>
     </header>
     ${SLOTS_X.map((x, i) => `<div class="wslot bslot" data-s="${i}" style="left:${x}px"><span class="slot-label">${i % 2 === 0 ? 'Front' : 'Back'}</span><div class="slot-card empty"></div></div>`).join('')}
-    <button class="swap-btn" title="Swap front and back">⇄</button>
+    <button class="swap-btn" data-sfx="card_whoosh" title="Swap front and back">⇄</button>
     <div class="pile">${cardBackHtml()}${cardBackHtml()}${cardBackHtml()}<span class="pile-n">${run.deck.length}</span></div>
     <div class="wcontrols bt-controls">
       <div class="bonus-line">${icon('star')}<span class="bonus-text">Choose 2 cards</span></div>
-      <button class="wbtn fight" disabled>${icon('swords')}<span>Fight!</span></button>
+      <button class="wbtn fight" data-sfx="confirm" disabled>${icon('swords')}<span>Fight!</span></button>
       <div class="control-row">
         <button class="wbtn small pause-btn" disabled>Pause</button>
         <div class="wseg" role="group"><button class="seg active" data-sp="1">1×</button><button class="seg" data-sp="2">2×</button><button class="seg" data-sp="4">4×</button></div>
@@ -121,7 +128,7 @@ export function battleScreen(g: Game, room: Room, onDone: (res: Result) => void)
     const s = Math.floor(arena.time);
     $('.t-time').textContent = `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
     $('.t-round').textContent = `ROUND ${Math.max(1, arena.round)}`;
-    if (boss) el.querySelector<HTMLElement>('.boss-bar i')!.style.width = `${(arena.bossHp / boss.hp) * 100}%`;
+    if (boss) el.querySelector<HTMLElement>('.boss-bar i')!.style.width = `${(arena.bossHp / arena.bossMax) * 100}%`;
   };
 
   // --- Spielschleife -------------------------------------------------------------------------
@@ -140,6 +147,7 @@ export function battleScreen(g: Game, room: Room, onDone: (res: Result) => void)
       steps++;
     }
     if (steps === 10) acc = 0;
+    sound.update(dt, slow, speed, paused);
     viewA.update(paused && phase === 'fight' ? 0 : phase === 'fight' ? dt * speed * slow : dt * slow);
     updateHud();
     if (phase === 'fight' && arena.state === 'over' && overResolve) {
@@ -149,7 +157,10 @@ export function battleScreen(g: Game, room: Room, onDone: (res: Result) => void)
     }
   };
   g.app.ticker.add(tick);
-  const cleanup = () => g.app.ticker.remove(tick);
+  const cleanup = () => {
+    g.app.ticker.remove(tick);
+    sound.stop();
+  };
 
   // --- Karten ziehen ----------------------------------------------------------------------------
   const bonusOf = (a: Card2, b: Card2): string[] => {
@@ -176,23 +187,8 @@ export function battleScreen(g: Game, room: Room, onDone: (res: Result) => void)
     return out;
   };
 
-  /** Truppen werden beim Aufdecken gewürfelt: zwischen 55 % und 100 % des Kartenwerts. */
-  const rollTroops = (c: Card2): number => (c.troops <= 1 ? 1 : Math.max(1, Math.round(c.troops * (0.55 + 0.45 * Math.random()))));
-
-  const enemyPick = (): Deployed[] => {
-    const deck = run.enemyDeck();
-    const a = deck[Math.floor(Math.random() * deck.length)]!;
-    const pairs = deck.filter((c) => c !== a && (c.race === a.race || c.cls === a.cls));
-    const b = Math.random() < 0.4 && pairs.length ? pairs[Math.floor(Math.random() * pairs.length)]! : deck[Math.floor(Math.random() * deck.length)]!;
-    // Nahkampf nach vorne
-    const melee = (c: Card2) => ['Infantry', 'Cavalry', 'Beast', 'Swarm', 'Champion'].includes(c.cls);
-    const [f, bk] = melee(b) && !melee(a) ? [b, a] : [a, b];
-    const st = run.enemyStars();
-    return [
-      { card: f, stars: st, count: rollTroops(f) },
-      { card: bk, stars: st, count: rollTroops(bk) },
-    ];
-  };
+  // Gegner-KI und Truppenwürfel teilen sich Spiel und Balance-Simulation (sim/balance.ts)
+  const enemyPick = (): Deployed[] => pickEnemy(run.enemyDeck(), run.enemyStars());
 
   const smallAt = (i: number) => ({ x: SLOTS_X[i]!, y: SLOT_Y });
 
@@ -221,6 +217,7 @@ export function battleScreen(g: Game, room: Room, onDone: (res: Result) => void)
       slot.className = 'slot-card';
       slot.innerHTML = flipCardHtml(pcardHtml(withStars({ uid: 0, card: enemy[k]!.card, stars: enemy[k]!.stars }), { team: 1, rolled: enemy[k]!.count }));
       void tl.play(slot, [{ transform: 'translateX(140px) rotate(12deg)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 420, delay: 150 + k * 160, easing: 'cubic-bezier(.2,.8,.3,1)' });
+      audio.play('card_draw', { pan: 0.6, delay: (150 + k * 160) / 1000, vol: 0.7 });
     }
 
     // 3 Karten nacheinander vom Stapel
@@ -235,7 +232,9 @@ export function battleScreen(g: Game, room: Room, onDone: (res: Result) => void)
       handEls.push(c);
       const deckCount = el.querySelector('.pile-n')!;
       deckCount.textContent = String(run.deck.length - k - 1);
+      audio.play('card_draw', { pan: -0.2 + k * 0.2 });
       await flyArc(tl, c, { x: PILE.x, y: PILE.y, s: 0.33, r: -20 }, { x: HAND_X[k]!, y: HAND_Y, s: 1, r: 0 }, 520, 60, 8);
+      audio.play('card_flip', { pan: -0.4 + k * 0.4 });
       void flip(tl, c);
       burst(g.fx, HAND_X[k]! + BIG.w / 2, HAND_Y + BIG.h / 2, ['#ffffff', '#fff4b0', RACES[hand[k]!.card.race].art[3]], 14, 70, 10);
       await sleep(90);
@@ -264,6 +263,7 @@ export function battleScreen(g: Game, room: Room, onDone: (res: Result) => void)
         const b = bonusOf(hand[chosen[0]!]!.card, hand[chosen[1]!]!.card);
         bonusText.textContent = b.length ? `Bonus: ${b.join(' + ')}` : 'No bonus';
         el.querySelector('.bonus-line')!.classList.toggle('lit', b.length > 0);
+        if (b.length) audio.play('chime', { rate: b.length > 1 ? 1.26 : 1, vol: 0.7 });
         if (hintEl && tutorial) {
           hintEl.remove();
           hintEl = hint('Same COLOR or same CLASS = bonus!<br>Now press FIGHT.', 236, 206, 'down');
@@ -286,12 +286,16 @@ export function battleScreen(g: Game, room: Room, onDone: (res: Result) => void)
       handEls.forEach((h, k) =>
         h.addEventListener('click', async () => {
           const pos = chosen.indexOf(k);
-          if (pos >= 0) chosen[pos] = null;
-          else {
+          if (pos >= 0) {
+            chosen[pos] = null;
+            audio.play('card_whoosh', { rate: 0.85 });
+          } else {
             const free = chosen.indexOf(null);
             if (free < 0) return;
             chosen[free] = k;
+            audio.play('card_whoosh');
             await flyToSlot(k, free);
+            audio.play('card_place', { pan: -0.8 });
           }
           refresh();
         }),
@@ -301,6 +305,7 @@ export function battleScreen(g: Game, room: Room, onDone: (res: Result) => void)
         slotEls[s]!.addEventListener('click', () => {
           if (phase !== 'draw' || chosen[s] === null) return;
           chosen[s] = null;
+          audio.play('card_whoosh', { rate: 0.85 });
           refresh();
         });
       $('.swap-btn').onclick = () => {
@@ -334,14 +339,18 @@ export function battleScreen(g: Game, room: Room, onDone: (res: Result) => void)
     handLayer.innerHTML = '';
 
     // Gegnerkarten aufdecken
-    for (let k = 0; k < 2; k++) void flip(tl, slotEls[2 + k]!.querySelector<HTMLElement>('.flipcard')!);
+    for (let k = 0; k < 2; k++) {
+      audio.play('card_flip', { pan: 0.6 + k * 0.2, delay: k * 0.08 });
+      void flip(tl, slotEls[2 + k]!.querySelector<HTMLElement>('.flipcard')!);
+    }
 
     const sides: [SideSpec, SideSpec] = [
       { front: { card: front.card, stars: front.stars, count: rolls[chosen[0]!] }, back: { card: back.card, stars: back.stars, count: rolls[chosen[1]!] }, mods: run.mods, baseHp: run.castleHp, power: 1 },
-      { front: enemy[0]!, back: enemy[1]!, baseHp: 0, power: run.enemyPower(room.stars) },
+      { front: enemy[0]!, back: enemy[1]!, baseHp: 0, power: run.enemyPower(room.stars, !!boss) },
     ];
     arena.deployRound(sides);
     viewA.playSpawnIntro();
+    audio.play('deploy', { jitter: 0.02 });
     if (tutorial && arena.round === 1) hint('Left-click to skip the intro.', 262, 190);
     await tl.wait(1500);
     viewA.skipIntro();
@@ -351,10 +360,11 @@ export function battleScreen(g: Game, room: Room, onDone: (res: Result) => void)
     await showcase(sides);
 
     arena.begin();
+    audio.play(arena.round === 1 ? 'battle_start' : 'round', { jitter: 0 });
     phase = 'fight';
     pauseBtn.disabled = false;
     if (tutorial && arena.round === 1) {
-      const h = hint('Units that reach the enemy castle<br>deal 1 damage each.', 250, 70);
+      const h = hint('Units that reach the enemy castle<br>damage it. Stronger units hit harder.', 250, 70);
       setTimeout(() => h.remove(), 4500);
     }
     await new Promise<void>((r) => (overResolve = r));
@@ -374,8 +384,11 @@ export function battleScreen(g: Game, room: Room, onDone: (res: Result) => void)
       flights.push(flyArc(tl, c, { ...smallAt(i), s: 1 }, { x: targets[i]!, y: 58, s: 1 }, 560 + i * 60, 50, i < 2 ? 10 : -10));
     });
     slotEls.forEach((s) => s.classList.add('away'));
+    audio.play('card_whoosh', { pan: -0.4 });
+    audio.play('card_whoosh', { pan: 0.4, delay: 0.08 });
     await Promise.all(flights);
     const vs = html(`<div class="vs">VS</div>`);
+    audio.play('vs', { jitter: 0 });
     layer.appendChild(vs);
     // Boni unter den Karten
     const bonusBox = (side: 0 | 1) => {
@@ -390,10 +403,14 @@ export function battleScreen(g: Game, room: Room, onDone: (res: Result) => void)
     const bb = [bonusBox(0), bonusBox(1)];
     bb.forEach((b, i) => {
       layer.appendChild(b);
-      b.querySelectorAll<HTMLElement>('.bn').forEach((n, k) => void tl.play(n, [{ opacity: 0, transform: 'scale(.6)' }, { opacity: 1, transform: 'scale(1.15)', offset: 0.6 }, { opacity: 1, transform: 'scale(1)' }], { duration: 380, delay: 120 + i * 140 + k * 160 }));
+      b.querySelectorAll<HTMLElement>('.bn').forEach((n, k) => {
+        if (!n.classList.contains('none')) audio.play('chime', { pan: i === 0 ? -0.5 : 0.5, delay: (120 + i * 140 + k * 160) / 1000, rate: semiRate(i * 2 + k * 4), vol: 0.6 });
+        void tl.play(n, [{ opacity: 0, transform: 'scale(.6)' }, { opacity: 1, transform: 'scale(1.15)', offset: 0.6 }, { opacity: 1, transform: 'scale(1)' }], { duration: 380, delay: 120 + i * 140 + k * 160 });
+      });
     });
     void tl.play(vs, [{ opacity: 0, transform: 'scale(3)' }, { opacity: 1, transform: 'scale(1)' }], { duration: 300 });
     await tl.wait(2000);
+    audio.play('card_whoosh', { rate: 0.9 });
     const back = clones.map((c, i) => flyArc(tl, c, { x: targets[i]!, y: 58, s: 1 }, { ...smallAt(i), s: 1 }, 460, 40, i < 2 ? -8 : 8));
     [...bb, vs].forEach((x) => void tl.play(x, [{ opacity: 1 }, { opacity: 0 }], { duration: 250 }));
     await Promise.all(back);
@@ -403,6 +420,7 @@ export function battleScreen(g: Game, room: Room, onDone: (res: Result) => void)
 
   const banner = async (text: string, sub = ''): Promise<void> => {
     const layer = el.querySelector<HTMLElement>('.banner-layer')!;
+    audio.play('round', { jitter: 0 });
     const b = html(`<div class="round-banner"><b>${text}</b>${sub ? `<span>${sub}</span>` : ''}</div>`);
     layer.appendChild(b);
     await b.animate([{ opacity: 0, transform: 'scaleY(0)' }, { opacity: 1, transform: 'scaleY(1)', offset: 0.2 }, { opacity: 1, offset: 0.8 }, { opacity: 0 }], { duration: 1400 }).finished;
@@ -413,10 +431,13 @@ export function battleScreen(g: Game, room: Room, onDone: (res: Result) => void)
   const finish = async (won: boolean) => {
     phase = 'end';
     pauseBtn.disabled = true;
+    sound.hush();
     viewA.crumbleCastle(won ? 1 : 0);
+    audio.play('crumble', { pan: won ? 0.7 : -0.7, jitter: 0 });
     while (!viewA.crumbleDone) await sleep(100);
     await sleep(300);
     if (tutorial) localStorage.setItem('c2-tutorial', '1');
+    audio.play(won ? 'victory' : 'defeat', { jitter: 0 });
     if (won) showRewards();
     else showDefeat();
   };
@@ -447,6 +468,7 @@ export function battleScreen(g: Game, room: Room, onDone: (res: Result) => void)
     for (const l of lines) {
       const row = html(`<div class="rw-row">${l}</div>`);
       list.appendChild(row);
+      audio.play(l.includes('gold') ? 'coins' : l.includes('upgraded') ? 'upgrade' : 'card_place', { vol: 0.8 });
       row.animate([{ opacity: 0, transform: 'translateX(-20px)' }, { opacity: 1, transform: 'none' }], { duration: 260, fill: 'forwards' });
       const r = localRect(row);
       burst(g.fx, r.x + 12, r.y + 6, ['#ffe23a', '#ffffff'], 10, 30, 10);
@@ -498,6 +520,7 @@ export function battleScreen(g: Game, room: Room, onDone: (res: Result) => void)
         pick.querySelectorAll<HTMLElement>('.rw-card').forEach((b) =>
           b.addEventListener('click', () => {
             run.addCard(opts[Number(b.dataset.i)]!);
+            audio.play('upgrade');
             pick.querySelectorAll('.rw-card').forEach((x) => x.classList.toggle('gone', x !== b));
             b.classList.add('taken');
             go.style.visibility = 'visible';
@@ -519,7 +542,8 @@ export function battleScreen(g: Game, room: Room, onDone: (res: Result) => void)
       const out = arena.outcome;
       if (out === 'win') return finish(true);
       if (out === 'lose') return finish(false);
-      await banner(`Round ${arena.round + 1}`, `${arena.survivorsAtBase[0]} of yours reached the castle`);
+      const next = arena.round + 1;
+      await banner(`Round ${next}`, next >= 4 ? `Siege! Castle damage ×${(1 + (next - 3) * 0.5).toFixed(1)}` : `${arena.survivorsAtBase[0]} of yours reached the castle`);
     }
   };
   void loop();

@@ -2,6 +2,7 @@
 // Chromatic-Kerze, deren Flamme nach jedem Flackern die Farbe wechselt –
 // Rahmen, Knöpfe und Lichtschein wechseln mit.
 
+import { audio } from '../audio/audio';
 import { mix } from '../../art/pixel';
 import { pcardHtml } from '../../lab/pcard';
 import { icon } from '../../lab/pixels';
@@ -41,7 +42,7 @@ export function menuScreen(g: Game): void {
     </div>
 
     <nav class="m-nav">
-      <button class="gbtn primary" data-a="enter">${icon('play')}<span>Enter World</span></button>
+      <button class="gbtn primary" data-a="enter" data-sfx="confirm">${icon('play')}<span>Enter World</span></button>
       <button class="gbtn" data-a="continue" ${hasSave ? '' : 'disabled'}>${icon('refresh')}<span>Continue</span></button>
       <button class="gbtn" data-a="cards">${icon('cards')}<span>Cards</span></button>
       <button class="gbtn" data-a="settings">${icon('gear')}<span>Settings</span></button>
@@ -104,14 +105,19 @@ export function menuScreen(g: Game): void {
     paint();
   }, FRAME_MS);
 
+  let leaving = false; // Doppelklick auf „Enter World“/„Continue“ nur einmal ausführen
   el.addEventListener('click', (e) => {
     const b = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-a]');
     if (!b || b.disabled) return;
     switch (b.dataset.a) {
       case 'enter':
+        if (leaving) return;
+        leaving = true;
         g.chooseColors();
         break;
       case 'continue':
+        if (leaving) return;
+        leaving = true;
         g.continueRun();
         break;
       case 'cards':
@@ -123,6 +129,8 @@ export function menuScreen(g: Game): void {
           'Settings',
           `<div class="settings">
             <label><span>Fullscreen</span><button class="gbtn" data-fs>${document.fullscreenElement ? 'On' : 'Off'}</button></label>
+            ${VOLUMES.map(([k, name]) => `<label><span>${name}</span><span class="vol" data-vol="${k}"><button class="gbtn small" data-d="-1">−</button><b></b><button class="gbtn small" data-d="1">+</button></span></label>`).join('')}
+            <label><span>Sound</span><button class="gbtn" data-mute></button></label>
             <label><span>Tutorial hints</span><button class="gbtn" data-tut>Reset</button></label>
           </div>`,
           (o) => {
@@ -137,6 +145,7 @@ export function menuScreen(g: Game): void {
               }
               fs.textContent = document.fullscreenElement ? 'On' : 'Off';
             });
+            bindVolumes(o);
             o.querySelector('[data-tut]')!.addEventListener('click', (ev) => {
               localStorage.removeItem('c2-tutorial');
               (ev.currentTarget as HTMLElement).textContent = 'Done';
@@ -149,6 +158,39 @@ export function menuScreen(g: Game): void {
         break;
     }
   });
+}
+
+const VOLUMES: [VolumeKey, string][] = [
+  ['master', 'Volume'],
+  ['sfx', 'Battle'],
+  ['ui', 'Interface'],
+  ['amb', 'Ambience'],
+];
+type VolumeKey = 'master' | 'sfx' | 'ui' | 'amb';
+
+/** Lautstärke in 10-%-Schritten, Ton an/aus (auch mit Taste M). */
+function bindVolumes(o: HTMLElement): void {
+  const show = () => {
+    o.querySelectorAll<HTMLElement>('[data-vol]').forEach((v) => {
+      v.querySelector('b')!.textContent = `${Math.round(audio.settings[v.dataset.vol as VolumeKey] * 100)}%`;
+    });
+    o.querySelector('[data-mute]')!.textContent = audio.settings.muted ? 'Off' : 'On';
+  };
+  o.querySelectorAll<HTMLElement>('[data-vol]').forEach((v) =>
+    v.querySelectorAll<HTMLElement>('[data-d]').forEach((b) =>
+      b.addEventListener('click', () => {
+        const k = v.dataset.vol as VolumeKey;
+        const next = Math.round(Math.max(0, Math.min(1, audio.settings[k] + Number(b.dataset.d) * 0.1)) * 10) / 10;
+        audio.set({ [k]: next });
+        show();
+      }),
+    ),
+  );
+  o.querySelector('[data-mute]')!.addEventListener('click', () => {
+    audio.set({ muted: !audio.settings.muted });
+    show();
+  });
+  show();
 }
 
 export function overlay(g: Game, title: string, body: string, bind?: (el: HTMLElement) => void): HTMLElement {

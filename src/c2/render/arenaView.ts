@@ -331,7 +331,7 @@ export class ArenaView {
       else if (a.lastStand[a.team[i]!]! < 0.85 && Math.floor(a.animT[i]! * 3 + i) % 3 === 0) tint = a.team[i] === 0 ? 0xfff2a0 : 0xffc0a0;
       p.tint = tint;
       list.push(p);
-      if (live) this.unitFx(i, x, y, t.scale, tex.height * t.scale, t.speed, t.flying, t.boss, t.rage, moving, k60);
+      if (live) this.unitFx(i, x, y, t.scale, tex.height * t.scale, t.speed, t.flying, t.boss, t.rage > 0, moving, k60);
     }
     this.units.update();
   }

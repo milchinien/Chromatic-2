@@ -5,6 +5,7 @@
 
 import { Application, TextureSource } from 'pixi.js';
 import { waitForRoomArtwork } from './art/roomArtwork';
+import { audio } from './audio/audio';
 import { WORLD_THEMES } from '../lab/palettes-crt';
 import { uiRamp, type PaletteTheme } from '../lab/palettes';
 import { pcardHtml } from '../lab/pcard';
@@ -14,6 +15,7 @@ import { buildGameAtlas, type GameAtlas } from './render/atlas';
 import { Run, clearSave, loadRun, saveRun, type DeckCard, type Room } from './run';
 import { battleScreen } from './screens/battle';
 import { colorScreen } from './screens/colors';
+import { deckRevealScreen } from './screens/deckReveal';
 import { endScreen } from './screens/end';
 import { forkScreen } from './screens/fork';
 import { introScreen } from './screens/intro';
@@ -26,6 +28,19 @@ export const W = 640;
 export const H = 360;
 
 TextureSource.defaultOptions.scaleMode = 'nearest';
+
+/**
+ * Ruft `fn` nur beim ersten Mal auf. Schützt Weiterleitungen vor Doppelklicks
+ * (sonst entstehen z. B. zwei Kampfbildschirme oder ein Raum wird übersprungen).
+ */
+export function once<A extends unknown[]>(fn: (...a: A) => void): (...a: A) => void {
+  let used = false;
+  return (...a: A) => {
+    if (used) return;
+    used = true;
+    fn(...a);
+  };
+}
 
 /** Karte mit Stern-Stufe aus dem Deck als Card2 für die Kartenanzeige. */
 export const withStars = (d: DeckCard): Card2 => ({ ...d.card, stars: d.stars });
@@ -71,6 +86,39 @@ export class Game {
       if (localStorage.getItem('c2-windowed') !== '1' && !document.fullscreenElement) void document.documentElement.requestFullscreen?.().catch(() => undefined);
     };
     window.addEventListener('pointerdown', goFull, { once: true });
+    this.bindSound();
+  }
+
+  /**
+   * Ton: der Browser erlaubt ihn erst nach der ersten Eingabe. Alle Knöpfe
+   * klingen beim Überfahren und Klicken; ein eigener Klang kommt über
+   * data-sfx="…" (oder "none" für keinen).
+   */
+  private bindSound(): void {
+    const unlock = () => audio.unlock();
+    window.addEventListener('pointerdown', unlock);
+    window.addEventListener('keydown', unlock);
+    const HOT = 'button, .hand-card, [data-sfx]';
+    let hovered: Element | null = null;
+    this.root.addEventListener('pointerover', (e) => {
+      const el = (e.target as HTMLElement).closest(HOT);
+      if (el === hovered) return;
+      hovered = el;
+      if (el && !(el as HTMLButtonElement).disabled && (el as HTMLElement).dataset.sfx !== 'none') audio.play('hover');
+    });
+    this.root.addEventListener(
+      'click',
+      (e) => {
+        const el = (e.target as HTMLElement).closest<HTMLElement>(HOT);
+        if (!el || (el as HTMLButtonElement).disabled) return;
+        const id = el.dataset.sfx ?? 'click';
+        if (id !== 'none') audio.play(id);
+      },
+      true,
+    );
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'm' || e.key === 'M') audio.set({ muted: !audio.settings.muted });
+    });
   }
 
   /**
@@ -93,6 +141,7 @@ export class Game {
     ramp.forEach((c, i) => this.root.style.setProperty(`--c${i}`, c));
     for (const [k, c] of Object.entries(this.theme.accents ?? {})) this.root.style.setProperty(`--a-${k}`, c);
     this.root.dataset.world = race;
+    audio.ambience(race);
   }
 
   /** Bildschirm wechseln, optional mit Kreis-Übergang. */
@@ -102,7 +151,10 @@ export class Game {
   }
 
   private async swap(build: () => void | Promise<void>, transition: boolean): Promise<void> {
-    if (transition) await iris(this.irisLayer, 'close', 520);
+    if (transition) {
+      audio.play('iris');
+      await iris(this.irisLayer, 'close', 520);
+    }
     this.ui.innerHTML = '';
     this.fx.innerHTML = '';
     this.app.canvas.style.display = 'none';
@@ -170,17 +222,24 @@ export class Game {
 
   mainMenu(): void {
     this.setWorld('drifters');
+    audio.ambience('menu');
     void this.go(() => menuScreen(this), this.ui.childElementCount > 0);
   }
 
   chooseColors(): void {
-    void this.go(() => colorScreen(this, (colors) => this.startRun(colors)));
+    void this.go(() => colorScreen(this, once((colors) => this.startRun(colors))));
   }
 
   startRun(colors: RaceId[]): void {
     this.run = new Run(colors);
-    this.setWorld(this.run.world);
-    void this.go(() => introScreen(this, () => this.enterRoom({ kind: 'battle', stars: 1 })));
+    // Erst die gezogenen Startkarten zeigen, dann weiter in die erste Welt
+    deckRevealScreen(
+      this,
+      once(() => {
+        this.setWorld(this.run!.world);
+        void this.go(() => introScreen(this, once(() => this.enterRoom({ kind: 'battle', stars: 1 }))));
+      }),
+    );
   }
 
   /** Gespeicherten Run fortsetzen (an der letzten Weggabelung). */
@@ -196,21 +255,21 @@ export class Game {
     const r = this.run!;
     if (r.lives <= 0) return this.gameOver();
     saveRun(r);
-    void this.go(() => forkScreen(this, r.fork(), (room) => this.enterRoom(room)));
+    void this.go(() => forkScreen(this, r.fork(), once((room) => this.enterRoom(room))));
   }
 
   enterRoom(room: Room): void {
     this.run!.lastRoom = room.kind;
-    const done = () => {
+    const done = once(() => {
       this.run!.completeRoom();
       this.toFork();
-    };
+    });
     switch (room.kind) {
       case 'battle':
-        void this.go(() => battleScreen(this, room, (res) => (res === 'lose' && this.run!.lives <= 0 ? this.gameOver() : done())));
+        void this.go(() => battleScreen(this, room, once((res) => (res === 'lose' && this.run!.lives <= 0 ? this.gameOver() : done()))));
         break;
       case 'boss':
-        void this.go(() => battleScreen(this, room, (res) => (res === 'lose' ? this.gameOver() : this.afterBoss())));
+        void this.go(() => battleScreen(this, room, once((res) => (res === 'lose' ? this.gameOver() : this.afterBoss()))));
         break;
       case 'treasure':
         void this.go(() => treasureScreen(this, room, done));
@@ -232,22 +291,28 @@ export class Game {
     r.defeated.push(r.world);
     if (r.worldNo >= 4) return this.victory();
     void this.go(() =>
-      worldPickScreen(this, r.worldChoices(), (race) => {
-        r.defeated.pop();
-        r.enterWorld(race);
-        this.setWorld(race);
-        void this.go(() => introScreen(this, () => this.toFork()));
-      }),
+      worldPickScreen(
+        this,
+        r.worldChoices(),
+        once((race) => {
+          r.defeated.pop();
+          r.enterWorld(race);
+          this.setWorld(race);
+          void this.go(() => introScreen(this, once(() => this.toFork())));
+        }),
+      ),
     );
   }
 
   gameOver(): void {
     clearSave();
+    audio.ambience('menu');
     void this.go(() => endScreen(this, false));
   }
 
   victory(): void {
     clearSave();
+    audio.ambience('menu');
     void this.go(() => endScreen(this, true));
   }
 }

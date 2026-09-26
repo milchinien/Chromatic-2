@@ -73,7 +73,9 @@ export type Ability =
   | 'volley'
   | 'adapt'
   | 'chaplain'
-  | 'taunt';
+  | 'taunt'
+  /** nur Wandering Magus neben Ashclan: Feuerbolzen setzen in Brand */
+  | 'firebolt';
 
 export const ABILITY: Record<string, Ability> = {
   'Ash Brute': 'burn',
@@ -123,25 +125,25 @@ export const cardByName = (name: string): Card2 => {
 // --- Boni -----------------------------------------------------------------------------------
 
 export const RACE_BONUS: Record<RaceId, { name: string; text: string }> = {
-  ashclan: { name: 'Rage', text: 'Below 50 % HP: damage ×1.5' },
-  wildwood: { name: 'Regeneration', text: 'Heals 1 % HP per second' },
-  tidebound: { name: 'Tidal Wave', text: 'Pushes all enemies back at the start' },
-  sunlegion: { name: 'Discipline', text: '+Armor for every living ally' },
-  plague: { name: 'Undeath', text: '20 % of the fallen rise as zombies' },
-  deepforge: { name: 'Iron Blood', text: 'HP ×2' },
-  drifters: { name: 'Hired Hands', text: '+10 % damage and HP' },
+  ashclan: { name: 'Rage', text: '+20 % damage, below 50 % HP: damage ×2' },
+  wildwood: { name: 'Regeneration', text: 'Heals 12 % HP per second' },
+  tidebound: { name: 'Tidal Wave', text: 'Every 8 s a wave hits all enemies, pushes them back and slows them' },
+  sunlegion: { name: 'Discipline', text: '−35 % damage taken' },
+  plague: { name: 'Undeath', text: 'Half of the fallen rise again as zombies' },
+  deepforge: { name: 'Iron Blood', text: 'HP +50 %' },
+  drifters: { name: 'Hired Hands', text: '+20 % damage and HP' },
 };
 
 export const CLASS_BONUS: Record<CardClass, { name: string; text: string }> = {
-  Infantry: { name: 'Formation', text: 'Troops ×1.5, HP ×1.5' },
-  Archers: { name: 'Opening Volley', text: 'First volley fires twice' },
-  Cavalry: { name: 'Stampede', text: 'Speed ×2, charge on first hit' },
+  Infantry: { name: 'Formation', text: 'Troops and HP +17 %' },
+  Archers: { name: 'Opening Volley', text: 'Attack speed +28 %, first volley fires twice' },
+  Cavalry: { name: 'Stampede', text: 'Speed ×2, HP +20 %, charge on first hit' },
   Mage: { name: 'Conjuring', text: 'Summons troops in front of the army' },
   Priest: { name: 'Guardians', text: 'Summons 2 giants with lots of HP' },
-  Siege: { name: 'Bulwark', text: 'Builds a strong wall' },
-  Beast: { name: 'Wild', text: 'Speed, damage and HP ×1.5' },
-  Swarm: { name: 'Endless', text: 'Troops ×3' },
-  Champion: { name: 'Duel', text: 'Damage ×1.5 per champion slain' },
+  Siege: { name: 'Bulwark', text: 'Builds a wall in front of the army' },
+  Beast: { name: 'Wild', text: 'Speed, damage and HP +12 %' },
+  Swarm: { name: 'Endless', text: 'Troops +20 %' },
+  Champion: { name: 'Duel', text: 'Damage ×1.25 per champion slain' },
 };
 
 // --- Bosse -------------------------------------------------------------------------------
@@ -162,8 +164,8 @@ export const BOSSES: Record<RaceId, Boss> = {
     race: 'drifters',
     name: 'Rusk',
     title: 'the Bandit King',
-    hp: 1200,
-    dmg: 30,
+    hp: 3100,
+    dmg: 60,
     kind: 'hammer',
     passive: { name: 'Cowardly', text: 'Below 25 % HP he tries to flee.' },
     deck: ['Mercenary Company', 'Mercenary Company', 'Mercenary Company', 'Militia Bowmen', 'Militia Bowmen', 'Militia Bowmen', 'Field Chaplain', 'Wandering Magus'],
@@ -172,8 +174,8 @@ export const BOSSES: Record<RaceId, Boss> = {
     race: 'ashclan',
     name: 'Gorrak Ashmaw',
     title: 'the Burning Warchief',
-    hp: 3000,
-    dmg: 80,
+    hp: 3200,
+    dmg: 75,
     kind: 'berserker',
     passive: { name: 'Scorched Earth', text: 'Every 8 s a random spot of the field catches fire.' },
     deck: ['Ash Brute', 'Ash Brute', 'Boar Riders', 'Boar Riders', 'Fire Catapult', 'Skullcrusher', 'Mercenary Company', 'Militia Bowmen'],
@@ -182,8 +184,8 @@ export const BOSSES: Record<RaceId, Boss> = {
     race: 'wildwood',
     name: 'Sylvara',
     title: 'Heart of the Forest',
-    hp: 2800,
-    dmg: 50,
+    hp: 2700,
+    dmg: 55,
     kind: 'healer',
     passive: { name: 'Overgrowth', text: 'Thorn hedges grow and slow all non-Wildwood units.' },
     deck: ['Thorn Archers', 'Thorn Archers', 'Wolf Pack', 'Sporelings', 'Moon Singer', 'Storm Caller', 'Elder Treant', 'Field Chaplain'],
@@ -193,7 +195,7 @@ export const BOSSES: Record<RaceId, Boss> = {
     name: 'Queen Nerissa',
     title: 'of the Deep',
     hp: 2600,
-    dmg: 60,
+    dmg: 70,
     kind: 'mage',
     passive: { name: 'Rising Tide', text: 'Every 20 s a flood wave pushes your army back.' },
     deck: ['Coral Guard', 'Coral Guard', 'Coral Guard', 'Snapjaw Crabs', 'Snapjaw Crabs', 'Frost Sister', 'Abyssal Kraken', 'Wandering Magus'],
@@ -202,27 +204,27 @@ export const BOSSES: Record<RaceId, Boss> = {
     race: 'sunlegion',
     name: 'Emperor Aurelian',
     title: 'of the Sun',
-    hp: 3200,
+    hp: 1800,
     dmg: 60,
     kind: 'mount',
-    passive: { name: 'Endless Legion', text: 'Every 15 s, 30 fresh Legionnaires march in.' },
+    passive: { name: 'Endless Legion', text: 'Every 15 s, 15 fresh Legionnaires march in.' },
     deck: ['Legionnaires', 'Legionnaires', 'Sun Priestess', 'Dawn Invoker', 'Trebuchet', 'Lord Commander', 'Mercenary Company', 'Field Chaplain'],
   },
   plague: {
     race: 'plague',
     name: 'Morvath',
     title: 'the Undying',
-    hp: 2500,
-    dmg: 40,
+    hp: 1700,
+    dmg: 45,
     kind: 'necro',
-    passive: { name: 'Endless Dead', text: 'All of the fallen rise as zombies.' },
+    passive: { name: 'Endless Dead', text: 'Most of his fallen rise again as zombies.' },
     deck: ['Zombie Horde', 'Zombie Horde', 'Bloaters', 'Bone Archers', 'Necromancer', 'Carrion Crows', 'Corpse Cart', 'The Lich'],
   },
   deepforge: {
     race: 'deepforge',
     name: 'Thane Borin',
     title: 'Deephammer',
-    hp: 3600,
+    hp: 2700,
     dmg: 70,
     kind: 'hammer',
     passive: { name: 'Iron Bastion', text: 'His army starts behind a stone wall.' },
@@ -310,14 +312,14 @@ const RACE_NAMES: Record<RaceId, string> = {
 
 type Maker = (r: Exclude<Rarity, 'greed'>, race: RaceId, cls: CardClass) => Enchant;
 
-const MAKERS: Maker[] = [
+export const MAKERS: Maker[] = [
   (r) => ({ id: 'troops', name: 'Reinforcements', rarity: r, text: `+${TIER[r] * 8} % max troops`, apply: (m) => (m.troopMul *= 1 + TIER[r] * 0.08) }),
-  (r) => ({ id: 'basehp', name: 'Stone Walls', rarity: r, text: `+${TIER[r] * 40} castle HP`, apply: (m) => (m.baseHp += TIER[r] * 40) }),
+  (r) => ({ id: 'basehp', name: 'Stone Walls', rarity: r, text: `+${TIER[r] * 25} castle HP`, apply: (m) => (m.baseHp += TIER[r] * 25) }),
   (r) => ({ id: 'regen', name: 'Field Rations', rarity: r, text: `Units heal ${TIER[r] * 0.5} % HP per second`, apply: (m) => (m.regenPct += TIER[r] * 0.005) }),
   (r) => ({ id: 'dmg', name: 'Whetstones', rarity: r, text: `+${TIER[r] * 6} % damage`, apply: (m) => (m.dmgMul *= 1 + TIER[r] * 0.06) }),
   (r) => ({ id: 'hp', name: 'Chain Mail', rarity: r, text: `+${TIER[r] * 7} % unit HP`, apply: (m) => (m.hpMul *= 1 + TIER[r] * 0.07) }),
   (r) => ({ id: 'haste', name: 'War Drums', rarity: r, text: `+${TIER[r] * 5} % attack speed`, apply: (m) => (m.atkSpeedMul *= 1 + TIER[r] * 0.05) }),
-  (r) => ({ id: 'heal', name: 'Masons', rarity: r, text: `Castle heals ${TIER[r] * 15} HP each round`, apply: (m) => (m.castleHeal += TIER[r] * 15) }),
+  (r) => ({ id: 'heal', name: 'Masons', rarity: r, text: `Castle heals ${TIER[r] * 10} HP each round`, apply: (m) => (m.castleHeal += TIER[r] * 10) }),
   (r) => ({ id: 'gold', name: 'Tax Collector', rarity: r, text: `+${TIER[r] * 10} % gold`, apply: (m) => (m.goldMul *= 1 + TIER[r] * 0.1) }),
   (r, race) => ({
     id: `race-${race}`,

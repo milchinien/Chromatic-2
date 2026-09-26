@@ -1,2 +1,7 @@
 node_modules
 dist
+dist-offline
+release
+tools/balance/.out
+tools/balance/calib-state.json
+playtest-shots

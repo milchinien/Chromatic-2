@@ -2,6 +2,7 @@
 // und Pyre (Karte entsorgen). Informationen zur Auswahl stehen immer rechts
 // in einem gleich großen Panel.
 
+import { audio } from '../audio/audio';
 import { cardArtUrl, frameUrl, pcardHtml } from '../../lab/pcard';
 import { icon } from '../../lab/pixels';
 import { gem } from '../art/props';
@@ -68,13 +69,14 @@ export function treasureScreen(g: Game, room: Room, done: () => void): void {
   const can = room.treasure === 'gold' ? 'Gold' : room.treasure === 'upgrade' ? 'A card upgrade' : 'Gold or a card upgrade';
   const panel = html(`<div class="gpanel treasure-info"><div class="gpanel-title">Contains</div><p>${can}</p><p class="hint">Click the chest to open it.</p></div>`);
   el.appendChild(panel);
-  const hot = html(`<button class="chest-hot" aria-label="Open chest"></button>`);
+  const hot = html(`<button class="chest-hot" data-sfx="none" aria-label="Open chest"></button>`);
   const anchor = TREASURE_ANCHOR[run.world];
   hot.style.left = `${anchor.x - 24}px`;
   hot.style.top = `${anchor.y - 38}px`;
   el.appendChild(hot);
   hot.addEventListener('click', async () => {
     hot.remove();
+    audio.play('chest', { jitter: 0 });
     el.classList.add('shake');
     await sleep(350);
     el.classList.remove('shake');
@@ -87,6 +89,7 @@ export function treasureScreen(g: Game, room: Room, done: () => void): void {
       const d = upgradeable[Math.floor(run.rnd() * upgradeable.length)]!;
       d.stars++;
       body = `<div class="reward-card">${pcardHtml(withStars(d), { big: true })}</div><p><b>${d.card.name}</b> upgraded to ★${d.stars}!</p>`;
+      audio.play('upgrade', { delay: 0.3 });
     } else {
       const gold = Math.round((40 + run.worldNo * 25 + run.rnd() * 40) * run.mods.goldMul);
       run.gold += gold;
@@ -153,6 +156,8 @@ export function shopScreen(g: Game, done: () => void): void {
         if (run.gold < cost) return;
         run.gold -= cost;
         d.stars++;
+        audio.play('coins');
+        audio.play('upgrade', { delay: 0.12 });
         g.refreshHud();
         const r = btn.getBoundingClientRect();
         void r;
@@ -173,6 +178,8 @@ export function shopScreen(g: Game, done: () => void): void {
         run.gold -= cost;
         run.addCard(c);
         bought = i;
+        audio.play('coins');
+        audio.play('card_place', { delay: 0.25 });
         g.refreshHud();
         // Die anderen beiden verschwinden
         counter.querySelectorAll<HTMLElement>('.tiny').forEach((t) => {
@@ -221,6 +228,7 @@ export function enchantScreen(g: Game, done: () => void): void {
     b.style.animationDelay = `${i * -1.1}s`;
     b.addEventListener('click', () => {
       el.querySelectorAll('.orb').forEach((o) => o.classList.toggle('sel', o === b));
+      audio.play('chime', { rate: i ? 1.5 : 1, vol: 0.6 });
       body.innerHTML = `
         <div class="ench-card r-${e.rarity}" style="--rc:${r.color};--rd:${r.dark}">
           <div class="ench-rarity">${r.name}</div>
@@ -233,6 +241,7 @@ export function enchantScreen(g: Game, done: () => void): void {
       const take = html(`<button class="gbtn primary">${icon('star')}<span>Take</span></button>`);
       take.addEventListener('click', async () => {
         run.enchants.push(e);
+        audio.play('enchant', { jitter: 0 });
         g.refreshHud();
         burst(g.fx, spots[i]!.x, spots[i]!.y, [r.color, '#ffffff'], 50, 70, 40);
         el.querySelectorAll('.orb').forEach((o) => (o as HTMLElement).animate([{ opacity: 1 }, { opacity: 0, transform: 'scale(2)' }], { duration: 400, fill: 'forwards' }));
@@ -271,6 +280,7 @@ export function pyreScreen(g: Game, done: () => void): void {
       burn.addEventListener('click', async () => {
         if (run.deck.length <= 6) return;
         run.deck = run.deck.filter((x) => x !== d);
+        audio.play('pyre', { jitter: 0 });
         g.refreshHud();
         await b.animate(
           [

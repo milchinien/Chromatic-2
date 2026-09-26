@@ -64,6 +64,8 @@ export function loadRun(): Run | null {
 }
 
 export const WORLDS_PER_RUN = 4;
+/** Eigene Burg: 3 volle Heere (siehe CASTLE_ARMY in arena.ts) */
+export const PLAYER_CASTLE = 300;
 /** Räume vor dem Boss: Welt 1 hat 5, jede weitere Welt einen mehr. */
 export const roomsInWorld = (worldNo: number) => 4 + worldNo;
 
@@ -73,6 +75,35 @@ const WORLD_STARS: [number, number][] = [
   [2, 4],
   [3, 5],
 ];
+
+const FRONTLINE = new Set<Card2['cls']>(['Infantry', 'Cavalry', 'Beast', 'Swarm', 'Archers']);
+/** Höchstzahl je Klasse im Startdeck (unterstützende Karten allein gewinnen keine Runde) */
+const START_CAP: Partial<Record<Card2['cls'], number>> = { Siege: 2, Priest: 2, Mage: 2 };
+
+/**
+ * Startdeck aus 10 Karten der 3 Farben (ohne Champions), aber spielbar:
+ * mindestens 5 kämpfende Karten, höchstens 2 Belagerung/Priester/Magier,
+ * höchstens 2 Kopien derselben Karte und jede Farbe mindestens 2-mal.
+ */
+export function startingDeck(colors: RaceId[], rnd: () => number): Card2[] {
+  const pool = CARDS2.filter((c) => colors.includes(c.race) && c.cls !== 'Champion');
+  const deck: Card2[] = [];
+  const count = (f: (c: Card2) => boolean) => deck.filter(f).length;
+  const allowed = (c: Card2) => count((d) => d === c) < 2 && count((d) => d.cls === c.cls) < (START_CAP[c.cls] ?? 99);
+  const draw = (from: Card2[]) => {
+    const ok = from.filter(allowed);
+    const list = ok.length ? ok : from;
+    deck.push(list[Math.floor(rnd() * list.length)]!);
+  };
+  // je Farbe zwei Karten, davon eine kämpfende
+  for (const r of colors) {
+    draw(pool.filter((c) => c.race === r && FRONTLINE.has(c.cls)));
+    draw(pool.filter((c) => c.race === r));
+  }
+  while (count((c) => FRONTLINE.has(c.cls)) < 5) draw(pool.filter((c) => FRONTLINE.has(c.cls)));
+  while (deck.length < 10) draw(pool);
+  return deck;
+}
 
 export class Run {
   deck: DeckCard[] = [];
@@ -95,9 +126,7 @@ export class Run {
     seed = Date.now() % 100000,
   ) {
     this.seed = seed || 1;
-    // Startdeck: 10 zufällige Karten aus den 3 Farben, ohne Champions
-    const pool = CARDS2.filter((c) => colors.includes(c.race) && c.cls !== 'Champion');
-    for (let i = 0; i < 10; i++) this.addCard(pool[Math.floor(this.rnd() * pool.length)]!);
+    for (const c of startingDeck(colors, () => this.rnd())) this.addCard(c);
   }
 
   rnd(): number {
@@ -122,7 +151,7 @@ export class Run {
   }
 
   get castleHp(): number {
-    return 500 + this.mods.baseHp;
+    return Math.max(50, PLAYER_CASTLE + this.mods.baseHp);
   }
 
   /** Sterne der Räume in dieser Welt. */
@@ -208,17 +237,25 @@ export class Run {
     return this.boss.deck.map(cardByName);
   }
 
+  /** Sterne der Gegnerkarten: Welt 1–3 ★1, Welt 4 ★2. */
   enemyStars(): number {
-    return Math.min(3, Math.max(1, this.worldNo - 1));
+    return this.worldNo >= 4 ? 2 : 1;
   }
 
   /** Truppen-Faktor des Gegners nach Raum-Sternen. */
-  enemyPower(stars: number): number {
-    return 0.55 + stars * 0.15 + (this.worldNo - 1) * 0.1;
+  enemyPower(stars: number, boss = false): number {
+    // Die Armee eines Bosses ist etwas kleiner – der Boss selbst kämpft mit
+    return (0.65 + stars * 0.1 + [0, 0.1, 0.4, 0.3][Math.min(3, this.worldNo - 1)]!) * (boss ? 0.85 : 1);
+  }
+
+  /** Boss-Stärke (HP und Schaden) nach Welt – unabhängig davon, welcher Boss es ist. */
+  bossPower(): number {
+    return [1, 0.85, 0.95, 1.1][Math.min(3, this.worldNo - 1)]!;
   }
 
   enemyCastle(stars: number, boss: boolean): number {
-    return boss ? 700 + this.worldNo * 200 : 260 + stars * 110 + this.worldNo * 60;
+    // Skala: ein ganzes Heer an der Burg = 100 Schaden (CASTLE_ARMY)
+    return boss ? 130 + this.worldNo * 30 : 52 + stars * 3;
   }
 
   // --- Ablauf ------------------------------------------------------------------------------

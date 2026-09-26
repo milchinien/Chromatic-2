@@ -3,7 +3,7 @@
 import { icon } from '../../lab/pixels';
 import { candleBack } from '../art/candle';
 import { RACES } from '../data';
-import type { Game } from '../game';
+import { once, type Game } from '../game';
 
 export function endScreen(g: Game, won: boolean): void {
   const r = g.run!;
@@ -25,5 +25,5 @@ export function endScreen(g: Game, won: boolean): void {
       <button class="gbtn primary big" data-menu>${icon('door')}<span>Main Menu</span></button>
     </div>`;
   g.ui.appendChild(el);
-  el.querySelector('[data-menu]')!.addEventListener('click', () => g.mainMenu());
+  el.querySelector('[data-menu]')!.addEventListener('click', once(() => g.mainMenu()));
 }

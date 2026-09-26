@@ -29,7 +29,7 @@ function roomPanel(g: Game, r: Room, side: 'left' | 'right' | 'center'): string 
   const text = r.kind === 'boss' ? `${BOSSES[run.world].title}. ${BOSSES[run.world].passive.name}: ${BOSSES[run.world].passive.text}` : info.text;
   const showStars = r.kind === 'battle' || r.kind === 'boss';
   return `
-    <button class="room-card k-${r.kind} ${side}">
+    <button class="room-card k-${r.kind} ${side}" data-sfx="confirm">
       <div class="rc-icon">${icon(ROOM_ICON[r.kind])}</div>
       <div class="rc-name">${title}</div>
       ${showStars ? `<div class="rc-stars" title="Difficulty">${stars(r.stars)}</div>` : ''}
