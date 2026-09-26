@@ -37,7 +37,7 @@ pnpm package    # Version zum Weitergeben: release/Chromatic-2.zip
 
 `pnpm package` baut eine Offline-Version, die per Doppelklick direkt von der Festplatte
 läuft (kein Server, kein Internet): klassisches Skript statt Modulen, Schriften und
-Sound-Worker eingebettet, Bilder verkleinert (Python + Pillow). Ergebnis:
+Sound-Worker eingebettet, Bilder verkleinert (sharp). Ergebnis:
 `release/Chromatic-2.zip` mit `Chromatic 2 spielen.html` und einer `LIESMICH.txt`.
 
 ### Balance-Werkzeuge

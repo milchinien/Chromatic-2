@@ -1,7 +1,7 @@
 // Baut die Version zum Weitergeben: `pnpm package`
 //   1. Offline-Build (läuft per Doppelklick von der Festplatte, siehe vite.config.ts)
 //   2. Nur die Dateien behalten, die das Spiel braucht
-//   3. Bilder verkleinern (Python + Pillow, falls vorhanden)
+//   3. Bilder verkleinern (sharp)
 //   4. Anleitung dazu und alles als release/Chromatic-2.zip packen
 // Mit `--web` (pnpm build:web) endet es nach Schritt 3: dist-offline/ ist dann
 // die schlanke Web-Version für GitHub Pages.
@@ -37,13 +37,7 @@ for (const f of readdirSync(join(out, 'assets'))) {
 }
 
 console.log('› Bilder verkleinern …');
-try {
-  execSync(`python "${join(root, 'scripts', 'shrink-art.py')}" "${out}"`, { stdio: 'inherit' });
-} catch {
-  console.warn('  (Python/Pillow nicht gefunden – Bilder bleiben groß)');
-  // Ohne Umwandlung sucht das Spiel trotzdem .webp: PNGs unter diesem Namen ablegen
-  for (const f of readdirSync(join(cardArt, 'v2'))) if (f.endsWith('.png')) renameSync(join(cardArt, 'v2', f), join(cardArt, 'v2', f.replace(/\.png$/, '.webp')));
-}
+run(`node "${join(root, 'scripts', 'shrink-art.mjs')}" "${out}"`);
 
 if (webOnly) {
   console.log('\n✓ Web-Version fertig: dist-offline/');
