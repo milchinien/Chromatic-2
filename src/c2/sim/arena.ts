@@ -22,6 +22,7 @@ import {
   type CardClass,
   type Mods,
   type RaceId,
+  maxTroops,
 } from '../data';
 
 export const FX0 = 32; // linke Burgmauer (Feldseite)
@@ -429,6 +430,11 @@ export class Arena {
     };
     if (c.cls === 'Champion') t.radius = 6 * (m?.sizeMul ?? 1);
     if (ability === 'colossus') t.speed = 16;
+    // The Lich zaubert aus der Ferne und hält Abstand
+    if (ability === 'harvest') {
+      t.attack = 'bolt';
+      t.range = 90;
+    }
     this.types.push(t);
     return this.types.length - 1;
   }
@@ -493,11 +499,13 @@ export class Arena {
     const c = d.card;
     const m = this.mods[tm];
     const bm = m?.bonusMul ?? 1;
-    let n = (d.count ?? c.troops) * (1 + 0.3 * (d.stars - 1)) * power * (m?.troopMul ?? 1) * (m?.raceTroops[c.race] ?? 1);
+    // d.count ist schon gewürfelt aus der Höchstzahl (Sterne + Enchantments, siehe maxTroops);
+    // nur die Gegner-Stärke kommt noch dazu – nicht bei Belagerung und Champions
+    let n = (d.count ?? maxTroops(c, d.stars, m)) * (t.building ? 1 : power);
     if (info.cls === 'Infantry' && c.cls === 'Infantry') n *= 1 + 0.17 * bm;
     if (info.cls === 'Swarm' && c.cls === 'Swarm') n *= 1 + 0.2 * bm;
     n = Math.max(1, Math.min(MAX_PER_CARD, Math.round(n)));
-    if (c.cls === 'Champion') n = Math.max(1, Math.round(power * (m?.troopMul ?? 1)));
+    if (c.cls === 'Champion') n = 1;
     const dir = tm === 0 ? 1 : -1;
     const base = tm === 0 ? FX0 : FX1;
     if (t.building) {
@@ -931,7 +939,7 @@ export class Arena {
         dvx = (dx / d) * speed;
         dvy = (dy / d) * speed;
       } else {
-        if ((t.attack === 'bolt' || t.attack === 'arrow' || t.attack === 'heal') && tt.attack === 'melee' && d < 18) {
+        if ((t.attack === 'bolt' || t.attack === 'arrow' || t.attack === 'heal') && tt.attack === 'melee' && d < (t.champion ? 60 : 18)) {
           dvx = (-dx / d) * speed;
           dvy = (-dy / d) * speed * 0.5;
         }
@@ -1075,8 +1083,8 @@ export class Arena {
         // Champions und Bosse spalten: jeder Hieb trifft bis zu 4 weitere Gegner ums Ziel
         if (t.champion || t.boss) {
           let n = 0;
-          this.forEachInRadius(1 - tm, tx, ty, t.radius + 7, (j) => {
-            if (j !== tgt && n++ < 4) this.damage(j, dmg * 0.5, i, true, false);
+          this.forEachInRadius(1 - tm, tx, ty, t.radius + 6, (j) => {
+            if (j !== tgt && n++ < 3) this.damage(j, dmg * 0.35, i, true, false);
           });
         }
         if (t.ability === 'burn') this.ignite(tgt, t.dmg * 0.4, 2);
@@ -1122,7 +1130,7 @@ export class Arena {
         } else if (t.ability === 'sunbeam' || t.ability === 'cannon') {
           // Sonnenstrahl (bzw. Magus neben Deepforge: durchschlagender Steinschuss)
           const sun = t.ability === 'sunbeam';
-          this.lineDamage(tm, x, ty, dmg * 0.6, i);
+          this.lineDamage(tm, x, ty, dmg * 0.4, i, 6);
           this.events.push({ t: 'beam', x0: x, y: ty, x1: tm === 0 ? FX1 : FX0, color: sun ? '#fff0a0' : '#ffd9a0', fx: sun ? 'sun' : 'cannon' });
         } else {
           this.fire(P_BOLT, i, x, y - 6, tx, ty, 140, dmg, tgt, 0);
@@ -1137,7 +1145,7 @@ export class Arena {
       }
       case 'siege': {
         if (t.ability === 'cannon') {
-          this.lineDamage(tm, x, ty, dmg * 0.7, i);
+          this.lineDamage(tm, x, ty, dmg * 0.5, i, 6);
           this.events.push({ t: 'beam', x0: x, y: ty, x1: tm === 0 ? FX1 : FX0, color: '#ffd9a0', fx: 'cannon' });
           this.shake = Math.min(1.4, this.shake + 0.25);
         } else {
@@ -1150,19 +1158,23 @@ export class Arena {
     }
   }
 
-  private lineDamage(tm: number, x: number, y: number, dmg: number, src: number): void {
+  /** Strich-Angriff (Kanone, Sonnenstrahl): trifft die ersten `maxHits` Gegner in einer Linie. */
+  private lineDamage(tm: number, x: number, y: number, dmg: number, src: number, maxHits = 6): void {
     const dir = tm === 0 ? 1 : -1;
     const g = this.grids[1 - tm]!;
     const cy0 = g.cellY(y - 6);
     const cy1 = g.cellY(y + 6);
+    const hits: number[] = [];
     for (let cy = cy0; cy <= cy1; cy++)
       for (let cx = 0; cx < g.cols; cx++) {
         const c = cy * g.cols + cx;
         for (let k = g.cellStart[c]!, e = g.cellStart[c + 1]!; k < e; k++) {
           const j = g.items[k]!;
-          if (this.alive[j] && Math.abs(this.y[j]! - y) < 5 && (this.x[j]! - x) * dir > 0) this.damage(j, dmg, src, false, true);
+          if (this.alive[j] && Math.abs(this.y[j]! - y) < 5 && (this.x[j]! - x) * dir > 0) hits.push(j);
         }
       }
+    hits.sort((a, b) => (this.x[a]! - this.x[b]!) * dir);
+    for (let k = 0; k < Math.min(maxHits, hits.length); k++) this.damage(hits[k]!, dmg, src, false, true);
   }
 
   private ignite(j: number, dps: number, dur: number): void {

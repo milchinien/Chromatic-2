@@ -10,7 +10,7 @@ import { WORLD_THEMES } from '../lab/palettes-crt';
 import { uiRamp, type PaletteTheme } from '../lab/palettes';
 import { pcardHtml } from '../lab/pcard';
 import { icon } from '../lab/pixels';
-import { RACES, type Card2, type RaceId } from './data';
+import { RACES, maxTroops, type Card2, type Mods, type RaceId } from './data';
 import { buildGameAtlas, type GameAtlas } from './render/atlas';
 import { Run, clearSave, loadRun, saveRun, type DeckCard, type Room } from './run';
 import { battleScreen } from './screens/battle';
@@ -42,8 +42,10 @@ export function once<A extends unknown[]>(fn: (...a: A) => void): (...a: A) => v
   };
 }
 
-/** Karte mit Stern-Stufe aus dem Deck als Card2 für die Kartenanzeige. */
-export const withStars = (d: DeckCard): Card2 => ({ ...d.card, stars: d.stars });
+/** Laufender Run (für die Truppen-Höchstzahl auf den Karten). */
+let activeRun: Run | null = null;
+/** Karte mit Stern-Stufe aus dem Deck; Truppen = Höchstzahl mit Level und Enchantments (Gegner: mods null). */
+export const withStars = (d: Pick<DeckCard, 'card' | 'stars'>, mods: Mods | null | undefined = activeRun?.mods): Card2 => ({ ...d.card, stars: d.stars, troops: maxTroops(d.card, d.stars, mods) });
 
 export class Game {
   readonly app = new Application();
@@ -52,7 +54,14 @@ export class Game {
   readonly ui: HTMLElement;
   readonly fx: HTMLElement;
   private readonly irisLayer: HTMLElement;
-  run: Run | null = null;
+  private _run: Run | null = null;
+  get run(): Run | null {
+    return this._run;
+  }
+  set run(r: Run | null) {
+    this._run = r;
+    activeRun = r;
+  }
   theme: PaletteTheme = WORLD_THEMES.find((t) => t.id === 'w-drifters')!;
   /** Bildschirm-Wechsel laufen nacheinander (Warteschlange) */
   private queue: Promise<void> = Promise.resolve();

@@ -90,7 +90,7 @@ const tri = (t: Tri) => (t === 'auto' ? undefined : t === 'on');
 function specOf(s: SideState, team: number, rnd = Math.random): SideSpec {
   const dep = (x: SlotState): Deployed => {
     const card = cardByName(x.name);
-    return { card, stars: x.stars, count: x.count ?? rollTroops(card, rnd) };
+    return { card, stars: x.stars, count: x.count ?? rollTroops(card, rnd, x.stars, modsOf(s)) };
   };
   return { front: dep(s.front), back: dep(s.back), mods: modsOf(s), baseHp: team === 0 ? s.castle : 0, power: s.power, bonus: { race: tri(s.race), cls: tri(s.cls) } };
 }

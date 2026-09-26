@@ -116,6 +116,17 @@ export const ABILITY: Record<string, Ability> = {
   'Hired Giant': 'taunt',
 };
 
+/**
+ * Höchstzahl an Truppen einer Karte: steigt mit dem Kartenlevel (+40 % je Stern)
+ * und durch Enchantments. Champions sind immer 1, Belagerung 1 (★3: 2) und ohne
+ * Enchantments. Beim Aufdecken wird zwischen 55 % und 100 % davon gewürfelt.
+ */
+export function maxTroops(card: Card2, stars: number, mods?: Mods | null): number {
+  if (card.cls === 'Champion') return 1;
+  if (card.cls === 'Siege') return Math.max(1, Math.round(card.troops * (1 + 0.3 * (stars - 1))));
+  return Math.max(1, Math.round(card.troops * (1 + 0.4 * (stars - 1)) * (mods?.troopMul ?? 1) * (mods?.raceTroops[card.race] ?? 1)));
+}
+
 export const cardByName = (name: string): Card2 => {
   const c = CARDS2.find((k) => k.name === name);
   if (!c) throw new Error(`Unbekannte Karte: ${name}`);
@@ -313,7 +324,7 @@ const RACE_NAMES: Record<RaceId, string> = {
 type Maker = (r: Exclude<Rarity, 'greed'>, race: RaceId, cls: CardClass) => Enchant;
 
 export const MAKERS: Maker[] = [
-  (r) => ({ id: 'troops', name: 'Reinforcements', rarity: r, text: `+${TIER[r] * 8} % max troops`, apply: (m) => (m.troopMul *= 1 + TIER[r] * 0.08) }),
+  (r) => ({ id: 'troops', name: 'Reinforcements', rarity: r, text: `+${TIER[r] * 12} % max troops`, apply: (m) => (m.troopMul *= 1 + TIER[r] * 0.12) }),
   (r) => ({ id: 'basehp', name: 'Stone Walls', rarity: r, text: `+${TIER[r] * 25} castle HP`, apply: (m) => (m.baseHp += TIER[r] * 25) }),
   (r) => ({ id: 'regen', name: 'Field Rations', rarity: r, text: `Units heal ${TIER[r] * 0.5} % HP per second`, apply: (m) => (m.regenPct += TIER[r] * 0.005) }),
   (r) => ({ id: 'dmg', name: 'Whetstones', rarity: r, text: `+${TIER[r] * 6} % damage`, apply: (m) => (m.dmgMul *= 1 + TIER[r] * 0.06) }),
@@ -325,8 +336,8 @@ export const MAKERS: Maker[] = [
     id: `race-${race}`,
     name: `${RACE_NAMES[race]} Banner`,
     rarity: r,
-    text: `${RACE_NAMES[race]} cards: +${TIER[r] * 15} % troops`,
-    apply: (m) => (m.raceTroops[race] = (m.raceTroops[race] ?? 1) * (1 + TIER[r] * 0.15)),
+    text: `${RACE_NAMES[race]} cards: +${TIER[r] * 20} % max troops`,
+    apply: (m) => (m.raceTroops[race] = (m.raceTroops[race] ?? 1) * (1 + TIER[r] * 0.2)),
   }),
   (r, race) => ({
     id: `rdmg-${race}`,

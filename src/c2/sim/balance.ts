@@ -5,11 +5,14 @@
 // benutzt, außerdem teilt der Kampfbildschirm die Gegner-KI von hier.
 // =====================================================================
 
-import { BOSSES, CARDS2, type Boss, type Card2, type Mods, type RaceId } from '../data';
+import { BOSSES, CARDS2, maxTroops, type Boss, type Card2, type Mods, type RaceId } from '../data';
 import { Arena, DT, type Deployed, type SideSpec } from './arena';
 
 /** Truppen werden beim Aufdecken gewürfelt: zwischen 55 % und 100 % des Kartenwerts. */
-export const rollTroops = (c: Card2, rnd: () => number = Math.random): number => (c.troops <= 1 ? 1 : Math.max(1, Math.round(c.troops * (0.55 + 0.45 * rnd()))));
+export function rollTroops(c: Card2, rnd: () => number = Math.random, stars = 1, mods?: Mods | null): number {
+  const max = maxTroops(c, stars, mods);
+  return max <= 1 || c.cls === 'Siege' ? max : Math.max(1, Math.round(max * (0.55 + 0.45 * rnd())));
+}
 
 const MELEE = new Set(['Infantry', 'Cavalry', 'Beast', 'Swarm', 'Champion']);
 
@@ -20,8 +23,8 @@ export function enemyPick(deck: Card2[], stars: number, rnd: () => number = Math
   const b = rnd() < 0.4 && pairs.length ? pairs[Math.floor(rnd() * pairs.length)]! : deck[Math.floor(rnd() * deck.length)]!;
   const [f, bk] = MELEE.has(b.cls) && !MELEE.has(a.cls) ? [b, a] : [a, b];
   return [
-    { card: f, stars, count: rollTroops(f, rnd) },
-    { card: bk, stars, count: rollTroops(bk, rnd) },
+    { card: f, stars, count: rollTroops(f, rnd, stars) },
+    { card: bk, stars, count: rollTroops(bk, rnd, stars) },
   ];
 }
 
@@ -34,7 +37,7 @@ export interface PlayerCard {
  * Spieler-KI für Simulationen: zieht 3 Karten und nimmt das Paar mit den
  * meisten Boni (bei Gleichstand das stärkere), Nahkampf nach vorne.
  */
-export function playerPick(deck: PlayerCard[], rnd: () => number = Math.random): [Deployed, Deployed] {
+export function playerPick(deck: PlayerCard[], rnd: () => number = Math.random, mods?: Mods): [Deployed, Deployed] {
   const pool = [...deck];
   const hand: PlayerCard[] = [];
   while (hand.length < 3 && pool.length) hand.push(pool.splice(Math.floor(rnd() * pool.length), 1)[0]!);
@@ -53,8 +56,8 @@ export function playerPick(deck: PlayerCard[], rnd: () => number = Math.random):
   const [a, b] = best;
   const [f, bk] = MELEE.has(b.card.cls) && !MELEE.has(a.card.cls) ? [b, a] : [a, b];
   return [
-    { card: f.card, stars: f.stars, count: rollTroops(f.card, rnd) },
-    { card: bk.card, stars: bk.stars, count: rollTroops(bk.card, rnd) },
+    { card: f.card, stars: f.stars, count: rollTroops(f.card, rnd, f.stars, mods) },
+    { card: bk.card, stars: bk.stars, count: rollTroops(bk.card, rnd, bk.stars, mods) },
   ];
 }
 
@@ -145,7 +148,7 @@ export function simBattle(s: BattleSetup): BattleResult {
   const maxRounds = s.maxRounds ?? 12;
   while (rounds < maxRounds) {
     rounds++;
-    const mine = playerPick(s.deck, rnd);
+    const mine = playerPick(s.deck, rnd, s.mods);
     const theirs = enemyPick(s.enemyDeck, s.enemyStars, rnd);
     arena.deployRound([
       { front: mine[0], back: mine[1], mods: s.mods, baseHp: s.playerCastle, power: 1 },

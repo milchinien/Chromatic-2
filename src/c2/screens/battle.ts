@@ -215,14 +215,14 @@ export function battleScreen(g: Game, room: Room, onDone: (res: Result) => void)
     for (let k = 0; k < 2; k++) {
       const slot = slotEls[2 + k]!.querySelector<HTMLElement>('.slot-card')!;
       slot.className = 'slot-card';
-      slot.innerHTML = flipCardHtml(pcardHtml(withStars({ uid: 0, card: enemy[k]!.card, stars: enemy[k]!.stars }), { team: 1, rolled: enemy[k]!.count }));
+      slot.innerHTML = flipCardHtml(pcardHtml(withStars({ card: enemy[k]!.card, stars: enemy[k]!.stars }, null), { team: 1, rolled: enemy[k]!.count }));
       void tl.play(slot, [{ transform: 'translateX(140px) rotate(12deg)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 420, delay: 150 + k * 160, easing: 'cubic-bezier(.2,.8,.3,1)' });
       audio.play('card_draw', { pan: 0.6, delay: (150 + k * 160) / 1000, vol: 0.7 });
     }
 
     // 3 Karten nacheinander vom Stapel
     const hand = drawThree();
-    const rolls = hand.map((d) => rollTroops(d.card));
+    const rolls = hand.map((d) => rollTroops(d.card, Math.random, d.stars, run.mods));
     handLayer.innerHTML = '<div class="hand-dim"></div><div class="hand-title">Choose 2 cards</div>';
     handLayer.classList.add('on');
     const handEls: HTMLElement[] = [];
@@ -378,7 +378,7 @@ export function battleScreen(g: Game, room: Room, onDone: (res: Result) => void)
     const cards = [sides[0].front, sides[0].back, sides[1].front, sides[1].back];
     const flights: Promise<void>[] = [];
     cards.forEach((d, i) => {
-      const c = html(`<div class="fly-card show">${pcardHtml(withStars({ uid: 0, card: d.card, stars: d.stars }), { team: i < 2 ? 0 : 1, rolled: d.count })}</div>`);
+      const c = html(`<div class="fly-card show">${pcardHtml(withStars({ card: d.card, stars: d.stars }, i < 2 ? run.mods : null), { team: i < 2 ? 0 : 1, rolled: d.count })}</div>`);
       layer.appendChild(c);
       clones.push(c);
       flights.push(flyArc(tl, c, { ...smallAt(i), s: 1 }, { x: targets[i]!, y: 58, s: 1 }, 560 + i * 60, 50, i < 2 ? 10 : -10));

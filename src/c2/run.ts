@@ -69,6 +69,14 @@ export const PLAYER_CASTLE = 300;
 /** Räume vor dem Boss: Welt 1 hat 5, jede weitere Welt einen mehr. */
 export const roomsInWorld = (worldNo: number) => 4 + worldNo;
 
+/** Burg-HP der Gegner je Welt (normale Kämpfe). */
+const CASTLE_RANGE: [number, number][] = [
+  [75, 150],
+  [200, 300],
+  [350, 500],
+  [550, 750],
+];
+
 const WORLD_STARS: [number, number][] = [
   [1, 1],
   [1, 3],
@@ -254,8 +262,13 @@ export class Run {
   }
 
   enemyCastle(stars: number, boss: boolean): number {
-    // Skala: ein ganzes Heer an der Burg = 100 Schaden (CASTLE_ARMY)
-    return boss ? 130 + this.worldNo * 30 : 52 + stars * 3;
+    // Spanne je Welt; innerhalb der Welt nach Raum-Sternen (Welt 1 hat nur ★1: zufällig).
+    // Bosse: obere Grenze + 30 %.
+    const [lo, hi] = CASTLE_RANGE[Math.min(3, this.worldNo - 1)]!;
+    if (boss) return Math.round(hi * 1.3);
+    const [a, b] = this.starRange();
+    const u = b > a ? Math.max(0, Math.min(1, (stars - a) / (b - a))) : this.rnd();
+    return Math.round((lo + (hi - lo) * u) / 5) * 5;
   }
 
   // --- Ablauf ------------------------------------------------------------------------------
