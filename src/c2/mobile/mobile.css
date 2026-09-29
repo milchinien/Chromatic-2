@@ -1,0 +1,938 @@
+/* =====================================================================
+   Chromatic 2 – Handy-Version (Hochformat, Bühne 320 × --H).
+   Wird nur auf Handys geladen; alle Regeln gelten nur unter #game.m und
+   bauen auf c2.css / world.css auf (gleiche Farben, Rahmen, Schriften).
+   ===================================================================== */
+
+html.c2-mobile,
+html.c2-mobile body {
+  overscroll-behavior: none;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-text-size-adjust: 100%;
+}
+
+#game.m {
+  width: var(--W);
+  height: var(--H);
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+#game.m img {
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+#game.m #arena {
+  width: var(--W);
+  height: var(--H);
+}
+
+/* Monitor-Rahmen schmaler, damit mehr Platz bleibt */
+#game.m .crt-frame {
+  inset: 2px;
+  border-width: 2px;
+  border-radius: 10px;
+  box-shadow:
+    0 0 0 1px var(--c1),
+    0 0 0 14px #000,
+    inset 0 0 0 1px var(--c1),
+    0 0 6px 1px color-mix(in srgb, var(--c3) 55%, transparent),
+    inset 0 0 6px 1px color-mix(in srgb, var(--c3) 45%, transparent),
+    inset 0 0 30px 4px rgba(0, 0, 0, 0.55);
+}
+
+/* Szenen (640×360) als mittiger Ausschnitt in Originalgröße */
+#game.m .scr {
+  background-size: 640px 360px;
+  background-repeat: no-repeat;
+  background-position: var(--bgx, -160px) var(--bgy, 0px);
+  background-color: #000;
+}
+
+/* Kampf: die Arena (Canvas) liegt unter der Oberfläche und muss durchscheinen */
+#game.m .battle-scr {
+  background: none;
+}
+
+/* Auf Touch-Geräten „klebt“ :hover nach dem Antippen – Hover-Effekte neutral */
+#game.m .gbtn:hover:not(:disabled):not(:active) {
+  background: var(--glass) !important;
+  box-shadow:
+    inset 0 0 0 1px var(--c3),
+    0 0 0 1px #000;
+}
+
+#game.m .gbtn:hover:not(:disabled):not(:active) .ico {
+  color: var(--c3);
+}
+
+#game.m .gbtn.primary:hover:not(:disabled):not(:active) {
+  background-color: var(--c3) !important;
+  box-shadow:
+    inset 0 0 0 1px var(--c4),
+    inset 0 -2px 0 0 var(--c2),
+    0 0 0 1px #000,
+    0 0 7px color-mix(in srgb, var(--c3) 60%, transparent);
+}
+
+#game.m .gbtn.primary:hover:not(:disabled):not(:active) .ico {
+  color: #000;
+}
+
+#game.m .gbtn.danger:hover:not(:disabled):not(:active) {
+  box-shadow:
+    inset 0 0 0 1px #ff3a4a,
+    0 0 0 1px #000;
+}
+
+#game.m .race-tile:hover,
+#game.m .room-card:hover,
+#game.m .tiny:hover:not(.sel),
+#game.m .pyre-pick:hover:not(.sel),
+#game.m .rw-card:hover,
+#game.m .wp-choice:hover .boss-card {
+  transform: none;
+}
+
+#game.m .race-tile:hover:not(.on) {
+  background: var(--glass) !important;
+}
+
+#game.m .world .wbtn:hover {
+  background: #3a3342;
+}
+
+#game.m .world .wbtn.fight:hover:not(:disabled) {
+  background: #c8323c;
+}
+
+#game.m .hand-card:hover .pc {
+  filter: none;
+}
+
+/* Etwas größere Tippflächen */
+#game.m .gbtn {
+  height: 24px;
+}
+
+#game.m .gbtn.small {
+  height: 18px;
+}
+
+#game.m .gbtn.big {
+  height: 28px;
+}
+
+/* --- Obere Leiste ------------------------------------------------------------------ */
+
+#game.m .tophud {
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  gap: 4px;
+}
+
+#game.m .chip {
+  padding: 0 5px;
+}
+
+#game.m .chip.world {
+  gap: 5px;
+}
+
+/* --- Overlays ------------------------------------------------------------------------ */
+
+#game.m .ov-box,
+#game.m .deck-view {
+  max-width: 308px;
+  max-height: calc(var(--H) - 24px);
+  min-width: 0;
+}
+
+#game.m .deck-scroll,
+#game.m .deck-scroll.wide {
+  grid-template-columns: repeat(3, 86px);
+  max-height: calc(var(--H) - 130px);
+  touch-action: pan-y;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+#game.m .ench-list {
+  max-width: 290px;
+  max-height: 60px;
+  overflow-y: auto;
+  touch-action: pan-y;
+}
+
+#game.m .settings label {
+  min-width: 240px;
+}
+
+/* Karte groß ansehen */
+.m-zoom {
+  position: absolute;
+  inset: 0;
+  z-index: 45;
+  display: grid;
+  place-items: center;
+  background: rgba(8, 6, 12, 0.82);
+}
+
+.m-zoom-card {
+  transform: scale(2);
+  filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.6));
+  animation: m-zoom-in 0.16s steps(3);
+}
+
+@keyframes m-zoom-in {
+  from {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+}
+
+.m-zoom-hint {
+  position: absolute;
+  bottom: 18px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: var(--muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-shadow: 1px 1px 0 #000;
+}
+
+/* Hinweis im Querformat */
+.m-rotate {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  background: #05040a;
+  color: #f4ecd9;
+  font-family: 'Silkscreen', monospace;
+  font-size: 16px;
+  text-align: center;
+  image-rendering: pixelated;
+}
+
+.m-rotate-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 24px;
+}
+
+.m-rotate-box .ico {
+  --is: 4px;
+  color: #ffd23a;
+  animation: m-spin 2s steps(4) infinite;
+}
+
+.m-rotate-box span {
+  font-size: 12px;
+  color: #b8ad9a;
+}
+
+@keyframes m-spin {
+  to {
+    transform: rotate(90deg);
+  }
+}
+
+@media (orientation: landscape) and (max-height: 540px) {
+  .m-rotate {
+    display: flex;
+  }
+}
+
+/* --- Hauptmenü: Titel oben, Kerze in der Mitte, Knöpfe darunter ----------------------- */
+
+#game.m .menu-scr {
+  --my: calc(30px + (var(--H) - 544px) * 0.4);
+  background-position: -160px var(--my);
+}
+
+#game.m .menu-scr .c-halo,
+#game.m .menu-scr .c-flame {
+  translate: -160px var(--my);
+}
+
+#game.m .menu-scr .c-body,
+#game.m .menu-scr .c-sparkle {
+  inset: auto;
+  left: -160px;
+  top: var(--my);
+  width: 640px;
+  height: 360px;
+}
+
+#game.m .m-title {
+  left: 0;
+  right: 0;
+  top: 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#game.m .m-logo {
+  font-size: 32px;
+  letter-spacing: 1px;
+}
+
+#game.m .m-two {
+  margin: 5px 0 0 5px;
+  padding: 2px 5px 3px;
+  font-size: 16px;
+}
+
+#game.m .m-sub {
+  margin-top: 8px;
+  letter-spacing: 3px;
+}
+
+#game.m .m-nav {
+  left: 60px;
+  width: 200px;
+  top: calc(var(--my) + 306px + (var(--H) - 544px) * 0.2);
+  gap: 6px;
+}
+
+#game.m .m-nav .gbtn {
+  height: 24px;
+}
+
+#game.m .m-nav .gbtn.primary {
+  height: 30px;
+}
+
+#game.m .m-foot {
+  left: 14px;
+  right: 14px;
+  bottom: 12px;
+}
+
+/* --- Farbwahl: 4 + 3 Kacheln ------------------------------------------------------------- */
+
+#game.m .colors-panel {
+  left: 5px;
+  top: 5px;
+  width: 310px;
+  height: calc(var(--H) - 10px);
+  padding: 8px 6px 7px;
+}
+
+#game.m .colors-panel .gpanel-title {
+  margin-bottom: 4px;
+}
+
+#game.m .colors-hint {
+  line-height: 1.3;
+  margin-bottom: 6px !important;
+}
+
+#game.m .race-grid {
+  margin: auto 0;
+  grid-template-columns: repeat(4, 71px);
+  gap: 4px 3px;
+}
+
+#game.m .race-tile {
+  height: min(216px, calc((var(--H) - 118px) / 2));
+  padding: 3px 1px 5px !important;
+  overflow: hidden;
+}
+
+#game.m .race-art {
+  width: 64px;
+  height: 36px;
+  background-size: 76px 40px;
+  background-position: center;
+}
+
+#game.m .race-cards {
+  padding: 0 2px;
+  gap: 2px;
+}
+
+#game.m .race-cards li {
+  gap: 2px;
+}
+
+#game.m .colors-foot {
+  flex-wrap: wrap;
+  gap: 5px 6px;
+}
+
+#game.m .colors-info {
+  order: -1;
+  flex: 1 0 100%;
+  min-height: 20px;
+}
+
+#game.m .colors-foot [data-back] {
+  margin-left: auto;
+}
+
+/* --- Einführung / Weltkarte ------------------------------------------------------------------ */
+
+#game.m .intro-scr,
+#game.m .worldpick-scr {
+  background-position: -160px center;
+}
+
+#game.m .intro-head {
+  top: 34px;
+}
+
+#game.m .intro-name {
+  font-size: 22px;
+}
+
+#game.m .route {
+  left: 22px;
+  width: 276px;
+  top: 88px;
+}
+
+#game.m .route-node {
+  left: calc(var(--i) * 250px / var(--n));
+}
+
+#game.m .intro-boss {
+  left: 94px;
+  top: 136px;
+}
+
+#game.m .intro-hint {
+  left: 10px;
+  width: 300px;
+  top: auto;
+  bottom: 10px;
+}
+
+#game.m .intro-hint .gbtn {
+  align-self: stretch;
+  justify-content: center;
+}
+
+/* --- Weggabelung: zwei Wege nebeneinander unter der Szene ------------------------------------- */
+
+#game.m .fork-scr {
+  --bgy: 28px;
+}
+
+#game.m .fork-title,
+#game.m .room-title {
+  top: 34px;
+  padding: 0 10px;
+}
+
+#game.m .fork-title {
+  font-size: 16px;
+}
+
+#game.m .room-title b {
+  font-size: 16px;
+}
+
+#game.m .room-title span {
+  display: block;
+  line-height: 1.3;
+}
+
+#game.m .fork-scr::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 328px;
+  height: 60px;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent, #000 90%);
+}
+
+#game.m .room-card {
+  top: min(344px, calc(var(--H) - 200px));
+  z-index: 1;
+  width: 148px;
+  padding: 8px 8px 9px !important;
+}
+
+#game.m .room-card.left {
+  left: 8px;
+}
+
+#game.m .room-card.right {
+  left: 164px;
+}
+
+#game.m .room-card.center {
+  left: 70px;
+  width: 180px;
+}
+
+#game.m .rc-go {
+  justify-content: center;
+  margin-top: 2px;
+  padding: 5px 0;
+  background: color-mix(in srgb, var(--c3) 22%, transparent);
+  box-shadow: inset 0 0 0 1px var(--c2);
+}
+
+/* --- Weltwahl ---------------------------------------------------------------------------- */
+
+#game.m .wp-title {
+  top: 34px;
+  font-size: 16px;
+}
+
+#game.m .wp-paths {
+  display: none;
+}
+
+#game.m .wp-army {
+  left: 154px;
+  top: auto;
+  bottom: 20px;
+}
+
+#game.m .wp-choice {
+  top: calc(60px + (var(--H) - 544px) * 0.3);
+  width: 148px;
+  gap: 6px;
+}
+
+#game.m .wp-choice:nth-of-type(1) {
+  left: 8px !important;
+}
+
+#game.m .wp-choice:nth-of-type(2) {
+  left: 164px !important;
+}
+
+#game.m .wp-choice .boss-card {
+  width: 140px;
+}
+
+/* --- Räume: Szene oben, Detail-Panel unten -------------------------------------------------- */
+
+#game.m .m-scene-fade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 60px;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent, #000 90%);
+}
+
+#game.m .m-panel {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+#game.m .md-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  overflow: hidden;
+}
+
+#game.m .md-body > .si-empty {
+  flex: 1;
+  align-self: center;
+}
+
+#game.m .md-card {
+  flex: none;
+}
+
+#game.m .md-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 26px;
+  line-height: 1.35;
+}
+
+#game.m .md-name {
+  font-family: 'Tiny5', monospace;
+  font-size: 12px;
+  font-weight: normal;
+}
+
+#game.m .md-type {
+  color: var(--muted);
+}
+
+#game.m .md-text p {
+  color: #e8e0d0;
+}
+
+#game.m .md-info {
+  flex: 1;
+  text-align: center;
+  line-height: 1.4;
+}
+
+#game.m .md-info .hint {
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+#game.m .md-actions {
+  position: absolute;
+  right: 9px;
+  bottom: 9px;
+  display: flex;
+  gap: 4px;
+}
+
+#game.m .m-room .leave-btn {
+  right: 8px;
+  bottom: auto;
+  top: 356px;
+}
+
+#game.m .m-result {
+  left: 20px;
+  right: 20px;
+  width: auto;
+  top: 60px;
+  z-index: 20;
+}
+
+#game.m .m-ench {
+  width: auto;
+  flex-direction: row;
+  align-items: flex-start;
+  text-align: left;
+  gap: 8px;
+}
+
+#game.m .m-ench .ench-rarity {
+  align-self: flex-start;
+}
+
+#game.m .m-pyre-row {
+  left: 0;
+  width: var(--W);
+  gap: 6px;
+}
+
+/* --- Ende --------------------------------------------------------------------------------- */
+
+#game.m .end-panel {
+  left: 20px;
+  width: 280px;
+  top: calc(60px + (var(--H) - 544px) * 0.3);
+}
+
+/* --- Kampf ---------------------------------------------------------------------------------- */
+
+#game.m .m-whud {
+  top: 6px;
+  left: 6px;
+  width: 308px;
+  height: 26px;
+  grid-template-columns: 118px 60px 118px;
+  gap: 6px;
+}
+
+#game.m .m-whud .wbar {
+  width: 118px;
+}
+
+#game.m .m-whud .wbar-head {
+  height: 10px;
+}
+
+#game.m .m-whud .wbar-name {
+  letter-spacing: 0;
+}
+
+#game.m .m-whud .wbar-count {
+  width: 24px;
+}
+
+#game.m .m-whud .wbar-track {
+  height: 13px;
+}
+
+#game.m .m-whud .wtimer {
+  width: 60px;
+  height: 25px;
+  border-width: 5px;
+  border-image: var(--frame) 6 fill / 5px;
+}
+
+#game.m .m-whud .wtimer b {
+  font-size: 10px;
+}
+
+#game.m .m-whud .boss-bar {
+  margin-top: 1px;
+}
+
+#game.m .m-battle .slot-label {
+  width: 36px;
+  margin-left: -18px;
+}
+
+#game.m .mslot .slot-card {
+  width: 68px;
+  height: 62px;
+}
+
+#game.m .flipcard.mini {
+  width: 68px;
+  height: 62px;
+}
+
+.mcard {
+  position: relative;
+  box-sizing: border-box;
+  width: 68px;
+  height: 62px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  border: 5px solid transparent;
+  border-image: var(--frame) 6 fill / 5px;
+  image-rendering: pixelated;
+  color: #f4ecd9;
+  text-shadow: 1px 1px 0 #000;
+}
+
+.mc-top {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 8px;
+  font-family: 'Tiny5', monospace;
+  font-size: 8px;
+  line-height: 8px;
+}
+
+.mc-top .ico {
+  flex: none;
+  color: var(--rc);
+}
+
+.mc-top span {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.mc-art {
+  position: relative;
+  height: 30px;
+  flex: none;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px #141018;
+}
+
+.mc-art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  image-rendering: pixelated;
+}
+
+.mc-troops {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  padding: 1px 1px 0;
+  font-family: 'Tiny5', monospace;
+  font-size: 8px;
+  color: #ffe23a;
+  background: rgba(10, 8, 14, 0.75);
+}
+
+.mc-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 8px;
+  font-family: 'Tiny5', monospace;
+  font-size: 8px;
+  line-height: 8px;
+}
+
+.mc-foot b {
+  font-weight: normal;
+}
+
+.mc-dmg {
+  color: #ff8a7a;
+}
+
+.mc-hp {
+  color: #9be070;
+}
+
+.mc-stars {
+  display: flex;
+  color: #ffd23a;
+  --is: 1px;
+}
+
+.mback i {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  image-rendering: pixelated;
+}
+
+#game.m .m-battle .swap-btn {
+  width: 18px;
+  height: 14px;
+  line-height: 14px !important;
+}
+
+#game.m .m-pile {
+  width: 30px;
+  height: 44px;
+}
+
+#game.m .m-pile i {
+  position: absolute;
+  left: 0;
+  top: 2px;
+  width: 26px;
+  height: 36px;
+  background-size: cover;
+  image-rendering: pixelated;
+  box-shadow:
+    0 0 0 1px #5d574e,
+    0 0 0 2px #141018;
+}
+
+#game.m .m-pile i + i {
+  left: 2px;
+  top: 0;
+}
+
+#game.m .m-pile .pile-n {
+  width: 30px;
+  bottom: -10px;
+}
+
+#game.m .m-controls {
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  height: 22px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+#game.m .m-controls .wbtn.fight {
+  flex: none;
+  width: 86px;
+  height: 22px;
+}
+
+#game.m .m-controls .bonus-line {
+  flex: 1;
+  min-width: 0;
+  height: 22px;
+  padding: 0 3px;
+  justify-content: flex-start;
+  background: rgba(10, 8, 14, 0.72);
+  box-shadow: 0 0 0 1px var(--ink);
+}
+
+#game.m .m-controls .bonus-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#game.m .m-controls .pause-btn {
+  width: 28px;
+  height: 22px;
+}
+
+#game.m .m-controls .pause-btn.on {
+  color: #000;
+  background: var(--gold);
+}
+
+#game.m .pause-ico {
+  font-weight: normal;
+  letter-spacing: -1px;
+}
+
+#game.m .m-controls .wseg {
+  flex: none;
+  width: 84px;
+}
+
+#game.m .m-controls .wseg .seg {
+  height: 20px;
+}
+
+#game.m .m-battle .hand-dim {
+  top: var(--area-top);
+  height: var(--area-h);
+}
+
+#game.m .m-battle .bonus-box {
+  width: 296px;
+}
+
+#game.m .m-battle .bn {
+  width: 296px;
+}
+
+#game.m .m-battle .reward-panel {
+  left: 10px;
+  width: 300px;
+}
+
+#game.m .rw-pick-title small {
+  font-size: 8px;
+  color: var(--muted);
+}
+
+#game.m .tut-hint {
+  max-width: 210px;
+}
+
+/* Bonus-Details: am Handy übereinander, volle Breite */
+#game.m .bpop.col .bpop-item {
+  width: 300px;
+}
+
+#game.m .m-controls .bl-more {
+  margin-left: auto;
+}

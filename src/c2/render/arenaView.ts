@@ -22,7 +22,7 @@ const hex = (c: string) => parseInt(c.slice(1, 7), 16);
 const rnd = (a: number, b: number) => a + Math.random() * (b - a);
 const TAU = Math.PI * 2;
 
-interface Stamp {
+export interface Stamp {
   tex: Texture;
   x: number;
   y: number;
@@ -32,7 +32,7 @@ interface Stamp {
   scale: number;
 }
 
-interface Ring {
+export interface Ring {
   x: number;
   y: number;
   r0: number;
@@ -45,7 +45,7 @@ interface Ring {
   delay: number;
 }
 
-interface Beam {
+export interface Beam {
   x0: number;
   x1: number;
   y: number;
@@ -55,14 +55,14 @@ interface Beam {
   max: number;
 }
 
-interface Chain {
+export interface Chain {
   pts: number[];
   color: number;
   t: number;
   max: number;
 }
 
-interface Block {
+export interface Block {
   s: Sprite;
   vx: number;
   vy: number;
@@ -74,67 +74,67 @@ interface Block {
 
 export class ArenaView {
   readonly root = new Container();
-  private readonly ground: Sprite;
-  private readonly decalRT: RenderTexture;
-  private readonly castles: Sprite[];
-  private readonly castleTex: HTMLCanvasElement[];
-  private readonly units: ParticleContainer;
-  private readonly unitParts: Particle[] = [];
-  private readonly projShadows: ParticleContainer;
-  private readonly projs: ParticleContainer;
-  private readonly projGlow: ParticleContainer;
-  private readonly projParts: Particle[] = [];
-  private readonly glowParts: Particle[] = [];
-  private readonly shadowParts: Particle[] = [];
-  private readonly fx: Particles;
-  private readonly art: FxArt;
+  protected readonly ground: Sprite;
+  protected readonly decalRT: RenderTexture;
+  protected readonly castles: Sprite[];
+  protected readonly castleTex: HTMLCanvasElement[];
+  protected readonly units: ParticleContainer;
+  protected readonly unitParts: Particle[] = [];
+  protected readonly projShadows: ParticleContainer;
+  protected readonly projs: ParticleContainer;
+  protected readonly projGlow: ParticleContainer;
+  protected readonly projParts: Particle[] = [];
+  protected readonly glowParts: Particle[] = [];
+  protected readonly shadowParts: Particle[] = [];
+  protected readonly fx: Particles;
+  protected readonly art: FxArt;
   /** Bodenringe (normal / leuchtend), Strahlen & Blitze, Flutwelle, Blitzlicht */
-  private readonly gGround = new Graphics();
-  private readonly gGroundAdd = new Graphics();
-  private readonly gTop = new Graphics();
-  private readonly gAdd = new Graphics();
-  private readonly gScreen = new Graphics();
-  private readonly texts = new Container();
-  private readonly castleFlash = [0, 0];
-  private readonly rings: Ring[] = [];
-  private readonly beams: Beam[] = [];
-  private readonly chains: Chain[] = [];
-  private readonly waves: { team: number; t: number }[] = [];
-  private readonly stamps: Stamp[] = [];
-  private readonly stampLayer = new Container();
-  private readonly stampSprites: Sprite[] = [];
-  private readonly bucket = new Int32Array(H + 2);
-  private readonly order = new Int32Array(MAX_UNITS);
+  protected readonly gGround = new Graphics();
+  protected readonly gGroundAdd = new Graphics();
+  protected readonly gTop = new Graphics();
+  protected readonly gAdd = new Graphics();
+  protected readonly gScreen = new Graphics();
+  protected readonly texts = new Container();
+  protected readonly castleFlash = [0, 0];
+  protected readonly rings: Ring[] = [];
+  protected readonly beams: Beam[] = [];
+  protected readonly chains: Chain[] = [];
+  protected readonly waves: { team: number; t: number }[] = [];
+  protected readonly stamps: Stamp[] = [];
+  protected readonly stampLayer = new Container();
+  protected readonly stampSprites: Sprite[] = [];
+  protected readonly bucket = new Int32Array(H + 2);
+  protected readonly order = new Int32Array(MAX_UNITS);
   /** Einblenden der Einheiten beim Aufstellen: Zeitpunkt je Einheit */
-  private readonly revealAt = new Float32Array(MAX_UNITS);
-  private readonly revealed = new Uint8Array(MAX_UNITS);
-  private introT = -1;
-  private crumble: Block[] = [];
-  private crumbleT = 0;
+  protected readonly revealAt = new Float32Array(MAX_UNITS);
+  protected readonly revealed = new Uint8Array(MAX_UNITS);
+  protected introT = -1;
+  protected crumble: Block[] = [];
+  protected crumbleT = 0;
   crumbleDone = false;
-  private readonly dust: number;
-  private readonly race: string;
-  private time = 0;
+  protected readonly dust: number;
+  protected readonly race: string;
+  protected time = 0;
   /** Bildschirm-Blitz */
-  private flashA = 0;
-  private flashC = 0xffffff;
+  protected flashA = 0;
+  protected flashC = 0xffffff;
   /** Zeitlupe (Echtzeit-Sekunden) */
-  private slowLeft = 0;
-  private slowDur = 0;
-  private slowScale = 1;
-  private lastState: ArenaState = 'over';
+  protected slowLeft = 0;
+  protected slowDur = 0;
+  protected slowScale = 1;
+  protected lastState: ArenaState = 'over';
   /** Explosionsdichte der letzten Momente: dämpft Leuchtkerne, damit nichts zu Weiß verschmilzt */
-  private heat = 0;
+  protected heat = 0;
   /** Sterbedichte: bei Massensterben blitzen nicht alle Silhouetten gleichzeitig auf */
-  private deathHeat = 0;
+  protected deathHeat = 0;
   /** Höchstzahl an Zustands-Partikeln (Brand, Frost, Staub …) pro Bild */
-  private statusBudget = 0;
-  private frameK = 1;
+  protected statusBudget = 0;
+  protected frameK = 1;
 
   constructor(
-    private readonly app: Application,
-    private readonly atlas: GameAtlas,
-    private readonly arena: Arena,
+    protected readonly app: Application,
+    protected readonly atlas: GameAtlas,
+    protected readonly arena: Arena,
     theme: PaletteTheme,
   ) {
     const tex = (c: HTMLCanvasElement) => {
@@ -144,14 +144,14 @@ export class ArenaView {
     };
     this.art = atlas.art;
     this.race = theme.race ?? 'drifters';
-    const groundCv = groundCanvas(theme);
-    this.dust = dustColorOf(groundCv);
+    const groundCv = this.groundCanvas(theme);
+    this.dust = this.dustColor(groundCv);
     this.ground = new Sprite(tex(groundCv));
-    this.decalRT = RenderTexture.create({ width: W, height: H, scaleMode: 'nearest' });
+    this.decalRT = RenderTexture.create({ width: this.sw, height: this.sh, scaleMode: 'nearest' });
     const decal = new Sprite(this.decalRT);
-    this.castleTex = [castleCanvas(theme, false), castleCanvas(theme, true)];
+    this.castleTex = this.castleCanvases(theme);
     this.castles = this.castleTex.map((c) => new Sprite(tex(c)));
-    const forest = new Sprite(tex(forestCanvas(theme)));
+    const forest = new Sprite(tex(this.forestCanvas(theme)));
     const dyn = { position: true, uvs: true, color: true, vertex: true, rotation: true };
     this.units = new ParticleContainer({ dynamicProperties: dyn, roundPixels: true });
     this.projShadows = new ParticleContainer({ dynamicProperties: dyn, roundPixels: true });
@@ -184,6 +184,43 @@ export class ArenaView {
       this.texts,
       this.gScreen,
     );
+  }
+
+  // --- Einstiegspunkte für andere Bildschirmformate (Handy-Version); PC: Standard ---------
+
+  /** Größe der Arena in Bildschirmpixeln. */
+  protected get sw(): number {
+    return W;
+  }
+
+  protected get sh(): number {
+    return H;
+  }
+
+  /** Wiese (Bildschirmkoordinaten) für Umgebungspartikel. */
+  protected get field(): { x0: number; x1: number; y0: number; y1: number } {
+    return { x0: FX0, x1: FX1, y0: FY0, y1: FY1 };
+  }
+
+  protected groundCanvas(theme: PaletteTheme): HTMLCanvasElement {
+    return groundCanvas(theme);
+  }
+
+  protected castleCanvases(theme: PaletteTheme): HTMLCanvasElement[] {
+    return [castleCanvas(theme, false), castleCanvas(theme, true)];
+  }
+
+  protected forestCanvas(theme: PaletteTheme): HTMLCanvasElement {
+    return forestCanvas(theme);
+  }
+
+  protected dustColor(ground: HTMLCanvasElement): number {
+    return dustColorOf(ground);
+  }
+
+  /** Waagrechte Bildschirmgeschwindigkeit einer Einheit (Staubwolken). */
+  protected unitVx(i: number): number {
+    return this.arena.vx[i]!;
   }
 
   clearDecals(): void {
@@ -223,13 +260,13 @@ export class ArenaView {
     return u > 0.4 ? this.slowScale : this.slowScale + (1 - this.slowScale) * (1 - u / 0.4);
   }
 
-  private slowmo(dur: number, scale: number): void {
+  protected slowmo(dur: number, scale: number): void {
     if (this.slowLeft > 0 && this.slowScale <= scale) return;
     this.slowLeft = this.slowDur = dur;
     this.slowScale = scale;
   }
 
-  private flash(a: number, color = 0xffffff): void {
+  protected flash(a: number, color = 0xffffff): void {
     if (a >= this.flashA) {
       this.flashA = a;
       this.flashC = color;
@@ -271,14 +308,14 @@ export class ArenaView {
   }
 
   /** Optionaler Effekt? Wird bei vollem Partikelspeicher seltener. */
-  private ok(p: number): boolean {
+  protected ok(p: number): boolean {
     const l = this.fx.load;
     return Math.random() < p * (l > 0.6 ? Math.max(0, 1 - (l - 0.6) * 2.5) : 1);
   }
 
   // --- Einheiten ---------------------------------------------------------------------------
 
-  private drawUnits(): void {
+  protected drawUnits(): void {
     const a = this.arena;
     const b = this.bucket;
     b.fill(0);
@@ -337,7 +374,7 @@ export class ArenaView {
   }
 
   /** Zustände sichtbar machen: Brand, Frost, Schild, Wut, Staub, Boss-Aura. */
-  private unitFx(i: number, x: number, y: number, scale: number, h: number, speed: number, flying: boolean, boss: boolean, rage: boolean, moving: boolean, k60: number): void {
+  protected unitFx(i: number, x: number, y: number, scale: number, h: number, speed: number, flying: boolean, boss: boolean, rage: boolean, moving: boolean, k60: number): void {
     if (this.statusBudget <= 0 && !boss) return;
     const a = this.arena;
     const fx = this.fx;
@@ -353,7 +390,7 @@ export class ArenaView {
     if (rage && a.hp[i]! < a.maxHp[i]! * 0.5 && this.ok(0.03 * k60))
       fx.emit({ tex: art.puff, x: x + rnd(-2, 2), y, z: h * 0.8, vz: 18, grav: -10, life: 0.5, size: 2, size1: 4, color: 0xff5a3a, alpha: 0.55, layer: L_ADD });
     if (moving && !flying && speed >= 30 && this.ok(0.05 * k60))
-      fx.emit({ tex: art.puff, x: x + rnd(-2, 2), y: y + 1, vx: -a.vx[i]! * 0.15, vy: rnd(-2, 2), vz: 6, grav: 10, drag: 2, life: rnd(0.45, 0.7), size: 2, size1: 5, color: this.dust, alpha: 0.5, layer: L_GROUND });
+      fx.emit({ tex: art.puff, x: x + rnd(-2, 2), y: y + 1, vx: -this.unitVx(i) * 0.15, vy: rnd(-2, 2), vz: 6, grav: 10, drag: 2, life: rnd(0.45, 0.7), size: 2, size1: 5, color: this.dust, alpha: 0.5, layer: L_GROUND });
     if (boss && k60 > 0) {
       const pulse = 0.35 + Math.sin(this.time * 4) * 0.12;
       const c = hex(a.types[a.type[i]!]!.glow);
@@ -369,7 +406,7 @@ export class ArenaView {
   }
 
   /** Einheit erscheint: Lichtsäule, Bodenschein, aufsteigende Funken. */
-  private spawnFx(x: number, y: number, color: number, scale: number, undead: boolean): void {
+  protected spawnFx(x: number, y: number, color: number, scale: number, undead: boolean): void {
     const fx = this.fx;
     const art = this.art;
     if (undead) {
@@ -394,7 +431,7 @@ export class ArenaView {
 
   // --- Geschosse --------------------------------------------------------------------------
 
-  private drawProjectiles(): void {
+  protected drawProjectiles(): void {
     const a = this.arena;
     const list = this.projs.particleChildren;
     const shadows = this.projShadows.particleChildren;
@@ -462,7 +499,7 @@ export class ArenaView {
     this.projGlow.update();
   }
 
-  private addGlow(list: IParticle[], p: number, x: number, y: number, size: number, color: number, alpha: number): void {
+  protected addGlow(list: IParticle[], p: number, x: number, y: number, size: number, color: number, alpha: number): void {
     let g = this.glowParts[p];
     if (!g) {
       g = new Particle({ texture: this.art.glow[0]!, anchorX: 0.5, anchorY: 0.5 });
@@ -479,13 +516,13 @@ export class ArenaView {
 
   // --- Ereignisse ------------------------------------------------------------------------
 
-  private consumeEvents(): void {
+  protected consumeEvents(): void {
     const a = this.arena;
     for (const e of a.events) this.onEvent(e);
     a.events.length = 0;
   }
 
-  private onEvent(e: SimEvent): void {
+  protected onEvent(e: SimEvent): void {
     switch (e.t) {
       case 'death':
         return this.deathFx(e);
@@ -517,7 +554,7 @@ export class ArenaView {
     }
   }
 
-  private deathFx(e: Extract<SimEvent, { t: 'death' }>): void {
+  protected deathFx(e: Extract<SimEvent, { t: 'death' }>): void {
     const fx = this.fx;
     const art = this.art;
     const ut = this.atlas.get(e.vis);
@@ -567,7 +604,7 @@ export class ArenaView {
     }
   }
 
-  private hitFx(x: number, y: number, c: number, big: boolean): void {
+  protected hitFx(x: number, y: number, c: number, big: boolean): void {
     const fx = this.fx;
     const art = this.art;
     if (!this.ok(big ? 1 : 0.9)) return;
@@ -590,11 +627,11 @@ export class ArenaView {
   // --- Explosionen & Flächen ---------------------------------------------------------------
 
   /** Helligkeit für Leuchtkerne: sinkt, wenn viele Explosionen gleichzeitig laufen. */
-  private get glowK(): number {
+  protected get glowK(): number {
     return 1 / (1 + this.heat * 0.18);
   }
 
-  private boomFx(x: number, y: number, r: number, c: number, kind: string | undefined): void {
+  protected boomFx(x: number, y: number, r: number, c: number, kind: string | undefined): void {
     const fx = this.fx;
     const art = this.art;
     this.heat += r / 12;
@@ -713,7 +750,7 @@ export class ArenaView {
   }
 
   /** Feuerball: Blitz, heiße Kugel, Flammenwolken, Glut und Rauch. */
-  private fireball(x: number, y: number, r: number): void {
+  protected fireball(x: number, y: number, r: number): void {
     const fx = this.fx;
     const art = this.art;
     const k = this.glowK;
@@ -742,7 +779,7 @@ export class ArenaView {
       fx.emit({ tex: art.puff, x: x + rnd(-r, r) * 0.4, y: y + rnd(-2, 2), z: rnd(6, 14), vx: rnd(-6, 6), vz: rnd(8, 18), grav: -6, drag: 0.8, life: rnd(1.4, 2.2), size: 5, size1: rnd(12, 18), ramp: RAMP.smoke, alpha: 0.6, flags: F_WOBBLE | F_FADEIN });
   }
 
-  private dustRing(x: number, y: number, n: number, r: number): void {
+  protected dustRing(x: number, y: number, n: number, r: number): void {
     for (let k = 0; k < n; k++) {
       if (k > 2 && !this.ok(1)) return;
       const an = (k / n) * TAU + rnd(0, 0.4);
@@ -751,7 +788,7 @@ export class ArenaView {
     }
   }
 
-  private debris(x: number, y: number, n: number, color: number, sp: number): void {
+  protected debris(x: number, y: number, n: number, color: number, sp: number): void {
     for (let k = 0; k < n; k++) {
       if (k > 2 && !this.ok(1)) return;
       const an = Math.random() * TAU;
@@ -760,7 +797,7 @@ export class ArenaView {
     }
   }
 
-  private auraFx(x: number, y: number, r: number, kind: 'moon' | 'bless' | 'mend'): void {
+  protected auraFx(x: number, y: number, r: number, kind: 'moon' | 'bless' | 'mend'): void {
     const fx = this.fx;
     const art = this.art;
     const ramp = kind === 'moon' ? RAMP.moon : kind === 'bless' ? RAMP.holy : RAMP.heal;
@@ -779,7 +816,7 @@ export class ArenaView {
     }
   }
 
-  private castFx(x: number, y: number, tx: number, c: number, siege: boolean): void {
+  protected castFx(x: number, y: number, tx: number, c: number, siege: boolean): void {
     const fx = this.fx;
     const art = this.art;
     if (siege) {
@@ -797,7 +834,7 @@ export class ArenaView {
     }
   }
 
-  private beamFx(x0: number, x1: number, y: number, c: number, kind: 'sun' | 'cannon'): void {
+  protected beamFx(x0: number, x1: number, y: number, c: number, kind: 'sun' | 'cannon'): void {
     const fx = this.fx;
     const art = this.art;
     // bei vielen gleichzeitigen Strahlen nicht alles überblenden
@@ -828,7 +865,7 @@ export class ArenaView {
     }
   }
 
-  private chainFx(pts: number[], c: number): void {
+  protected chainFx(pts: number[], c: number): void {
     if (this.chains.length >= 10) return;
     this.chains.push({ pts, color: c, t: 0.35, max: 0.35 });
     this.flash(0.06, 0xc8ffb0);
@@ -843,7 +880,7 @@ export class ArenaView {
     }
   }
 
-  private baseFx(team: number, y: number): void {
+  protected baseFx(team: number, y: number): void {
     const fx = this.fx;
     const art = this.art;
     this.castleFlash[team] = 1;
@@ -860,7 +897,7 @@ export class ArenaView {
   }
 
   /** Expandierender Kreis auf dem Boden (Schockwelle, Magie). */
-  private ring(x: number, y: number, r0: number, r1: number, dur: number, color: number, w: number, add: boolean, delay = 0): void {
+  protected ring(x: number, y: number, r0: number, r1: number, dur: number, color: number, w: number, add: boolean, delay = 0): void {
     if (this.rings.length > 120) return;
     this.rings.push({ x, y, r0, r1, t: 0, max: dur, color, w, add, delay });
   }
@@ -868,13 +905,14 @@ export class ArenaView {
   // --- Umgebung ----------------------------------------------------------------------------
 
   /** Stimmung je Welt: Staub, Glut, Glühwürmchen, Regen, Lichtfunken, Sporen … */
-  private ambient(dt: number): void {
+  protected ambient(dt: number): void {
     const fx = this.fx;
     const art = this.art;
     if (fx.load > 0.5 || dt <= 0) return;
     const rate = dt * 60;
-    const fieldX = () => rnd(FX0, FX1);
-    const fieldY = () => rnd(FY0 - 4, FY1 + 4);
+    const f = this.field;
+    const fieldX = () => rnd(f.x0, f.x1);
+    const fieldY = () => rnd(f.y0 - 4, f.y1 + 4);
     switch (this.race) {
       case 'ashclan':
         if (Math.random() < 0.35 * rate) fx.emit({ tex: art.ember, x: fieldX(), y: fieldY(), vx: rnd(-4, 8), vy: rnd(-4, 2), vz: rnd(6, 16), grav: -2, life: rnd(2, 4), ramp: RAMP.spark, layer: L_ADD, alpha: 0.8, flags: F_WOBBLE | F_FLICKER | F_FADEIN });
@@ -886,7 +924,7 @@ export class ArenaView {
         break;
       case 'tidebound':
         for (let k = 0; k < 2; k++)
-          if (Math.random() < 0.8 * rate) fx.emit({ tex: art.drop, x: rnd(FX0 - 20, FX1), y: fieldY(), z: rnd(90, 140), vx: 18, vz: -230, grav: 1, life: 1, color: 0xc8f0ff, alpha: 0.45, layer: L_TOP });
+          if (Math.random() < 0.8 * rate) fx.emit({ tex: art.drop, x: rnd(f.x0 - 20, f.x1), y: fieldY(), z: rnd(90, 140), vx: 18, vz: -230, grav: 1, life: 1, color: 0xc8f0ff, alpha: 0.45, layer: L_TOP });
         if (Math.random() < 0.4 * rate) fx.emit({ tex: art.bubble, x: fieldX(), y: fieldY(), life: 0.25, size: 1, color: 0xc8f0ff, alpha: 0.4, layer: L_GROUND, flags: F_LINEAR });
         if (Math.random() < 0.05 * rate) fx.emit({ tex: art.puff, x: fieldX(), y: fieldY(), vx: rnd(3, 8), life: rnd(4, 6), size: 18, size1: 24, color: 0xd8f0ff, alpha: 0.12, layer: L_GROUND, flags: F_FADEIN | F_LINEAR });
         break;
@@ -908,7 +946,7 @@ export class ArenaView {
 
   // --- Linien, Ringe, Wellen, Blitzlicht ------------------------------------------------------
 
-  private drawGraphics(dt: number): void {
+  protected drawGraphics(dt: number): void {
     const gg = this.gGround;
     const gga = this.gGroundAdd;
     const gt = this.gTop;
@@ -942,26 +980,7 @@ export class ArenaView {
         this.beams.splice(k, 1);
         continue;
       }
-      const u = b.t / b.max;
-      const x = Math.min(b.x0, b.x1);
-      const w = Math.abs(b.x1 - b.x0);
-      if (b.fx === 'sun') {
-        const th = Math.round(1 + u * 3 + (Math.random() < 0.5 ? 1 : 0));
-        ga.rect(x, b.y - th * 2 - 2, w, th * 4 + 4).fill({ color: b.color, alpha: 0.12 * u });
-        ga.rect(x, b.y - th - 1, w, th * 2 + 2).fill({ color: b.color, alpha: 0.4 * u });
-        ga.rect(x, b.y - Math.floor(th / 2), w, Math.max(1, th)).fill({ color: 0xffffff, alpha: Math.min(1, u * 1.6) });
-        // Lichtpakete, die am Strahl entlanglaufen
-        const dir = b.x1 > b.x0 ? 1 : -1;
-        for (let q = 0; q < 4; q++) {
-          const px = b.x0 + dir * (((this.time * 420 + q * 90) % w) || 0);
-          ga.rect(Math.round(px) - 3, b.y - 1, 6, 2).fill({ color: 0xffffff, alpha: 0.7 * u });
-        }
-      } else {
-        const th = u > 0.7 ? 4 : u > 0.4 ? 3 : u > 0.2 ? 2 : 1;
-        ga.rect(x, b.y - th * 2, w, th * 4).fill({ color: 0xff8a3a, alpha: 0.18 * u });
-        ga.rect(x, b.y - th, w, th * 2).fill({ color: b.color, alpha: 0.6 * u });
-        ga.rect(x, b.y - (th > 2 ? 1 : 0), w, th > 2 ? 2 : 1).fill({ color: 0xffffff, alpha: u });
-      }
+      this.drawBeam(b, b.t / b.max, ga);
     }
 
     for (let k = this.chains.length - 1; k >= 0; k--) {
@@ -1018,22 +1037,48 @@ export class ArenaView {
         if (a.lastStand[t]! >= 0.85) continue;
         const p = 0.5 + Math.sin(this.time * 6) * 0.5;
         const col = t === 0 ? 0xffe23a : 0xff6a3a;
-        for (let s = 0; s < 5; s++) {
-          const x = t === 0 ? FX0 - 8 + s * 6 : FX1 + 2 - s * 6;
-          ga.rect(x, FY0 - 6, 6, FY1 - FY0 + 14).fill({ color: col, alpha: (0.16 - s * 0.03) * (0.5 + p * 0.5) });
-        }
+        for (let s = 0; s < 5; s++) this.lastStandBand(ga, t, s, col, (0.16 - s * 0.03) * (0.5 + p * 0.5));
       }
 
     const gs = this.gScreen;
     gs.clear();
     if (this.flashA > 0.005) {
-      gs.rect(0, 0, W, H).fill({ color: this.flashC, alpha: this.flashA });
+      gs.rect(0, 0, this.sw, this.sh).fill({ color: this.flashC, alpha: this.flashA });
       this.flashA = Math.max(0, this.flashA - dt * 2.8);
     }
   }
 
+  /** Ein Sonnen- oder Kanonenstrahl (waagrecht). `u` = verbleibender Anteil 1…0. */
+  protected drawBeam(b: Beam, u: number, ga: Graphics): void {
+    const x = Math.min(b.x0, b.x1);
+    const w = Math.abs(b.x1 - b.x0);
+    if (b.fx === 'sun') {
+      const th = Math.round(1 + u * 3 + (Math.random() < 0.5 ? 1 : 0));
+      ga.rect(x, b.y - th * 2 - 2, w, th * 4 + 4).fill({ color: b.color, alpha: 0.12 * u });
+      ga.rect(x, b.y - th - 1, w, th * 2 + 2).fill({ color: b.color, alpha: 0.4 * u });
+      ga.rect(x, b.y - Math.floor(th / 2), w, Math.max(1, th)).fill({ color: 0xffffff, alpha: Math.min(1, u * 1.6) });
+      // Lichtpakete, die am Strahl entlanglaufen
+      const dir = b.x1 > b.x0 ? 1 : -1;
+      for (let q = 0; q < 4; q++) {
+        const px = b.x0 + dir * (((this.time * 420 + q * 90) % w) || 0);
+        ga.rect(Math.round(px) - 3, b.y - 1, 6, 2).fill({ color: 0xffffff, alpha: 0.7 * u });
+      }
+    } else {
+      const th = u > 0.7 ? 4 : u > 0.4 ? 3 : u > 0.2 ? 2 : 1;
+      ga.rect(x, b.y - th * 2, w, th * 4).fill({ color: 0xff8a3a, alpha: 0.18 * u });
+      ga.rect(x, b.y - th, w, th * 2).fill({ color: b.color, alpha: 0.6 * u });
+      ga.rect(x, b.y - (th > 2 ? 1 : 0), w, th > 2 ? 2 : 1).fill({ color: 0xffffff, alpha: u });
+    }
+  }
+
+  /** Streifen `s` (0 = an der Mauer) des Last-Stand-Leuchtens von Team `t`. */
+  protected lastStandBand(ga: Graphics, t: number, s: number, color: number, alpha: number): void {
+    const x = t === 0 ? FX0 - 8 + s * 6 : FX1 + 2 - s * 6;
+    ga.rect(x, FY0 - 6, 6, FY1 - FY0 + 14).fill({ color, alpha });
+  }
+
   /** Flutwelle: Wasserwand mit Gischtkante, Spritzern und Nebel. */
-  private drawWave(team: number, u: number): void {
+  protected drawWave(team: number, u: number): void {
     const g = this.gTop;
     const ga = this.gAdd;
     const e = 1 - (1 - u) * (1 - u);
@@ -1120,7 +1165,7 @@ export class ArenaView {
     for (let k = 0; k < 20; k++) this.fx.emit({ tex: this.art.puff, x: cx + rnd(-16, 16), y: rnd(FY0, FY1), vx: -Math.sign(cx - 320) * rnd(10, 40), vz: rnd(4, 14), grav: -4, drag: 1.2, life: rnd(1.4, 2.4), size: 8, size1: rnd(16, 24), color: this.dust, alpha: 0.7, flags: F_WOBBLE | F_FADEIN });
   }
 
-  private updateCrumble(dt: number): void {
+  protected updateCrumble(dt: number): void {
     if (!this.crumble.length) return;
     this.crumbleT += dt;
     let active = 0;
@@ -1157,7 +1202,7 @@ export class ArenaView {
     }
   }
 
-  private flushStamps(): void {
+  protected flushStamps(): void {
     if (this.stamps.length === 0) return;
     const layer = this.stampLayer;
     layer.removeChildren();

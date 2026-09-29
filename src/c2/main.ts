@@ -7,6 +7,7 @@ import './c2.css';
 import { frameUrl } from '../lab/pcard';
 import { audio } from './audio/audio';
 import { Game } from './game';
+import { wantsMobileLayout } from './mobile/detect';
 
 async function boot(): Promise<void> {
   await document.fonts.load('8px Silkscreen');
@@ -19,4 +20,6 @@ async function boot(): Promise<void> {
   game.mainMenu();
 }
 
-void boot();
+// Handys laden die Hochformat-Version nach (eigenes Bundle, siehe docs/mobile.md)
+if (wantsMobileLayout()) void import('./mobile/main').then((m) => m.bootMobile());
+else void boot();

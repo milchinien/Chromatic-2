@@ -47,7 +47,12 @@ export class Timeline {
 }
 
 /** Skalierung des Spielfelds (wird von game.ts gesetzt). */
-export const view = { scale: 1, root: null as HTMLElement | null };
+export const view = {
+  scale: 1,
+  root: null as HTMLElement | null,
+  /** Radius, ab dem der Kreis-Übergang die ganze Bühne bedeckt */
+  irisR: 380,
+};
 
 /** Rechteck eines Elements in Spielpixeln. */
 export function localRect(el: Element): { x: number; y: number; w: number; h: number } {
@@ -116,7 +121,7 @@ export function iris(layer: HTMLElement, mode: 'close' | 'open', ms = 650): Prom
   const el = document.createElement('div');
   el.className = `iris ${mode}`;
   layer.appendChild(el);
-  const maxR = 380;
+  const maxR = view.irisR;
   return new Promise((resolve) => {
     const t0 = performance.now();
     const step = () => {

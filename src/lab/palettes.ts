@@ -84,15 +84,20 @@ const SET = 0x1000000;
 const hexInt = (h: string) => parseInt(h.slice(1, 7), 16) | SET;
 
 export class Scene {
-  readonly w = W;
-  readonly h = H;
-  private readonly buf = new Uint32Array(W * H);
+  private readonly buf: Uint32Array;
   private rng: number;
   private ramp: number[];
 
-  constructor(ramp: readonly string[], seed = 7) {
+  /** Standardgröße 640×360 (Querformat); die Handy-Version zeichnet im Hochformat. */
+  constructor(
+    ramp: readonly string[],
+    seed = 7,
+    readonly w = W,
+    readonly h = H,
+  ) {
     this.rng = seed;
     this.ramp = ramp.map(hexInt);
+    this.buf = new Uint32Array(w * h);
   }
 
   /** Zeichnet `fn` mit einer anderen Farbreihe (Stufen 0…n-1 statt 0…4). */
@@ -121,8 +126,8 @@ export class Scene {
   set(x: number, y: number, c: Col): void {
     x = Math.round(x);
     y = Math.round(y);
-    if (x < 0 || y < 0 || x >= W || y >= H) return;
-    this.buf[y * W + x] = typeof c === 'string' ? hexInt(c) : this.ramp[Math.max(0, Math.min(this.ramp.length - 1, c))]!;
+    if (x < 0 || y < 0 || x >= this.w || y >= this.h) return;
+    this.buf[y * this.w + x] = typeof c === 'string' ? hexInt(c) : this.ramp[Math.max(0, Math.min(this.ramp.length - 1, c))]!;
   }
 
   /** Setzt einen stufenlosen Wert 0…n, der per Dithering auf die Farbreihe verteilt wird. */
@@ -138,9 +143,9 @@ export class Scene {
   }
 
   /** Füllt jeden Pixel mit f(x, y) → Wert (oder null = unverändert). */
-  each(f: (x: number, y: number) => number | null, x0 = 0, y0 = 0, x1 = W, y1 = H): void {
-    for (let y = Math.max(0, y0); y < Math.min(H, y1); y++)
-      for (let x = Math.max(0, x0); x < Math.min(W, x1); x++) {
+  each(f: (x: number, y: number) => number | null, x0 = 0, y0 = 0, x1 = this.w, y1 = this.h): void {
+    for (let y = Math.max(0, y0); y < Math.min(this.h, y1); y++)
+      for (let x = Math.max(0, x0); x < Math.min(this.w, x1); x++) {
         const v = f(x, y);
         if (v !== null) this.shade(x, y, v);
       }
@@ -156,9 +161,9 @@ export class Scene {
     for (let k = 0; k <= n; k++) this.set(x0 + ((x1 - x0) * k) / n, y0 + ((y1 - y0) * k) / n, i);
   }
 
-  stars(n: number, cols: Col[], y1 = H): void {
+  stars(n: number, cols: Col[], y1 = this.h): void {
     for (let k = 0; k < n; k++) {
-      const x = Math.floor(this.rnd() * W);
+      const x = Math.floor(this.rnd() * this.w);
       const y = Math.floor(this.rnd() * y1);
       const c = cols[Math.floor(this.rnd() * cols.length)]!;
       this.set(x, y, c);
@@ -172,7 +177,7 @@ export class Scene {
   }
 
   toImageData(): ImageData {
-    const img = new ImageData(W, H);
+    const img = new ImageData(this.w, this.h);
     for (let i = 0; i < this.buf.length; i++) {
       const v = this.buf[i]!;
       img.data[i * 4] = (v >> 16) & 255;
@@ -185,8 +190,8 @@ export class Scene {
 
   toDataURL(): string {
     const c = document.createElement('canvas');
-    c.width = W;
-    c.height = H;
+    c.width = this.w;
+    c.height = this.h;
     c.getContext('2d')!.putImageData(this.toImageData(), 0, 0);
     return c.toDataURL();
   }

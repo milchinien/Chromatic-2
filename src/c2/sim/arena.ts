@@ -25,10 +25,27 @@ import {
   maxTroops,
 } from '../data';
 
-export const FX0 = 32; // linke Burgmauer (Feldseite)
-export const FX1 = 608; // rechte Burgmauer
-export const FY0 = 26;
-export const FY1 = 208;
+export let FX0 = 32; // linke Burgmauer (Feldseite)
+export let FX1 = 608; // rechte Burgmauer
+export let FY0 = 26;
+export let FY1 = 208;
+
+/**
+ * Anderes Spielfeld einstellen (nur die Handy-Version, vor dem ersten `new Arena()`).
+ * Die PC-Version ruft das nie auf; alle Formeln unten ergeben mit den
+ * Standardwerten exakt die ursprünglichen Zahlen.
+ */
+export function setArenaField(f: { fx0: number; fx1: number; fy0: number; fy1: number }): void {
+  FX0 = f.fx0;
+  FX1 = f.fx1;
+  FY0 = f.fy0;
+  FY1 = f.fy1;
+}
+
+/** Feldlänge im Verhältnis zum PC-Feld (576) – PC: genau 1. */
+const lenK = () => (FX1 - FX0) / 576;
+/** Aufstellungstiefe so, dass die Truppendichte bei breiterem Feld gleich bleibt – PC: genau 1. */
+const depthK = () => 182 / (FY1 - FY0);
 export const DT = 1 / 60;
 /** Nur Speicherrahmen der Simulation – kein Spiel-Limit. */
 export const MAX_UNITS = 30000;
@@ -243,10 +260,10 @@ export class Arena {
   private passiveT = 0;
   private readonly armyHp = [1, 1];
   private readonly tideT = [0, 0];
-  private readonly grids = [new Grid(640, 240, CELL, MAX_UNITS), new Grid(640, 240, CELL, MAX_UNITS)];
+  private readonly grids = [0, 1].map(() => new Grid(Math.max(640, FX1 + 32), Math.max(240, FY1 + 32), CELL, MAX_UNITS));
   private readonly teamIds = [new Int32Array(MAX_UNITS), new Int32Array(MAX_UNITS)];
   private readonly teamN = [0, 0];
-  private readonly centroidY = [117, 117];
+  private readonly centroidY = [(FY0 + FY1) / 2, (FY0 + FY1) / 2];
   private readonly pushX = new Float32Array(MAX_UNITS);
   private readonly pushY = new Float32Array(MAX_UNITS);
   /** Pro Einheit zwischengespeicherte Typwerte (spart Objekt-Lookups in den heißen Schleifen) */
@@ -265,8 +282,8 @@ export class Arena {
   /** Einheiten mit „taunt“ je Team (verändern die Zielsuche) */
   private readonly tauntN = [0, 0];
   /** Suchreihenfolge von jeder Zelle nach außen (Zeilen / Spalten), siehe outwardTable */
-  private readonly rowOrd = outwardTable(240 / CELL);
-  private readonly colOrd = outwardTable(640 / CELL);
+  private readonly rowOrd = outwardTable(this.grids[0]!.rows);
+  private readonly colOrd = outwardTable(this.grids[0]!.cols);
   private rng = 1;
   private tick = 0;
 
@@ -517,8 +534,9 @@ export class Arena {
       }
       return;
     }
-    const zoneX0 = slot === 'front' ? 70 : 20;
-    const zoneW = slot === 'front' ? 90 : 48;
+    const dk = depthK();
+    const zoneX0 = (slot === 'front' ? 70 : 20) * dk;
+    const zoneW = (slot === 'front' ? 90 : 48) * dk;
     const h = FY1 - FY0 - 12;
     const sp = Math.max(3, Math.min(7, Math.sqrt((zoneW * h) / n)));
     const perCol = Math.max(1, Math.floor(h / sp));
@@ -544,11 +562,11 @@ export class Arena {
       const pick = pool[Math.floor(this.random() * pool.length)] ?? cardsOf('drifters')[0]!;
       const ti = this.summonType(tm, pick.race, pick.kind, pick.cls, pick.hp, pick.dmg);
       const n = Math.round(20 * bm);
-      for (let k = 0; k < n; k++) this.spawn(ti, base + dir * (175 + this.random() * 20), FY0 + 10 + this.random() * (FY1 - FY0 - 20), true);
+      for (let k = 0; k < n; k++) this.spawn(ti, base + dir * (175 + this.random() * 20) * lenK(), FY0 + 10 + this.random() * (FY1 - FY0 - 20), true);
     }
     if (info.cls === 'Priest') {
       const ti = this.summonType(tm, race, 'hammer', 'Summon', 170 * bm, 18, { scale: 2, radius: 6, speed: 18, interval: 1.2 });
-      for (let k = 0; k < 2; k++) this.spawn(ti, base + dir * 170, FY0 + (FY1 - FY0) * (k === 0 ? 0.3 : 0.7), true);
+      for (let k = 0; k < 2; k++) this.spawn(ti, base + dir * 170 * lenK(), FY0 + (FY1 - FY0) * (k === 0 ? 0.3 : 0.7), true);
     }
     if (info.cls === 'Siege') this.buildWall(tm, 0.3 * bm);
   }
@@ -558,7 +576,7 @@ export class Arena {
     const base = tm === 0 ? FX0 : FX1;
     const ti = this.summonType(tm, 'deepforge', 'tower', 'Summon', 90 * strength, 0, { building: true, wall: true, radius: 7, scale: 1, speed: 0, attack: 'melee', visKey: `wall|${tm}` });
     // Lückenlos vom oberen bis zum unteren Feldrand
-    for (let y = FY0 + 4; y <= FY1 + 2; y += 12) this.spawn(ti, base + dir * 190, y, true);
+    for (let y = FY0 + 4; y <= FY1 + 2; y += 12) this.spawn(ti, base + dir * 190 * lenK(), y, true);
   }
 
   private spawnBoss(): void {
@@ -715,7 +733,7 @@ export class Arena {
       this.lastStandDmg[tm] = 1 + (player ? 0.9 : 0.3) * k;
       if (k > 0.35 && !this.lastStandShown[tm]) {
         this.lastStandShown[tm] = true;
-        this.events.push({ t: 'text', x: player ? 150 : 490, y: 60, text: 'LAST STAND!', color: player ? '#ffe23a' : '#ff8a6a' });
+        this.events.push({ t: 'text', x: player ? FX0 + 118 : FX1 - 118, y: FY0 + 34, text: 'LAST STAND!', color: player ? '#ffe23a' : '#ff8a6a' });
       }
     }
   }
@@ -1427,7 +1445,7 @@ export class Arena {
     const p = this.boss.passive.name;
     if (p === 'Scorched Earth' && this.passiveT >= 8) {
       this.passiveT = 0;
-      const x = FX0 + 60 + this.random() * 300;
+      const x = FX0 + 60 * lenK() + this.random() * 300 * lenK();
       const y = FY0 + 20 + this.random() * (FY1 - FY0 - 40);
       this.forEachInRadius(0, x, y, 20, (j) => this.ignite(j, 3 * DMG_SCALE, 5));
       this.events.push({ t: 'boom', x, y, r: 20, color: '#ff5a2a', fx: 'meteor' });
@@ -1440,7 +1458,7 @@ export class Arena {
         this.slowMul[j] = 0.6;
         this.damage(j, 0.5 * DMG_SCALE, -1, false, false);
       }
-      this.events.push({ t: 'text', x: 320, y: 60, text: 'OVERGROWTH', color: '#9dff6a' });
+      this.events.push({ t: 'text', x: (FX0 + FX1) / 2, y: FY0 + 34, text: 'OVERGROWTH', color: '#9dff6a' });
     } else if (p === 'Rising Tide' && this.passiveT >= 20) {
       this.passiveT = 0;
       this.tidalWave(0, 40);

@@ -10,13 +10,17 @@ in **2D Top-Down** mit kleinen Pixel-Art-Figuren.
 | `sandbox.html` | Erster Prototyp: zwei Karten frei gegeneinander kämpfen lassen (`src/main.ts`) |
 | `balance.html` | **Balance-Editor** (`src/editor/`): zwei Heere mit Karten, Sternen, Truppen, Boni, Enchantments und Boss zusammenstellen, ansehen oder hundertfach durchrechnen |
 
+**Handy:** `index.html` erkennt Handys automatisch und lädt die Hochformat-Version
+(`src/c2/mobile/`, Gegner oben, Spieler unten, volle Touch-Steuerung). Die PC-Version
+bleibt davon unberührt. Am PC testen mit `?layout=mobile`. Details: `docs/mobile.md`.
+
 ### Das Spiel in Kürze
 
 - **Run:** 3 Farben wählen → die 10 gezogenen Startkarten werden aufgedeckt → Continue.
   Welt 1 ist die Drifters-Welt von Rusk,
   danach vor jeder Welt Wahl zwischen 2 Farb-Bossen. 5 Räume pro Welt, dann der Boss. 3 Leben.
 - **Kampf:** 3 Karten ziehen, 2 wählen (Front/Back), FIGHT → Einheiten erscheinen, Kartenschau
-  mit Boni (Linksklick überspringt) → Massenschlacht → Überlebende laufen zur Burg → nächste
+  mit Boni bis zum nächsten Klick → Massenschlacht → Überlebende laufen zur Burg → nächste
   Runde, bis eine Burg fällt. Burgschaden: ein ganzes Heer = 100, jede Einheit nach ihrem
   HP-Anteil (12 Magier zählen so viel wie 240 Zombies). Ab Runde 4 steigt der Burgschaden
   (Belagerung, +50 % je Runde).
@@ -53,7 +57,7 @@ Sound-Worker eingebettet, Bilder verkleinert (sharp). Ergebnis:
 - **Spieltest im Browser:** `pnpm playtest <url> [räume] [bilderordner]` spielt mit echten
   Klicks durch (Chrome/Edge ohne Fenster, stumm) und meldet Konsolenfehler.
 
-Steuerung: Karte anklicken → Kartenauswahl · **Leertaste** = Kampf starten / Pause ·
+Steuerung: Karte anklicken → Kartenauswahl · Maus über die Bonus-Leiste bzw. einen Bonus → Details · **Leertaste** = Kampf starten / Pause ·
 Tempo 1×/2×/4× · „Neu aufstellen“ setzt das Feld zurück.
 
 ## Technik

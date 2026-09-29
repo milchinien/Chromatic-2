@@ -53,7 +53,7 @@ export class Game {
   readonly root: HTMLElement;
   readonly ui: HTMLElement;
   readonly fx: HTMLElement;
-  private readonly irisLayer: HTMLElement;
+  protected readonly irisLayer: HTMLElement;
   private _run: Run | null = null;
   get run(): Run | null {
     return this._run;
@@ -64,7 +64,7 @@ export class Game {
   }
   theme: PaletteTheme = WORLD_THEMES.find((t) => t.id === 'w-drifters')!;
   /** Bildschirm-Wechsel laufen nacheinander (Warteschlange) */
-  private queue: Promise<void> = Promise.resolve();
+  protected queue: Promise<void> = Promise.resolve();
 
   constructor(host: HTMLElement) {
     this.root = document.createElement('div');
@@ -135,7 +135,7 @@ export class Game {
    * Faktoren (sonst bleibt ein dicker Rand). Pixel bleiben durch
    * image-rendering: pixelated scharf.
    */
-  private fit(): void {
+  protected fit(): void {
     const scale = Math.min(window.innerWidth / W, window.innerHeight / H);
     view.scale = scale;
     this.root.style.transform = `scale(${scale})`;
@@ -159,7 +159,7 @@ export class Game {
     return this.queue;
   }
 
-  private async swap(build: () => void | Promise<void>, transition: boolean): Promise<void> {
+  protected async swap(build: () => void | Promise<void>, transition: boolean): Promise<void> {
     if (transition) {
       audio.play('iris');
       await iris(this.irisLayer, 'close', 520);
